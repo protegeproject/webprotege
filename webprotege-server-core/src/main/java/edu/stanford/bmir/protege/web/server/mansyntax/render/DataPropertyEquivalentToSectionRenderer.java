@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.EquivalentDataPropertiesAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -32,14 +32,14 @@ public class DataPropertyEquivalentToSectionRenderer extends AbstractOWLAxiomIte
     }
 
     @Override
-    protected Set<OWLEquivalentDataPropertiesAxiom> getAxiomsInOntology(OWLDataProperty subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getEquivalentDataPropertiesAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLEquivalentDataPropertiesAxiom> getAxiomsInOntology(OWLDataProperty subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getEquivalentDataPropertiesAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLDataPropertyExpression> getRenderablesForItem(OWLDataProperty subject,
                                                                  OWLEquivalentDataPropertiesAxiom item,
-                                                                 OWLOntologyID ontologyId) {
+                                                                 OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getPropertiesMinus(subject));
     }
 }

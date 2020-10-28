@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class AddAxiomChange implements AxiomChange {
 
-    public static AddAxiomChange of(@Nonnull OWLOntologyID ontologyId,
+    public static AddAxiomChange of(@Nonnull OntologyDocumentId ontologyId,
                                     @Nonnull OWLAxiom axiom) {
         return new AutoValue_AddAxiomChange(ontologyId, axiom);
     }
@@ -36,19 +36,13 @@ public abstract class AddAxiomChange implements AxiomChange {
 
     @Nonnull
     @Override
-    public AddAxiomChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
+    public AddAxiomChange replaceOntologyId(@Nonnull OntologyDocumentId ontologyId) {
         if(ontologyId.equals(getOntologyDocumentId())) {
             return this;
         }
         else {
             return AddAxiomChange.of(ontologyId, getAxiom());
         }
-    }
-
-    @Nonnull
-    @Override
-    public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
-        return new OWLOntologyChangeRecord(getOntologyDocumentId(), new AddAxiomData(getAxiom()));
     }
 
     @Override

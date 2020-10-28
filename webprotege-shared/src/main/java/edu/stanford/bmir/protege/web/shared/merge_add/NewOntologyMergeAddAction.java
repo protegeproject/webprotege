@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.merge_add;
 
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 

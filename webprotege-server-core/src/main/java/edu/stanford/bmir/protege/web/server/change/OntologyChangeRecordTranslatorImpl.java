@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
+import org.apache.commons.lang.NotImplementedException;
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,71 +21,72 @@ public class OntologyChangeRecordTranslatorImpl implements OntologyChangeRecordT
     @Nonnull
     @Override
     public OntologyChange getOntologyChange(@Nonnull OWLOntologyChangeRecord record) {
-        var ontologyId = record.getOntologyID();
-        OWLOntologyChangeDataVisitor<OntologyChange, RuntimeException> visitor = new OWLOntologyChangeDataVisitor<>() {
-            @Nonnull
-            @Override
-            public OntologyChange visit(AddAxiomData data) throws RuntimeException {
-                return translateAddAxiom(data, ontologyId);
-            }
-
-            @Override
-            public OntologyChange visit(RemoveAxiomData data) throws RuntimeException {
-                return translateRemoveAxiom(data, ontologyId);
-            }
-
-            @Override
-            public OntologyChange visit(AddOntologyAnnotationData data) throws RuntimeException {
-                return translateAddOntologyAnnotation(data, ontologyId);
-            }
-
-            @Override
-            public OntologyChange visit(RemoveOntologyAnnotationData data) throws RuntimeException {
-                return translateRemoveOntologyAnnotation(data, ontologyId);
-            }
-
-            @Override
-            public OntologyChange visit(SetOntologyIDData data) throws RuntimeException {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public OntologyChange visit(AddImportData data) throws RuntimeException {
-                return translateAddImport(data, ontologyId);
-            }
-
-            @Override
-            public OntologyChange visit(RemoveImportData data) throws RuntimeException {
-                return translateRemoveImport(data, ontologyId);
-            }
-        };
-        return record.getData()
-                     .accept(visitor);
+        throw new NotImplementedException();
+//        var ontologyDocumentId = record.getOntologyID();
+//        OWLOntologyChangeDataVisitor<OntologyChange, RuntimeException> visitor = new OWLOntologyChangeDataVisitor<>() {
+//            @Nonnull
+//            @Override
+//            public OntologyChange visit(AddAxiomData data) throws RuntimeException {
+//                return translateAddAxiom(data, ontologyDocumentId);
+//            }
+//
+//            @Override
+//            public OntologyChange visit(RemoveAxiomData data) throws RuntimeException {
+//                return translateRemoveAxiom(data, ontologyDocumentId);
+//            }
+//
+//            @Override
+//            public OntologyChange visit(AddOntologyAnnotationData data) throws RuntimeException {
+//                return translateAddOntologyAnnotation(data, ontologyDocumentId);
+//            }
+//
+//            @Override
+//            public OntologyChange visit(RemoveOntologyAnnotationData data) throws RuntimeException {
+//                return translateRemoveOntologyAnnotation(data, ontologyDocumentId);
+//            }
+//
+//            @Override
+//            public OntologyChange visit(SetOntologyIDData data) throws RuntimeException {
+//                throw new UnsupportedOperationException();
+//            }
+//
+//            @Override
+//            public OntologyChange visit(AddImportData data) throws RuntimeException {
+//                return translateAddImport(data, ontologyDocumentId);
+//            }
+//
+//            @Override
+//            public OntologyChange visit(RemoveImportData data) throws RuntimeException {
+//                return translateRemoveImport(data, ontologyDocumentId);
+//            }
+//        };
+//        return record.getData()
+//                     .accept(visitor);
     }
 
-    private AddAxiomChange translateAddAxiom(AddAxiomData data, OWLOntologyID ontologyId) {
-        return AddAxiomChange.of(ontologyId, data.getAxiom());
+    private AddAxiomChange translateAddAxiom(AddAxiomData data, OntologyDocumentId ontologyDocumentId) {
+        return AddAxiomChange.of(ontologyDocumentId, data.getAxiom());
     }
 
-    private RemoveAxiomChange translateRemoveAxiom(RemoveAxiomData data, OWLOntologyID ontologyId) {
-        return RemoveAxiomChange.of(ontologyId, data.getAxiom());
+    private RemoveAxiomChange translateRemoveAxiom(RemoveAxiomData data, OntologyDocumentId ontologyDocumentId) {
+        return RemoveAxiomChange.of(ontologyDocumentId, data.getAxiom());
     }
 
     private AddOntologyAnnotationChange translateAddOntologyAnnotation(AddOntologyAnnotationData data,
-                                                                       OWLOntologyID ontologyId) {
-        return AddOntologyAnnotationChange.of(ontologyId, data.getAnnotation());
+                                                                       OntologyDocumentId ontologyDocumentId) {
+        return AddOntologyAnnotationChange.of(ontologyDocumentId, data.getAnnotation());
     }
 
     private RemoveOntologyAnnotationChange translateRemoveOntologyAnnotation(RemoveOntologyAnnotationData data,
-                                                                             OWLOntologyID ontologyId) {
-        return RemoveOntologyAnnotationChange.of(ontologyId, data.getAnnotation());
+                                                                             OntologyDocumentId ontologyDocumentId) {
+        return RemoveOntologyAnnotationChange.of(ontologyDocumentId, data.getAnnotation());
     }
 
-    private AddImportChange translateAddImport(AddImportData data, OWLOntologyID ontologyId) {
+    private AddImportChange translateAddImport(AddImportData data, OntologyDocumentId ontologyId) {
         return AddImportChange.of(ontologyId, data.getDeclaration());
     }
 
-    private RemoveImportChange translateRemoveImport(RemoveImportData data, OWLOntologyID ontologyId) {
+    private RemoveImportChange translateRemoveImport(RemoveImportData data, OntologyDocumentId ontologyId) {
         return RemoveImportChange.of(ontologyId, data.getDeclaration());
     }
 }

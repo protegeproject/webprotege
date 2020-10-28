@@ -122,7 +122,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
                                           @Nonnull ImmutableList<OWLEntity> parents,
                                           @Nonnull EntityCrudContext context,
                                           @Nonnull OntologyChangeList.Builder<E> builder) {
-        var targetOntology = context.getTargetOntologyId();
+        var targetOntology = context.getTargetOntologyDocumentId();
         var iri = getNextIRI(session, context.getUserId(), parents);
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);

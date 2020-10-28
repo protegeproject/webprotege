@@ -7,5 +7,6 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import java.util.List;
 
 public interface SelectOntologiesForMergeView extends IsWidget, HasInitialFocusable {
+
     List<OWLOntologyID> getSelectedOntologies();
 }

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
     private ObjectPropertyCharacteristicsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLObjectProperty property;
@@ -61,7 +61,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForFunctional() {
-        when(axiomsByTypeIndex.getAxiomsByType(FUNCTIONAL_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(FUNCTIONAL_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLFunctionalObjectPropertyAxiom.class));
 
         assertHasCharacteristic(ObjectPropertyCharacteristic.FUNCTIONAL, true);
@@ -69,7 +69,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     private void assertHasCharacteristic(ObjectPropertyCharacteristic characteristic,
                                          boolean b) {
-        var hasCharacteristic = impl.hasCharacteristic(property, characteristic, ontologyId);
+        var hasCharacteristic = impl.hasCharacteristic(property, characteristic, ontologyDocumentId);
         assertThat(hasCharacteristic, is(b));
     }
 
@@ -80,7 +80,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForInverseFunctional() {
-        when(axiomsByTypeIndex.getAxiomsByType(INVERSE_FUNCTIONAL_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(INVERSE_FUNCTIONAL_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLInverseFunctionalObjectPropertyAxiom.class));
 
         assertHasCharacteristic(ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL, true);
@@ -93,7 +93,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForSymmetric() {
-        when(axiomsByTypeIndex.getAxiomsByType(SYMMETRIC_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(SYMMETRIC_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLSymmetricObjectPropertyAxiom.class));
         assertHasCharacteristic(ObjectPropertyCharacteristic.SYMMETRIC, true);
     }
@@ -105,7 +105,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForAsymmetric() {
-        when(axiomsByTypeIndex.getAxiomsByType(ASYMMETRIC_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(ASYMMETRIC_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLAsymmetricObjectPropertyAxiom.class));
         assertHasCharacteristic(ASYMMETRIC, true);
     }
@@ -117,7 +117,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForReflexive() {
-        when(axiomsByTypeIndex.getAxiomsByType(REFLEXIVE_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(REFLEXIVE_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLReflexiveObjectPropertyAxiom.class));
         assertHasCharacteristic(REFLEXIVE, true);
     }
@@ -129,7 +129,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForIrreflexive() {
-        when(axiomsByTypeIndex.getAxiomsByType(IRREFLEXIVE_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(IRREFLEXIVE_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLIrreflexiveObjectPropertyAxiom.class));
         assertHasCharacteristic(IRREFLEXIVE, true);
     }
@@ -141,7 +141,7 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForTransitive() {
-        when(axiomsByTypeIndex.getAxiomsByType(TRANSITIVE_OBJECT_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(TRANSITIVE_OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> mockAxiom(OWLTransitiveObjectPropertyAxiom.class));
         assertHasCharacteristic(TRANSITIVE, true);
     }
@@ -153,24 +153,24 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnFalseForUnknownOntologyId() {
-        assertThat(impl.hasCharacteristic(property, FUNCTIONAL, mock(OWLOntologyID.class)), is(false));
+        assertThat(impl.hasCharacteristic(property, FUNCTIONAL, mock(OntologyDocumentId.class)), is(false));
     }
 
     @Test
     public void shouldReturnFalseForUnknownProperty() {
-        assertThat(impl.hasCharacteristic(mock(OWLObjectProperty.class), FUNCTIONAL, ontologyId), is(false));
+        assertThat(impl.hasCharacteristic(mock(OWLObjectProperty.class), FUNCTIONAL, ontologyDocumentId), is(false));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfPropertyIsNull() {
-        impl.hasCharacteristic(null, FUNCTIONAL, ontologyId);
+        impl.hasCharacteristic(null, FUNCTIONAL, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfCharacteristicIsNull() {
-        impl.hasCharacteristic(property, null, ontologyId);
+        impl.hasCharacteristic(property, null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")

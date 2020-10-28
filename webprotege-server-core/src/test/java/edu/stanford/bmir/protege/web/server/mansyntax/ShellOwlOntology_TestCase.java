@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
+import edu.stanford.bmir.protege.web.server.owlapi.OwlApiOntologyDocumentTempOWLOntologyIDTranslator;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,39 +24,40 @@ public class ShellOwlOntology_TestCase {
 
     private ShellOwlOntology ontology;
 
-    @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId = OntologyDocumentId.generate();
 
     @Before
     public void setUp() {
-        ontology = ShellOwlOntology.get(ontologyId);
+        ontology = ShellOwlOntology.get(ontologyDocumentId);
     }
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        assertThat(ontology.getOntologyID(), is(ontologyId));
+        assertThat(ontology.getOntologyID(), is(ontologyDocumentId));
     }
 
     @Test
     public void shouldBeEqualToShellOntologyWithSameId() {
-        var otherOntology = ShellOwlOntology.get(ontologyId);
+        var otherOntology = ShellOwlOntology.get(ontologyDocumentId);
         assertThat(ontology, is(equalTo(otherOntology)));
     }
 
     @Test
     public void shouldHaveSameHashCodeAsOtherShellOntologyWithSameOntologyId() {
-        var otherOntology = ShellOwlOntology.get(ontologyId);
+        var otherOntology = ShellOwlOntology.get(ontologyDocumentId);
         assertThat(ontology.hashCode(), is(equalTo(otherOntology.hashCode())));
     }
 
     @Test
     public void shouldBeEqualToOwlApiImplementationWithSameOntologyId() throws Exception {
+        var ontologyId = OwlApiOntologyDocumentTempOWLOntologyIDTranslator.toOWLOntologyID(ontologyDocumentId);
         var owlapiOntology = new OWLOntologyImpl(OWLManager.createOWLOntologyManager(), ontologyId);
         assertThat(owlapiOntology, is(equalTo(ontology)));
     }
 
     @Test
     public void shouldHaveSameHashCodeAsOwlApiImplementationWithSameOntologyId() throws Exception {
+        var ontologyId = OwlApiOntologyDocumentTempOWLOntologyIDTranslator.toOWLOntologyID(ontologyDocumentId);
         var owlapiOntology = new OWLOntologyImpl(OWLManager.createOWLOntologyManager(), ontologyId);
         assertThat(owlapiOntology.hashCode(), is(equalTo(ontology.hashCode())));
     }

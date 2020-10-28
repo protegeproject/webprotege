@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +34,10 @@ public class ExistingOntologyMergeAddActionHandler extends AbstractProjectAction
     private final ProjectOntologiesBuilder projectOntologiesBuilder;
 
 
+    @Nonnull
     private final MergeOntologyCalculator mergeCalculator;
 
+    @Nonnull
     private final OntologyMergeAddPatcher patcher;
 
     @Inject
@@ -44,13 +45,15 @@ public class ExistingOntologyMergeAddActionHandler extends AbstractProjectAction
                                                  @Nonnull ProjectId projectId,
                                                  @Nonnull UploadedOntologiesCache uploadedOntologiesCache,
                                                  @Nonnull ProjectOntologiesBuilder projectOntologiesBuilder,
-                                                 @Nonnull HasApplyChanges changeManager) {
+                                                 @Nonnull HasApplyChanges changeManager,
+                                                 @Nonnull MergeOntologyCalculator mergeCalculator,
+                                                 @Nonnull OntologyMergeAddPatcher patcher) {
         super(accessManager);
         this.projectId = projectId;
         this.uploadedOntologiesCache = uploadedOntologiesCache;
         this.projectOntologiesBuilder = projectOntologiesBuilder;
-        this.mergeCalculator = new MergeOntologyCalculator();
-        this.patcher = new OntologyMergeAddPatcher(changeManager);
+        this.mergeCalculator = mergeCalculator;
+        this.patcher = patcher;
     }
 
 
@@ -69,9 +72,9 @@ public class ExistingOntologyMergeAddActionHandler extends AbstractProjectAction
             var axioms = mergeCalculator.getMergeAxioms(projectOntologies, uploadedOntologies, ontologyList);
             var annotations = mergeCalculator.getMergeAnnotations(projectOntologies, uploadedOntologies, ontologyList);
 
-            OWLOntologyID ontologyID = action.getTargetOntology();
+            var targetOntologyId = action.getTargetOntology();
 
-            List<OntologyChange> changes = patcher.addAxiomsAndAnnotations(axioms, annotations, ontologyID);
+            List<OntologyChange> changes = patcher.addAxiomsAndAnnotations(axioms, annotations, targetOntologyId);
 
             patcher.applyChanges(changes, executionContext);
 

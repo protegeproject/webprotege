@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 
-import org.semanticweb.owlapi.model.IRI;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
-import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -16,5 +14,5 @@ import java.util.stream.Stream;
 public interface EntitiesInOntologySignatureIndex extends Index {
 
     boolean containsEntityInSignature(@Nonnull OWLEntity entity,
-                                      @Nonnull OWLOntologyID ontologyId);
+                                      @Nonnull OntologyDocumentId ontologyDocumentId);
 }

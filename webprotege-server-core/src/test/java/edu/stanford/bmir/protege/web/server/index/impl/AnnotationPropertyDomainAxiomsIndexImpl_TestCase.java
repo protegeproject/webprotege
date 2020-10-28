@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class AnnotationPropertyDomainAxiomsIndexImpl_TestCase {
     private AnnotationPropertyDomainAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAnnotationProperty property;
@@ -45,7 +46,7 @@ public class AnnotationPropertyDomainAxiomsIndexImpl_TestCase {
                 .thenReturn(property);
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyID))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new AnnotationPropertyDomainAxiomsIndexImpl(axiomsByTypeIndex);
     }
@@ -57,19 +58,19 @@ public class AnnotationPropertyDomainAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetAnnotationPropertyDomainAxiomForProperty() {
-        var axioms = impl.getAnnotationPropertyDomainAxioms(property, ontologyID).collect(toSet());
+        var axioms = impl.getAnnotationPropertyDomainAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getAnnotationPropertyDomainAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getAnnotationPropertyDomainAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getAnnotationPropertyDomainAxioms(mock(OWLAnnotationProperty.class), ontologyID).collect(toSet());
+        var axioms = impl.getAnnotationPropertyDomainAxioms(mock(OWLAnnotationProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -82,7 +83,7 @@ public class AnnotationPropertyDomainAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullProperty() {
-        impl.getAnnotationPropertyDomainAxioms(null, ontologyID);
+        impl.getAnnotationPropertyDomainAxioms(null, ontologyDocumentId);
     }
 
 }

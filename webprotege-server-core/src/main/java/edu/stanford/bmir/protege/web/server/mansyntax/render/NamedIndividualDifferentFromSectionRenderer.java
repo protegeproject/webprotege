@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.DifferentIndividualsAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,14 +35,14 @@ public class NamedIndividualDifferentFromSectionRenderer extends AbstractOWLAxio
     }
 
     @Override
-    protected Set<OWLDifferentIndividualsAxiom> getAxiomsInOntology(OWLNamedIndividual subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getDifferentIndividualsAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLDifferentIndividualsAxiom> getAxiomsInOntology(OWLNamedIndividual subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getDifferentIndividualsAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLIndividual> getRenderablesForItem(OWLNamedIndividual subject,
                                                      OWLDifferentIndividualsAxiom item,
-                                                     OWLOntologyID ontologyId) {
+                                                     OntologyDocumentId ontologyDocumentId) {
         Set<OWLIndividual> setResult = item.getIndividuals();
         setResult.remove(subject);
         return Lists.newArrayList(setResult);

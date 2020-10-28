@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadReposit
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -53,7 +54,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
     private ImmutableSet<OWLEntity> sourceEntities;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     private OWLClass targetEntity;
 

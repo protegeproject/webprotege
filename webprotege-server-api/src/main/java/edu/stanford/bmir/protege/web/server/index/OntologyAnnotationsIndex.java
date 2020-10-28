@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -18,13 +18,13 @@ public interface OntologyAnnotationsIndex extends Index {
 
     /**
      * Gets the ontology annotations for the specified ontology Id
-     * @param ontologyID The ontology Id
+     * @param ontologyDocumentId The ontology Id
      * @return A stream of annotations that are annotations on the ontology id.  If the ontology Id
      * is not recognized then an empty stream is returned.
      */
     @Nonnull
-    Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OWLOntologyID ontologyID);
+    Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OntologyDocumentId ontologyDocumentId);
 
     boolean containsAnnotation(@Nonnull OWLAnnotation annotation,
-                               @Nonnull OWLOntologyID ontologyId);
+                               @Nonnull OntologyDocumentId ontologyDocumentId);
 }

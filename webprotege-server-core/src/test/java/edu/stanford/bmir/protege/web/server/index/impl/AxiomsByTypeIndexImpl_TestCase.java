@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +13,6 @@ import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
-import java.util.List;
-
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -33,7 +31,7 @@ public class AxiomsByTypeIndexImpl_TestCase {
     private AxiomsByTypeIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLSubClassOfAxiom axiom, axiom2;
@@ -46,19 +44,19 @@ public class AxiomsByTypeIndexImpl_TestCase {
                 .thenReturn((AxiomType) AxiomType.SUBCLASS_OF);
         when(axiom2.getAxiomType())
                 .thenReturn((AxiomType) AxiomType.SUBCLASS_OF);
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetSubClassOfAxiom() {
-        var axiomsStream = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyId);
+        var axiomsStream = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyDocumentId);
         var axioms = axiomsStream.collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldContainAxiom() {
-        var containsAxioms = impl.containsAxiom(axiom, ontologyId);
+        var containsAxioms = impl.containsAxiom(axiom, ontologyDocumentId);
         assertThat(containsAxioms, is(true));
     }
 
@@ -67,7 +65,7 @@ public class AxiomsByTypeIndexImpl_TestCase {
         var subClassOfAxiom = mock(OWLSubClassOfAxiom.class);
         when(subClassOfAxiom.getAxiomType())
                 .thenReturn((AxiomType) AxiomType.SUBCLASS_OF);
-        var containsAxiom = impl.containsAxiom(subClassOfAxiom, ontologyId);
+        var containsAxiom = impl.containsAxiom(subClassOfAxiom, ontologyDocumentId);
         assertThat(containsAxiom, is(false));
     }
 
@@ -75,7 +73,7 @@ public class AxiomsByTypeIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfContainsAxiom_Axiom_IsNull() {
-        impl.containsAxiom(null, ontologyId);
+        impl.containsAxiom(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -86,28 +84,28 @@ public class AxiomsByTypeIndexImpl_TestCase {
 
     @Test
     public void shouldReturnEmptyStreamIfForUnknownOntologyId() {
-        var axiomsStream = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, mock(OWLOntologyID.class));
+        var axiomsStream = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, mock(OntologyDocumentId.class));
         var axioms = axiomsStream.collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldHandleAddAxiom() {
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom2)));
-        var axioms = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyId).collect(toSet());
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom2)));
+        var axioms = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom2));
     }
 
     @Test
     public void shouldHandleRemoveAxiom() {
-        impl.applyChanges(ImmutableList.of(RemoveAxiomChange.of(ontologyId, axiom)));
-        var axioms = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyId).collect(toSet());
+        impl.applyChanges(ImmutableList.of(RemoveAxiomChange.of(ontologyDocumentId, axiom)));
+        var axioms = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyDocumentId).collect(toSet());
         assertThat(axioms, not(hasItem(axiom)));
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfAxiomTypeIsNull() {
-        impl.getAxiomsByType(null, ontologyId);
+        impl.getAxiomsByType(null, ontologyDocumentId);
     }
 
     @Test(expected = NullPointerException.class)

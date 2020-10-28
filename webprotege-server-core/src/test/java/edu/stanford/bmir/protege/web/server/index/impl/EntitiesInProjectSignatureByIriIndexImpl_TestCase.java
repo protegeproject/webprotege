@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class EntitiesInProjectSignatureByIriIndexImpl_TestCase {
     private IRI iri;
 
     @Mock
-    private OWLOntologyID ontAId, ontBId;
+    private OntologyDocumentId ontAId, ontBId;
 
     @Mock
     private OWLClass entityCls;
@@ -50,7 +51,7 @@ public class EntitiesInProjectSignatureByIriIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontAId, ontBId));
 
         when(entitiesInOntologySignatureByIriIndex.getEntitiesInSignature(iri, ontAId))

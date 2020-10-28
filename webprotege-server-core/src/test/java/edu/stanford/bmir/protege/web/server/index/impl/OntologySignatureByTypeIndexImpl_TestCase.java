@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
     private OntologySignatureByTypeIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLClass cls;
@@ -69,25 +70,25 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
         when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
 
-        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(CLASS, ontologyId))
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(CLASS, ontologyDocumentId))
 
                 .thenAnswer(invocation -> Stream.of(cls));
-        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(OBJECT_PROPERTY, ontologyId))
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(objectProperty));
 
-        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATA_PROPERTY, ontologyId))
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATA_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(dataProperty));
 
-        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(ANNOTATION_PROPERTY, ontologyId))
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(ANNOTATION_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(annotationProperty));
 
-        when(ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId))
+        when(ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(annotationProperty2));
 
-        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(NAMED_INDIVIDUAL, ontologyId))
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(NAMED_INDIVIDUAL, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(individual));
 
-        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATATYPE, ontologyId))
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATATYPE, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(datatype));
     }
 
@@ -99,52 +100,52 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
 
     @Test
     public void shouldGetClassesInSignature() {
-        var signature = impl.getSignature(CLASS, ontologyId).collect(toSet());
+        var signature = impl.getSignature(CLASS, ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItem(cls));
     }
 
 
     @Test
     public void shouldGetDatatypesInSignature() {
-        var signature = impl.getSignature(DATATYPE, ontologyId).collect(toSet());
+        var signature = impl.getSignature(DATATYPE, ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItem(datatype));
     }
 
     @Test
     public void shouldGetObjectPropertiesInSignature() {
-        var signature = impl.getSignature(OBJECT_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getSignature(OBJECT_PROPERTY, ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItem(objectProperty));
     }
 
     @Test
     public void shouldGetDataPropertiesInSignature() {
-        var signature = impl.getSignature(DATA_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getSignature(DATA_PROPERTY, ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItem(dataProperty));
     }
 
     @Test
     public void shouldGetAnnotationPropertiesInSignature() {
-        var signature = impl.getSignature(ANNOTATION_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getSignature(ANNOTATION_PROPERTY, ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItems(annotationProperty, annotationProperty2));
     }
 
 
     @Test
     public void shouldGetIndividualsInSignature() {
-        var signature = impl.getSignature(NAMED_INDIVIDUAL, ontologyId).collect(toSet());
+        var signature = impl.getSignature(NAMED_INDIVIDUAL, ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItem(individual));
     }
 
     @Test
     public void shouldGetEmptyStreamForUnknownOntology() {
-        var signature = impl.getSignature(CLASS, mock(OWLOntologyID.class)).collect(toSet());
+        var signature = impl.getSignature(CLASS, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(signature.isEmpty(), is(true));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullType() {
-        impl.getSignature(null, ontologyId);
+        impl.getSignature(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")

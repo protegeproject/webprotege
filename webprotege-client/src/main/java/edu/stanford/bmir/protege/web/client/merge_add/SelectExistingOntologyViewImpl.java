@@ -8,8 +8,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectExistingOntologyViewImpl extends Composite implements SelectExistingOntologyView, HasInitialFocusable {
@@ -21,21 +23,20 @@ public class SelectExistingOntologyViewImpl extends Composite implements SelectE
     @UiField
     protected ListBox listBox;
 
-    private List<OWLOntologyID> idList;
+    private List<OntologyDocumentId> idList = new ArrayList<>();
 
-    public SelectExistingOntologyViewImpl(List<OWLOntologyID> idList) {
+    public SelectExistingOntologyViewImpl(List<OntologyDocumentId> idList) {
         MergeAddClientBundle.BUNDLE.style().ensureInjected();
         initWidget(ourUiBinder.createAndBindUi(this));
-        this.idList = idList;
+        this.idList.addAll(idList);
         listBox.setMultipleSelect(false);
-        for (OWLOntologyID id: idList){
-            if(id.getOntologyIRI().isPresent())
-                listBox.addItem(id.getOntologyIRI().get().toString());
+        for (OntologyDocumentId id : idList) {
+            listBox.addItem(id.getId());
         }
     }
 
     @Override
-    public OWLOntologyID getOntology(){
+    public OntologyDocumentId getOntology(){
         for (int i=0;i<listBox.getItemCount();i++){
             if(listBox.isItemSelected(i)){
                 return idList.get(i);

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -16,8 +16,6 @@ import java.util.stream.Stream;
 @ProjectSingleton
 public interface AxiomsByEntityReferenceIndex extends Index {
 
-    Stream<OWLAxiom> getReferencingAxioms(@Nonnull
-                                          OWLEntity entity,
-                                          @Nonnull
-                                          OWLOntologyID ontologyId);
+    Stream<OWLAxiom> getReferencingAxioms(@Nonnull OWLEntity entity,
+                                          @Nonnull OntologyDocumentId ontologyDocumentId);
 }

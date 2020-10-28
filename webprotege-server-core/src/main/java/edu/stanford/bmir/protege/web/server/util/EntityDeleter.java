@@ -5,10 +5,10 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveOntologyAnnotationChange;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -45,12 +45,12 @@ public class EntityDeleter {
         if(entities.isEmpty()) {
             return ImmutableList.of();
         }
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontologyID -> getChangesForOntology(entities, ontologyID))
                 .collect(toImmutableList());
     }
 
-    private Stream<OntologyChange> getChangesForOntology(Collection<OWLEntity> entities, OWLOntologyID ontology) {
+    private Stream<OntologyChange> getChangesForOntology(Collection<OWLEntity> entities, OntologyDocumentId ontology) {
         ReferenceFinder.ReferenceSet referenceSet = referenceFinder.getReferenceSet(entities, ontology);
         List<OntologyChange> changeList = new ArrayList<>(
                 referenceSet.getReferencingAxioms().size() + referenceSet.getReferencingOntologyAnnotations().size()

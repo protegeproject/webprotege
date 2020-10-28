@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class RemoveAxiomChange_TestCase<R> {
     private RemoveAxiomChange change;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAnnotationAssertionAxiom axiom;
@@ -135,13 +136,6 @@ public class RemoveAxiomChange_TestCase<R> {
         assertThat(change.isAddOntologyAnnotation(), is(false));
     }
 
-    @Test
-    public void shouldCreateOwlOntologyChangeRecord() {
-        var changeRecord = change.toOwlOntologyChangeRecord();
-        assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new RemoveAxiomData(axiom)));
-    }
-
     @Test(expected = NoSuchElementException.class)
     public void shouldGetAnnotationOrThrow() {
         change.getAnnotationOrThrow();
@@ -162,7 +156,7 @@ public class RemoveAxiomChange_TestCase<R> {
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = mock(OWLOntologyID.class);
+        var otherOntologyId = mock(OntologyDocumentId.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
         assertThat(replaced.getOntologyDocumentId(), is(otherOntologyId));
     }

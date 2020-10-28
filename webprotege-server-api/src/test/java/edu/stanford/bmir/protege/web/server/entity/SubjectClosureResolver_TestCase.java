@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
-import edu.stanford.bmir.protege.web.server.entity.SubjectClosureResolver;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.stream.Stream;
@@ -48,7 +47,7 @@ public class SubjectClosureResolver_TestCase {
     private OWLAnnotationAssertionAxiom axiom;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId documentId;
 
 
     @Before
@@ -56,12 +55,12 @@ public class SubjectClosureResolver_TestCase {
         resolver = new SubjectClosureResolver(axiomsByValueIndex,
                                               projectOntologiesIndex,
                                               entitiesInSignatureIndex);
-        when(axiomsByValueIndex.getAxiomsByValue(valueIri, ontologyId))
+        when(axiomsByValueIndex.getAxiomsByValue(valueIri, documentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         when(entitiesInSignatureIndex.getEntitiesInSignature(clsIri))
                 .thenAnswer(invocation -> Stream.of(cls));
-        when(projectOntologiesIndex.getOntologyIds())
-                .thenAnswer(invocation -> Stream.of(ontologyId));
+        when(projectOntologiesIndex.getOntologyDocumentIds())
+                .thenAnswer(invocation -> Stream.of(documentId));
     }
 
     @Test

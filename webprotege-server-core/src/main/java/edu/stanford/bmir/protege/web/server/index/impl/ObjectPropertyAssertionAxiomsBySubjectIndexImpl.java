@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
 import javax.annotation.Nonnull;
@@ -39,9 +39,9 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
     @Nonnull
     @Override
     public Stream<OWLObjectPropertyAssertionAxiom> getObjectPropertyAssertions(@Nonnull OWLIndividual subject,
-                                                                               @Nonnull OWLOntologyID ontologyId) {
+                                                                               @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(subject);
-        checkNotNull(ontologyId);
-        return index.getAxioms(subject, ontologyId);
+        checkNotNull(ontologyDocumentId);
+        return index.getAxioms(subject, ontologyDocumentId);
     }
 }

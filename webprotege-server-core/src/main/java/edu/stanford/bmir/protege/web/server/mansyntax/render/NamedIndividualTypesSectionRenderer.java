@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,14 +35,14 @@ public class NamedIndividualTypesSectionRenderer extends AbstractOWLAxiomItemSec
     }
 
     @Override
-    protected Set<OWLClassAssertionAxiom> getAxiomsInOntology(OWLNamedIndividual subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getClassAssertionAxioms(subject, ontologyId).collect(Collectors.toSet());
+    protected Set<OWLClassAssertionAxiom> getAxiomsInOntology(OWLNamedIndividual subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getClassAssertionAxioms(subject, ontologyDocumentId).collect(Collectors.toSet());
     }
 
     @Override
     public List<OWLClassExpression> getRenderablesForItem(OWLNamedIndividual subject,
                                                           OWLClassAssertionAxiom item,
-                                                          OWLOntologyID ontologyId) {
+                                                          OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getClassExpression());
     }
 }

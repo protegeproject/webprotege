@@ -54,7 +54,7 @@ public class DeleteAxiomsActionHandler extends AbstractProjectActionHandler<Dele
     @Override
     public DeleteAxiomsResult execute(@Nonnull DeleteAxiomsAction action, @Nonnull ExecutionContext executionContext) {
         var builder = OntologyChangeList.<String>builder();
-        var ontId = defaultOntologyIdManager.getDefaultOntologyId();
+        var ontId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         action.getAxioms()
               .forEach(ax -> builder.add(RemoveAxiomChange.of(ontId, ax)));
         var changeList = builder.build(action.getCommitMessage());

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
@@ -17,7 +18,7 @@ import java.util.Set;
 public interface OntologyChange {
 
     @Nonnull
-    OWLOntologyID getOntologyDocumentId();
+    OntologyDocumentId getOntologyDocumentId();
 
     @Nonnull
     Set<OWLEntity> getSignature();
@@ -51,10 +52,7 @@ public interface OntologyChange {
     OntologyChange replaceIris(@Nonnull IriReplacer iriReplacer);
 
     @Nonnull
-    OntologyChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId);
-
-    @Nonnull
-    OWLOntologyChangeRecord toOwlOntologyChangeRecord();
+    OntologyChange replaceOntologyId(@Nonnull OntologyDocumentId ontologyId);
 
     default boolean isRemoveOntologyAnnotation() {
         return false;

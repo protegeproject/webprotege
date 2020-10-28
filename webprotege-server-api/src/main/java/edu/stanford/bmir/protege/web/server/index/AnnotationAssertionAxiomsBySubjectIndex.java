@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -15,5 +15,5 @@ import java.util.stream.Stream;
 public interface AnnotationAssertionAxiomsBySubjectIndex extends Index {
 
     Stream<OWLAnnotationAssertionAxiom> getAxiomsForSubject(@Nonnull OWLAnnotationSubject subject,
-                                                            @Nonnull OWLOntologyID ontologyId);
+                                                            @Nonnull OntologyDocumentId ontologyId);
 }

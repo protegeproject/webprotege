@@ -46,21 +46,21 @@ public class AnnotationPropertyFrameTranslator {
     @Nonnull
     public PlainAnnotationPropertyFrame getFrame(@Nonnull OWLAnnotationProperty subject) {
         var propertyIRI = subject.getIRI();
-        var propertyValues = projectOntologiesIndex.getOntologyIds()
+        var propertyValues = projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(propertyIRI, ontId))
                 .filter(isTranslatableValue())
                 .distinct()
                 .map(toPropertyValue())
                 .collect(toImmutableSet());
 
-        var domains = projectOntologiesIndex.getOntologyIds()
+        var domains = projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> domainAxiomsIndex.getAnnotationPropertyDomainAxioms(subject, ontId))
                 .map(OWLAnnotationPropertyDomainAxiom::getDomain)
                 .distinct()
                 .sorted()
                 .collect(toImmutableSet());
 
-        var ranges = projectOntologiesIndex.getOntologyIds()
+        var ranges = projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> rangeAxiomsIndex.getAnnotationPropertyRangeAxioms(subject, ontId))
                 .map(OWLAnnotationPropertyRangeAxiom::getRange)
                 .distinct()

@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.ExistingOntologyMergeAddResult;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -44,24 +45,29 @@ public class ExistingOntologyMergeProjectWorkflow {
     }
 
 
-    public void start(ProjectId projectId, DocumentId documentId, List<OWLOntologyID> allOntologies, List<OWLOntologyID> selectedOntologies){
+    public void start(ProjectId projectId, DocumentId documentId,
+                      List<OntologyDocumentId> allOntologies,
+                      List<OWLOntologyID> selectedOntologies){
         selectExistingOntology(projectId, documentId, allOntologies, selectedOntologies);
     }
 
-    private void selectExistingOntology(ProjectId projectId, DocumentId documentId, List<OWLOntologyID> allOntologies, List<OWLOntologyID> selectedOntologies){
-        SelectExistingOntologyView view = new SelectExistingOntologyViewImpl(allOntologies);
+    private void selectExistingOntology(@Nonnull ProjectId projectId,
+                                        @Nonnull DocumentId uploadedDocumentId,
+                                        @Nonnull List<OntologyDocumentId> currentOntologies,
+                                        @Nonnull List<OWLOntologyID> uploadedOntologies){
+        SelectExistingOntologyView view = new SelectExistingOntologyViewImpl(currentOntologies);
         SelectExistingOntologyDialogController controller = new SelectExistingOntologyDialogController(view);
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<OWLOntologyID>() {
-            @Override
-            public void handleHide(OWLOntologyID data, WebProtegeDialogCloser closer) {
-                mergeIntoExistingOntology(projectId, documentId, selectedOntologies, view.getOntology());
-                closer.hide();
-            }
+        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            mergeIntoExistingOntology(projectId, uploadedDocumentId, uploadedOntologies, view.getOntology());
+            closer.hide();
         });
         WebProtegeDialog.showDialog(controller);
     }
 
-    private void mergeIntoExistingOntology(ProjectId projectId, DocumentId documentId, List<OWLOntologyID> selectedOntologies, OWLOntologyID targetOntology){
+    private void mergeIntoExistingOntology(@Nonnull ProjectId projectId,
+                                           @Nonnull DocumentId documentId,
+                                           @Nonnull List<OWLOntologyID> selectedOntologies,
+                                           @Nonnull OntologyDocumentId targetOntology){
         dispatchServiceManager.execute(new ExistingOntologyMergeAddAction(projectId, documentId, selectedOntologies, targetOntology), new DispatchServiceCallbackWithProgressDisplay<ExistingOntologyMergeAddResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {

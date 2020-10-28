@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 
@@ -72,7 +73,7 @@ public class TermRelationshipsManager {
 
     public OBOTermRelationships getRelationships(OWLClass term) {
         OWLClass cls = dataFactory.getOWLClass(term.getIRI());
-        var relationships = projectOntologiesIndex.getOntologyIds()
+        var relationships = projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> subClassAxiomsIndex.getSubClassOfAxiomsForSubClass(cls, ontId))
                 .map(OWLSubClassOfAxiom::getSuperClass)
                 .map(OWLClassExpression::asConjunctSet)
@@ -95,8 +96,8 @@ public class TermRelationshipsManager {
         List<OntologyChange> changes = null;
         OWLClass cls = null;
         StringBuilder description = null;
-        Set<OWLOntologyID> ontologyIds = projectOntologiesIndex.getOntologyIds().collect(Collectors.toSet());
-        for(OWLOntologyID ontId : ontologyIds) {
+        Set<OntologyDocumentId> ontologyIds = projectOntologiesIndex.getOntologyDocumentIds().collect(Collectors.toSet());
+        for(var ontId : ontologyIds) {
             Set<OWLObjectSomeValuesFrom> superClsesToSet = new HashSet<>();
             for (OBORelationship relationship : relationships.getRelationships()) {
                 OWLObjectSomeValuesFrom someValuesFrom = relationshipConverter.toSomeValuesFrom(relationship);

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -16,5 +16,5 @@ import java.util.stream.Stream;
 public interface AnnotationPropertyRangeAxiomsIndex extends Index  {
     @Nonnull
     Stream<OWLAnnotationPropertyRangeAxiom> getAnnotationPropertyRangeAxioms(@Nonnull OWLAnnotationProperty property,
-                                                                             @Nonnull OWLOntologyID ontologyId);
+                                                                             @Nonnull OntologyDocumentId ontologyDocumentId);
 }

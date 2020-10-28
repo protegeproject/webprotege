@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
@@ -26,22 +28,23 @@ public class Revision2DiffElementsTranslator {
 
     private final OntologyChangeVisitorEx<DiffOperation> changeOperationVisitor;
 
-    private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
-
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
+    @Nonnull
+    private final OntologyDocumentIdDisplayNameProvider displayNameProvider;
+
     @AutoFactory
     @Inject
-    public Revision2DiffElementsTranslator(@Provided @Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                                           @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                           @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
-        this.ontologyIRIShortFormProvider = checkNotNull(ontologyIRIShortFormProvider);
+    public Revision2DiffElementsTranslator(@Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                           @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                           @Nonnull OntologyDocumentIdDisplayNameProvider displayNameProvider) {
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.displayNameProvider = displayNameProvider;
         changeOperationVisitor = new OntologyChangeVisitorEx<DiffOperation>() {
             @Nonnull
             @Override
@@ -91,34 +94,20 @@ public class Revision2DiffElementsTranslator {
 
     private DiffElement<String, OntologyChange> toElement(OntologyChange changeRecord) {
         var ontologyID = changeRecord.getOntologyDocumentId();
-        final String ontologyIRIShortForm;
-        if(isRootOntologySingleton(ontologyID)) {
-            ontologyIRIShortForm = "";
-        }
-        else if (ontologyID.isAnonymous()) {
-            // This used to be possible, but isn't anymore.  Some projects may have anonymous ontologies, so we
-            // still need to support this.
-            ontologyIRIShortForm = "";
-        }
-        else {
-            var ontologyIRI = ontologyID.getOntologyIRI();
-            if (ontologyIRI.isPresent()) {
-                ontologyIRIShortForm = ontologyIRIShortFormProvider.getShortForm(ontologyIRI.get());
-            }
-            else {
-                ontologyIRIShortForm = "Anonymous Ontology";
-            }
-
-        }
+        var ontologyIRIShortForm = getOntologyDocumentShortForm(ontologyID);
         return new DiffElement<>(
                 getDiffOperation(changeRecord),
                 ontologyIRIShortForm,
                 changeRecord);
     }
 
+    private String getOntologyDocumentShortForm(OntologyDocumentId ontologyID) {
+        return displayNameProvider.getDisplayName(ontologyID);
+    }
+
     private boolean isRootOntologySingleton(@Nonnull OWLOntologyID ontologyId) {
-        return defaultOntologyIdManager.getDefaultOntologyId().equals(ontologyId)
-                || projectOntologiesIndex.getOntologyIds().count() == 1;
+        return defaultOntologyIdManager.getDefaultOntologyDocumentId().equals(ontologyId)
+                || projectOntologiesIndex.getOntologyDocumentIds().count() == 1;
     }
 
     private DiffOperation getDiffOperation(OntologyChange changeRecord) {

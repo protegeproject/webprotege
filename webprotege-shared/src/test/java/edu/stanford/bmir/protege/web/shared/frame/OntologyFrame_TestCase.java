@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ public class OntologyFrame_TestCase {
 
     private OntologyFrame frame;
 
-    private OWLOntologyID subject = new OWLOntologyID();
+    private OntologyDocumentId subject = OntologyDocumentId.generate();
 
     @Mock
     private PropertyValueList propertyValues;
@@ -72,7 +73,7 @@ public class OntologyFrame_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_subject() {
-        assertThat(frame, is(not(new OntologyFrame(new OWLOntologyID(), propertyValues, shortForm))));
+        assertThat(frame, is(not(new OntologyFrame(OntologyDocumentId.generate(), propertyValues, shortForm))));
     }
 
     @Test

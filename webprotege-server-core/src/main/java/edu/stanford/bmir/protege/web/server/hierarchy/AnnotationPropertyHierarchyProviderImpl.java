@@ -86,7 +86,7 @@ public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyPr
 
     public Collection<OWLAnnotationProperty> getChildren(OWLAnnotationProperty object) {
         rebuildIfNecessary();
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                               .flatMap(ontId -> subAnnotationPropertyAxiomsBySuperPropertyIndex.getAxiomsForSuperProperty(object, ontId))
                               .map(OWLSubAnnotationPropertyOfAxiom::getSubProperty)
                               .filter(prop -> !getAncestors(prop).contains(prop))
@@ -96,7 +96,7 @@ public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyPr
 
     public Collection<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
         rebuildIfNecessary();
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> subAnnotationPropertyAxioms.getSubPropertyOfAxioms(object, ontId))
                                      .map(OWLSubAnnotationPropertyOfAxiom::getSuperProperty)
                                      .collect(toImmutableSet());

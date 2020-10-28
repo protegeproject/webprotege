@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.project.BranchId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -225,14 +226,14 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                 // Deleted
                 var axiom = dataFactory.getOWLClassAssertionAxiom(subjectCls, pristineInstance);
                 // TODO: Project ontologies?
-                ontologyChangeList.removeAxiom(defaultOntologyIdManager.getDefaultOntologyId(), axiom);
+                ontologyChangeList.removeAxiom(defaultOntologyIdManager.getDefaultOntologyDocumentId(), axiom);
             }
         }
         for(var editedInstance : editedInstances) {
             if(!pristineInstances.contains(editedInstance)) {
                 // Added
                 var axiom = dataFactory.getOWLClassAssertionAxiom(subjectCls, editedInstance);
-                ontologyChangeList.addAxiom(defaultOntologyIdManager.getDefaultOntologyId(), axiom);
+                ontologyChangeList.addAxiom(defaultOntologyIdManager.getDefaultOntologyDocumentId(), axiom);
             }
         }
         changeListBuilder.add(ontologyChangeList.build(subject));

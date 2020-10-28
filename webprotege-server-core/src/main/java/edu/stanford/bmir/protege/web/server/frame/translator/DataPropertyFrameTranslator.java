@@ -64,12 +64,12 @@ public class DataPropertyFrameTranslator {
     public PlainDataPropertyFrame getFrame(@Nonnull OWLDataProperty subject) {
         
         var propertyValueAxioms = projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject.getIRI(), ontId))
                 .collect(toImmutableSet());
 
         var domains = projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> domainAxiomsIndex.getDataPropertyDomainAxioms(subject, ontId))
                 .map(OWLDataPropertyDomainAxiom::getDomain)
                 .filter(OWLClassExpression::isNamed)
@@ -77,7 +77,7 @@ public class DataPropertyFrameTranslator {
                 .collect(toImmutableSet());
 
         var ranges = projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> rangeAxiomsIndex.getDataPropertyRangeAxioms(subject, ontId))
                 .map(OWLDataPropertyRangeAxiom::getRange)
                 .filter(OWLDataRange::isDatatype)
@@ -86,7 +86,7 @@ public class DataPropertyFrameTranslator {
 
 
         var functional = projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .anyMatch(ont -> characteristicsIndex.isFunctional(subject, ont));
 
 

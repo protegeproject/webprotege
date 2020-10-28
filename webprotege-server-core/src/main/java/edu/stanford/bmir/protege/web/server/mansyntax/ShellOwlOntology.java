@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
+import edu.stanford.bmir.protege.web.server.owlapi.OwlApiOntologyDocumentTempOWLOntologyIDTranslator;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.AxiomAnnotations;
@@ -28,33 +30,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ShellOwlOntology implements OWLOntology {
 
     @Nonnull
-    private final OWLOntologyID ontologyID;
+    private final OntologyDocumentId ontologyDocumentId;
 
     @Nonnull
-    public static ShellOwlOntology get(@Nonnull OWLOntologyID ontologyId) {
+    private final OWLOntologyID ontologyId;
+
+    @Nonnull
+    public static ShellOwlOntology get(@Nonnull OntologyDocumentId ontologyId) {
         return new ShellOwlOntology(ontologyId);
     }
 
-    public ShellOwlOntology(@Nonnull OWLOntologyID ontologyID) {
-        this.ontologyID = checkNotNull(ontologyID);
+    public ShellOwlOntology(@Nonnull OntologyDocumentId ontologyDocumentId) {
+        this.ontologyDocumentId = checkNotNull(ontologyDocumentId);
+        this.ontologyId = OwlApiOntologyDocumentTempOWLOntologyIDTranslator
+                .toOWLOntologyID(ontologyDocumentId);
     }
+
 
     @Nonnull
     @Override
     public OWLOntologyID getOntologyID() {
-        return ontologyID;
+        return ontologyId;
     }
 
     @Override
     public int hashCode() {
-        return ontologyID.hashCode();
+        return ontologyId.hashCode();
     }
 
 
+    @Nonnull
     @Override
     public String toString() {
         return toStringHelper("ShellOwlOntology")
-                .addValue(ontologyID)
+                .addValue(ontologyDocumentId)
                 .toString();
     }
 
@@ -67,7 +76,7 @@ public class ShellOwlOntology implements OWLOntology {
             return false;
         }
         OWLOntology other = (OWLOntology) obj;
-        return this.ontologyID.equals(other.getOntologyID());
+        return this.ontologyId.equals(other.getOntologyID());
     }
 
     @Override

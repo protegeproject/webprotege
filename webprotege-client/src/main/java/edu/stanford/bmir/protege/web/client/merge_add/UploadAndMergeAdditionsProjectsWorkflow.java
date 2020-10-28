@@ -7,19 +7,17 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
-import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesAction;
-import edu.stanford.bmir.protege.web.shared.merge_add.GetAllOntologiesResult;
+import edu.stanford.bmir.protege.web.shared.merge_add.GetUploadedAndCurrentOntologiesAction;
+import edu.stanford.bmir.protege.web.shared.merge_add.GetUploadedAndCurrentOntologiesResult;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UploadAndMergeAdditionsProjectsWorkflow {
@@ -67,7 +65,7 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
     }
 
     private void getOntologies(ProjectId projectId, DocumentId documentId){
-        dispatchServiceManager.execute(new GetAllOntologiesAction(projectId, documentId), new DispatchServiceCallbackWithProgressDisplay<GetAllOntologiesResult>(errorDisplay, progressDisplay) {
+        dispatchServiceManager.execute(new GetUploadedAndCurrentOntologiesAction(projectId, documentId), new DispatchServiceCallbackWithProgressDisplay<GetUploadedAndCurrentOntologiesResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading Ontologies";
@@ -79,30 +77,31 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
             }
 
             @Override
-            public void handleSuccess(GetAllOntologiesResult result){
-                selectOntologies(projectId, documentId, result);
+            public void handleSuccess(GetUploadedAndCurrentOntologiesResult result){
+                selectUploadedOntologies(projectId, documentId, result);
             }
         });
     }
 
-    private void selectOntologies(ProjectId projectId, DocumentId documentId, GetAllOntologiesResult result){
-        ArrayList<OWLOntologyID> list = (ArrayList<OWLOntologyID>) result.getOntologies();
-
-        SelectOntologiesForMergeView view = new SelectOntologiesForMergeViewImpl(list);
+    private void selectUploadedOntologies(@Nonnull ProjectId projectId,
+                                          @Nonnull DocumentId documentId,
+                                          @Nonnull GetUploadedAndCurrentOntologiesResult result){
+        List<OWLOntologyID> uploadedOntologyIds = result.getUploadedOntologies();
+        SelectOntologiesForMergeView view = new SelectOntologiesForMergeViewImpl(uploadedOntologyIds);
         SelectOntologiesForMergeDialogController controller = new SelectOntologiesForMergeDialogController(view);
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<List<OWLOntologyID>>() {
-            @Override
-            public void handleHide(List<OWLOntologyID> data, WebProtegeDialogCloser closer) {
-                List<OWLOntologyID> l = view.getSelectedOntologies();
-                startSelectAdditionsWorkflow(projectId, documentId, list, l);
-                closer.hide();
-            }
+        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            List<OWLOntologyID> selectedUploadedOntologyIds = view.getSelectedOntologies();
+            startSelectAdditionsWorkflow(projectId,
+                                         documentId,
+                                         result.getCurrentOntologyDocumentIds(),
+                                         selectedUploadedOntologyIds);
+            closer.hide();
         });
         WebProtegeDialog.showDialog(controller);
     }
 
 
-    private void startSelectAdditionsWorkflow(ProjectId projectId, DocumentId documentId, List<OWLOntologyID> allOntologies, List<OWLOntologyID> selectedOntologies) {
-        selectOptionsWorkflow.start(projectId, documentId, allOntologies, selectedOntologies);
+    private void startSelectAdditionsWorkflow(ProjectId projectId, DocumentId documentId, List<OntologyDocumentId> currentOntologies, List<OWLOntologyID> selectedOntologies) {
+        selectOptionsWorkflow.start(projectId, documentId, currentOntologies, selectedOntologies);
     }
 }

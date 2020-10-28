@@ -60,7 +60,7 @@ public class AddAxiomsActionHandler extends AbstractProjectActionHandler<AddAxio
     @Override
     public AddAxiomsResult execute(@Nonnull AddAxiomsAction action, @Nonnull ExecutionContext executionContext) {
         var builder = OntologyChangeList.<String>builder();
-        var ontId = defaultOntologyIdManager.getDefaultOntologyId();
+        var ontId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         action.getAxioms()
               .forEach(ax -> builder.add(AddAxiomChange.of(ontId, ax)));
         var changeList = builder.build(action.getCommitMessage());

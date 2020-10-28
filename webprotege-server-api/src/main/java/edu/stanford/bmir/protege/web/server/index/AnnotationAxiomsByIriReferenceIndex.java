@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -25,8 +25,8 @@ public interface AnnotationAxiomsByIriReferenceIndex extends Index {
      *   - The axiom is an AnnotationPropertyDomain axiom where the domain is equal to the specified IRI
      *   - The axiom is an AnnotationPropertyRange axiom where the range is equal to the specified IRI
      * @param iri The IRI
-     * @param ontologyID The ontology identifier
+     * @param ontologyDocumentId The ontology identifier
      */
     Stream<OWLAnnotationAxiom> getReferencingAxioms(@Nonnull IRI iri,
-                                                    @Nonnull OWLOntologyID ontologyID);
+                                                    @Nonnull OntologyDocumentId ontologyDocumentId);
 }

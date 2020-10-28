@@ -3,11 +3,12 @@ package edu.stanford.bmir.protege.web.client.merge_add;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 
-public class SelectExistingOntologyDialogController extends WebProtegeOKCancelDialogController<OWLOntologyID> {
+public class SelectExistingOntologyDialogController extends WebProtegeOKCancelDialogController<OntologyDocumentId> {
     final private SelectExistingOntologyView view;
 
     public SelectExistingOntologyDialogController(SelectExistingOntologyView view) {
@@ -27,7 +28,7 @@ public class SelectExistingOntologyDialogController extends WebProtegeOKCancelDi
     }
 
     @Override
-    public OWLOntologyID getData(){
+    public OntologyDocumentId getData(){
         return view.getOntology();
     }
 }

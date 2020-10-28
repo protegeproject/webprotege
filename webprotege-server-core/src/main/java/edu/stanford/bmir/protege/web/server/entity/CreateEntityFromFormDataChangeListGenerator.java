@@ -66,7 +66,7 @@ public class CreateEntityFromFormDataChangeListGenerator implements ChangeListGe
     public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
         var entity = dataFactory.getOWLEntity(entityType, freshEntityIri.getIri());
         var changeListBuilder = ImmutableList.<OntologyChange>builder();
-        var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        var ontologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         // Declare the entity
         changeListBuilder.add(AddAxiomChange.of(ontologyId, dataFactory.getOWLDeclarationAxiom(entity)));
         // Place the entity

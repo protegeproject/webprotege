@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAxiomsByIriReferenceIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
@@ -37,8 +38,8 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
     }
 
     @Override
-    public Stream<OWLAnnotationAxiom> getReferencingAxioms(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyID) {
-        return index.getAxioms(iri, ontologyID);
+    public Stream<OWLAnnotationAxiom> getReferencingAxioms(@Nonnull IRI iri, @Nonnull OntologyDocumentId ontologyDocumentId) {
+        return index.getAxioms(iri, ontologyDocumentId);
     }
 
     private Iterable<IRI> extractIris(OWLAnnotationAxiom axiom) {

@@ -4,10 +4,10 @@ import edu.stanford.bmir.protege.web.server.index.AnnotationPropertyDomainAxioms
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,10 +42,10 @@ public class AnnotationPropertyDomainAxiomsIndexImpl implements AnnotationProper
     @Nonnull
     @Override
     public Stream<OWLAnnotationPropertyDomainAxiom> getAnnotationPropertyDomainAxioms(@Nonnull OWLAnnotationProperty property,
-                                                                                      @Nonnull OWLOntologyID ontologyId) {
+                                                                                      @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(property);
-        checkNotNull(ontologyId);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId)
+        checkNotNull(ontologyDocumentId);
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyDocumentId)
                                 .filter(ax -> ax.getProperty()
                                                 .equals(property));
     }

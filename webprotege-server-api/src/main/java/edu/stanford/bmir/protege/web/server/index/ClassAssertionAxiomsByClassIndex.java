@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -19,5 +19,5 @@ public interface ClassAssertionAxiomsByClassIndex extends Index {
 
     @Nonnull
     Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLClass cls,
-                                                           @Nonnull OWLOntologyID ontologyId);
+                                                           @Nonnull OntologyDocumentId ontologyDocumentId);
 }

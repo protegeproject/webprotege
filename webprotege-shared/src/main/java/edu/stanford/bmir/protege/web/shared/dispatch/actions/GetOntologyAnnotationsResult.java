@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 
 import javax.annotation.Nonnull;
 
@@ -17,28 +18,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetOntologyAnnotationsResult implements Result {
 
-    private OWLOntologyID ontologyID;
-
-    private ImmutableList<PropertyAnnotationValue> annotations;
+    private ImmutableListMultimap<OntologyDocumentId, PropertyAnnotationValue> annotations;
 
 
     @GwtSerializationConstructor
     private GetOntologyAnnotationsResult() {
     }
 
-    public GetOntologyAnnotationsResult(OWLOntologyID ontologyID,
-                                        ImmutableList<PropertyAnnotationValue> annotations) {
-        this.ontologyID = checkNotNull(ontologyID);
+    public GetOntologyAnnotationsResult(ImmutableListMultimap<OntologyDocumentId, PropertyAnnotationValue> annotations) {
         this.annotations = checkNotNull(annotations);
     }
 
     @Nonnull
-    public OWLOntologyID getOntologyId() {
-        return ontologyID;
-    }
-
-    @Nonnull
-    public ImmutableList<PropertyAnnotationValue> getAnnotations() {
+    public ImmutableListMultimap<OntologyDocumentId, PropertyAnnotationValue> getAnnotations() {
         return annotations;
     }
 }

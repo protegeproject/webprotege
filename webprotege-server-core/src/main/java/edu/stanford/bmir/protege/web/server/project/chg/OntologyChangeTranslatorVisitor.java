@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
 import edu.stanford.bmir.protege.web.server.change.*;
+import org.apache.commons.lang.NotImplementedException;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -61,13 +62,14 @@ public class OntologyChangeTranslatorVisitor implements OntologyChangeVisitorEx<
 
 
     private OWLOntology getOntology(OntologyChange change) {
-        var ontologyId = change.getOntologyDocumentId();
-        var ontology = manager.getOntology(ontologyId);
-        if(ontology == null) {
-            throw new UnknownOWLOntologyException(ontologyId);
-        }
-        else {
-            return ontology;
-        }
+//        var ontologyId = change.getOntologyDocumentId();
+//        var ontology = manager.getOntology(ontologyId);
+//        if(ontology == null) {
+//            throw new UnknownOWLOntologyException(ontologyId);
+//        }
+//        else {
+//            return ontology;
+//        }
+        throw new NotImplementedException();
     }
 }

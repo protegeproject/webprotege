@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +45,7 @@ public class AxiomMultimap_Nary_TestCase {
     private OWLSameIndividualAxiom axiom;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     private Iterable<OWLIndividual> extractIndividuals(OWLSameIndividualAxiom axiom) {
         return axiom.getIndividuals();
@@ -68,42 +69,42 @@ public class AxiomMultimap_Nary_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfValueIsNull() {
-        index.getAxioms(null, ontologyId);
+        index.getAxioms(null, ontologyDocumentId);
     }
 
     @Test
     public void shouldGetEmptyStreamBeforeAnyChange() {
-        var axiomsStream = index.getAxioms(indA, ontologyId);
+        var axiomsStream = index.getAxioms(indA, ontologyDocumentId);
         assertThat(axiomsStream.count(), is(0L));
     }
 
     @Test
     public void shouldContainAxiomInBackingMapAfterAdd() {
-        var chg = AddAxiomChange.of(ontologyId, axiom);
+        var chg = AddAxiomChange.of(ontologyDocumentId, axiom);
         index.applyChanges(ImmutableList.of(chg));
         assertThat(backingMap.values(), hasItem(axiom));
     }
 
     @Test
     public void shouldNotContainAxiomInBackingMapAfterRemove() {
-        var chg = AddAxiomChange.of(ontologyId, axiom);
+        var chg = AddAxiomChange.of(ontologyDocumentId, axiom);
         index.applyChanges(ImmutableList.of(chg));
         assertThat(backingMap.values(), hasItem(axiom));
-        var remChg = RemoveAxiomChange.of(ontologyId, axiom);
+        var remChg = RemoveAxiomChange.of(ontologyDocumentId, axiom);
         index.applyChanges(ImmutableList.of(remChg));
         assertThat(backingMap.values(), not(hasItem(axiom)));
     }
 
     @Test
     public void shouldAddDuplicatesByDefault() {
-        var chg = AddAxiomChange.of(ontologyId, axiom);
+        var chg = AddAxiomChange.of(ontologyDocumentId, axiom);
         index.applyChanges(ImmutableList.of(chg, chg));
         assertThat(backingMap.size(), is(4));
     }
 
     @Test
     public void shouldNotAddDuplicatesIfFlagIsSet() {
-        var chg = AddAxiomChange.of(ontologyId, axiom);
+        var chg = AddAxiomChange.of(ontologyDocumentId, axiom);
         index.setAllowDuplicates(false);
         index.applyChanges(ImmutableList.of(chg, chg));
         assertThat(backingMap.size(), is(2));
@@ -112,23 +113,23 @@ public class AxiomMultimap_Nary_TestCase {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldContainAllKeyValues() {
-        var chg = AddAxiomChange.of(ontologyId, axiom);
+        var chg = AddAxiomChange.of(ontologyDocumentId, axiom);
         index.applyChanges(ImmutableList.of(chg));
-        assertThat(backingMap.keys(), containsInAnyOrder(Key.get(ontologyId, indA), Key.get(ontologyId, indB)));
+        assertThat(backingMap.keys(), containsInAnyOrder(Key.get(ontologyDocumentId, indA), Key.get(ontologyDocumentId, indB)));
     }
 
     @Test
     public void shouldNotAddAxiomsWithNullKeyValue() {
         var subClassOfAxiom = mock(OWLSubClassOfAxiom.class);
-        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, subClassOfAxiom)));
+        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, subClassOfAxiom)));
         assertThat(backingMap.size(), is(0));
     }
 
     @Test
     public void shouldIgnoreIrrelevantChanges() {
         var otherAxiom = mock(OWLClassAssertionAxiom.class);
-        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, otherAxiom)));
-        assertThat(index.getAxioms(indA, ontologyId)
+        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, otherAxiom)));
+        assertThat(index.getAxioms(indA, ontologyDocumentId)
                         .count(), is(0L));
     }
 }

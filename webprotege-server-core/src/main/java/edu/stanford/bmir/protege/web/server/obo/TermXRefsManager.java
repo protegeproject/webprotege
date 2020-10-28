@@ -66,7 +66,7 @@ public class TermXRefsManager {
     public void setXRefs(UserId userId, OWLEntity term, List<OBOXRef> xrefs) {
         var subject = term.getIRI();
         var changes = new ArrayList<OntologyChange>();
-        projectOntologies.getOntologyIds()
+        projectOntologies.getOntologyDocumentIds()
                          .forEach(ontId -> {
                              annotationAssertions.getAxiomsForSubject(subject, ontId)
                                                  .forEach(existingAx -> {

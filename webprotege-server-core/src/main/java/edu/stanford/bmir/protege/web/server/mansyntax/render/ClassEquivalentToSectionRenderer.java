@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,14 +35,14 @@ public class ClassEquivalentToSectionRenderer extends AbstractOWLAxiomItemSectio
     }
 
     @Override
-    protected Set<OWLEquivalentClassesAxiom> getAxiomsInOntology(OWLClass subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getEquivalentClassesAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLEquivalentClassesAxiom> getAxiomsInOntology(OWLClass subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getEquivalentClassesAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLClassExpression> getRenderablesForItem(OWLClass subject,
                                                           OWLEquivalentClassesAxiom item,
-                                                          OWLOntologyID ontologyId) {
+                                                          OntologyDocumentId ontologyDocumentId) {
         return new ArrayList<>(item.getClassExpressionsMinus(subject));
     }
 }

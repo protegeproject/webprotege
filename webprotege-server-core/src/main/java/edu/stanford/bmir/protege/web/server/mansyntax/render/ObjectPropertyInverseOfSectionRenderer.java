@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.InverseObjectPropertyAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,14 +36,14 @@ public class ObjectPropertyInverseOfSectionRenderer extends AbstractOWLAxiomItem
 
     @Override
     protected Set<OWLInverseObjectPropertiesAxiom> getAxiomsInOntology(OWLObjectProperty subject,
-                                                                       OWLOntologyID ontologyId) {
-        return axiomsIndex.getInverseObjectPropertyAxioms(subject, ontologyId).collect(toSet());
+                                                                       OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getInverseObjectPropertyAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLObjectPropertyExpression> getRenderablesForItem(OWLObjectProperty subject,
                                                                    OWLInverseObjectPropertiesAxiom item,
-                                                                   OWLOntologyID ontologyId) {
+                                                                   OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getPropertiesMinus(subject));
     }
 }

@@ -62,14 +62,14 @@ public class EntityRelationshipMatcher implements EntityFrameMatcher {
 
         Stream<? extends OWLAxiom> axiomStream;
         if(entity.isOWLClass()) {
-            axiomStream = projectOntologiesIndex.getOntologyIds()
+            axiomStream = projectOntologiesIndex.getOntologyDocumentIds()
                     .flatMap(ontId -> {
                         OWLClass cls = entity.asOWLClass();
                         return subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(cls, ontId);
                     });
         }
         else if(entity.isOWLNamedIndividual()) {
-            axiomStream = projectOntologiesIndex.getOntologyIds()
+            axiomStream = projectOntologiesIndex.getOntologyDocumentIds()
                                                 .flatMap(ontId -> {
                                                     OWLNamedIndividual individual = entity.asOWLNamedIndividual();
                                                     return propertyAssertionAxiomsBySubjectIndex.getPropertyAssertions(

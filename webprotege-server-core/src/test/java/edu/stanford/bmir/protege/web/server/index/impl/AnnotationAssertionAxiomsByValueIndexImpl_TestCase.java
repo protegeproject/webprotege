@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class AnnotationAssertionAxiomsByValueIndexImpl_TestCase {
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAnnotationAssertionAxiom axiom;
@@ -46,28 +45,28 @@ public class AnnotationAssertionAxiomsByValueIndexImpl_TestCase {
     @Test
     public void shouldIndexAxiomByIriValue() {
         when(axiom.getValue()).thenReturn(iriValue);
-        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
-        assertThat(index.getAxiomsByValue(iriValue, ontologyId).collect(toSet()), contains(axiom));
+        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
+        assertThat(index.getAxiomsByValue(iriValue, ontologyDocumentId).collect(toSet()), contains(axiom));
     }
 
     @Test
     public void shouldIndexAxiomByAnonymousIndividualValue() {
         when(axiom.getValue()).thenReturn(individualValue);
-        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
-        assertThat(index.getAxiomsByValue(individualValue, ontologyId).collect(toSet()), contains(axiom));
+        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
+        assertThat(index.getAxiomsByValue(individualValue, ontologyDocumentId).collect(toSet()), contains(axiom));
     }
 
     @Test
     public void shouldNotIndexAxiomByLiteralValue() {
         when(axiom.getValue()).thenReturn(literalValue);
-        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
-        assertThat(index.getAxiomsByValue(literalValue, ontologyId).collect(toSet()), not(contains(axiom)));
+        index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
+        assertThat(index.getAxiomsByValue(literalValue, ontologyDocumentId).collect(toSet()), not(contains(axiom)));
     }
 
     /** @noinspection ConstantConditions*/
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfAxiomIsNull() {
-        index.getAxiomsByValue(null, ontologyId);
+        index.getAxiomsByValue(null, ontologyDocumentId);
     }
 
     /** @noinspection ConstantConditions*/

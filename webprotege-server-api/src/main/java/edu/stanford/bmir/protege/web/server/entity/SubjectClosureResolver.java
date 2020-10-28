@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.entity;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import org.semanticweb.owlapi.model.*;
 
@@ -74,7 +73,7 @@ public class SubjectClosureResolver {
 
     @Nonnull
     private Stream<OWLAnnotationSubject> getSubjectsForValue(@Nonnull OWLAnnotationValue targetValue) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                               .flatMap(ontId -> annotationAssertionAxiomsByValueIndex.getAxiomsByValue(targetValue, ontId))
                 .map(OWLAnnotationAssertionAxiom::getSubject);
     }

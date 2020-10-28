@@ -134,7 +134,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
                 label = suppliedName;
             }
         }
-        var targetOntologyId = context.getTargetOntologyId();
+        var targetOntologyId = context.getTargetOntologyDocumentId();
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
         changeListBuilder.add(AddAxiomChange.of(targetOntologyId, declarationAxiom));

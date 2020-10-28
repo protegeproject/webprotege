@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -62,7 +63,7 @@ public class EntityGraphBuilder_TestCase {
     private EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex;
 
     @Mock
-    private OWLOntologyID ontId;
+    private OntologyDocumentId ontId;
 
     private EdgeMatcher edgeMatcher = edge -> true;
 
@@ -74,7 +75,7 @@ public class EntityGraphBuilder_TestCase {
                                               subClassOfAxiomIndex,
                                               classAssertionAxiomsIndex,
                                               equivalentClassesAxiomsIndex, EDGE_LIMIT, edgeMatcher);
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(inv -> Stream.of(ontId));
     }
 

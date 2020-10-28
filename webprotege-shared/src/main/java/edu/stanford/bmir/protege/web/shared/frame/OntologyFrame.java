@@ -4,10 +4,12 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.HasShortForm;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -24,19 +26,20 @@ public class OntologyFrame implements HasSignature, Serializable, HasPropertyVal
 
     private String shortForm;
 
-    private OWLOntologyID subject;
+    private OntologyDocumentId subject;
 
     private PropertyValueList propertyValueList;
 
     private OntologyFrame() {
     }
 
-    public OntologyFrame(OWLOntologyID subject, PropertyValueList propertyValueList, String shortForm) {
+    public OntologyFrame(OntologyDocumentId subject, PropertyValueList propertyValueList, String shortForm) {
         this.subject = checkNotNull(subject);
         this.propertyValueList = checkNotNull(propertyValueList);
         this.shortForm = checkNotNull(shortForm);
     }
 
+    @Nonnull
     public String getShortForm() {
         return shortForm;
     }

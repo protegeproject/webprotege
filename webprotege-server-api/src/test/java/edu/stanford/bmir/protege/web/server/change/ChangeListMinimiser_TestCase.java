@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ public class ChangeListMinimiser_TestCase {
     private OWLAxiom axiomA;
 
     @Mock
-    private OWLOntologyID ontologyId, otherOntologyId;
+    private OntologyDocumentId ontologyId, otherOntologyId;
 
     private AddAxiomChange addAxiomA;
 

@@ -4,9 +4,9 @@ import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,26 +40,26 @@ public class OntologyAxiomsIndexImpl implements OntologyAxiomsIndex, DependentIn
 
     @Nonnull
     @Override
-    public Stream<OWLAxiom> getAxioms(@Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+    public Stream<OWLAxiom> getAxioms(@Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         var streamsBuilder = Stream.<Stream<? extends OWLAxiom>>builder();
         AxiomType.AXIOM_TYPES.forEach(axiomType -> {
-            streamsBuilder.add(axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyId));
+            streamsBuilder.add(axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyDocumentId));
         });
         return streamsBuilder.build().flatMap(s -> s);
     }
 
     @Override
     public boolean containsAxiom(@Nonnull OWLAxiom axiom,
-                                 @Nonnull OWLOntologyID ontologyId) {
+                                 @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(axiom);
-        checkNotNull(ontologyId);
-        return axiomsByTypeIndex.containsAxiom(axiom, ontologyId);
+        checkNotNull(ontologyDocumentId);
+        return axiomsByTypeIndex.containsAxiom(axiom, ontologyDocumentId);
     }
 
     @Override
     public boolean containsAxiomIgnoreAnnotations(@Nonnull OWLAxiom axiom,
-                                                  @Nonnull OWLOntologyID ontologyId) {
-        return containsAxiom(axiom, ontologyId);
+                                                  @Nonnull OntologyDocumentId ontologyDocumentId) {
+        return containsAxiom(axiom, ontologyDocumentId);
     }
 }

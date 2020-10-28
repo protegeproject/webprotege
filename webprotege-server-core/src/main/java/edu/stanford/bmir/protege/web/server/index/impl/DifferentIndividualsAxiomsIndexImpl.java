@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.DifferentIndividualsAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,10 +35,10 @@ public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividuals
     @Nonnull
     @Override
     public Stream<OWLDifferentIndividualsAxiom> getDifferentIndividualsAxioms(@Nonnull OWLIndividual individual,
-                                                                              @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                                              @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(individual);
-        return index.getAxioms(individual, ontologyId);
+        return index.getAxioms(individual, ontologyDocumentId);
     }
 
     @Override

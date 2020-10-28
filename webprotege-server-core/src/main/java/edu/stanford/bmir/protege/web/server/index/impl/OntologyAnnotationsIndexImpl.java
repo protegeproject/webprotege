@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 @ProjectSingleton
 public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatureIndex, OntologyAnnotationsIndex, UpdatableIndex {
 
-    private Multimap<OWLOntologyID, OWLAnnotation> annotationsMap = ArrayListMultimap.create();
+    private Multimap<OntologyDocumentId, OWLAnnotation> annotationsMap = ArrayListMultimap.create();
 
     @Inject
     public OntologyAnnotationsIndexImpl() {
@@ -33,15 +34,15 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
 
     @Nonnull
     @Override
-    public Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OWLOntologyID ontologyID) {
-        return ImmutableList.copyOf(annotationsMap.get(ontologyID)).stream();
+    public Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OntologyDocumentId ontologyDocumentId) {
+        return ImmutableList.copyOf(annotationsMap.get(ontologyDocumentId)).stream();
     }
 
     @Nonnull
     @Override
-    public Stream<OWLAnnotationProperty> getOntologyAnnotationsSignature(@Nonnull OWLOntologyID ontologyId) {
+    public Stream<OWLAnnotationProperty> getOntologyAnnotationsSignature(@Nonnull OntologyDocumentId ontologyDocumentId) {
         var resultBuilder = ImmutableList.<OWLAnnotationProperty>builder();
-        annotationsMap.get(ontologyId)
+        annotationsMap.get(ontologyDocumentId)
                       .forEach(anno -> collectAnnotationProperties(anno, resultBuilder));
         return resultBuilder.build().stream().distinct();
     }
@@ -53,16 +54,15 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
     }
 
     @Override
-    public boolean containsEntityInOntologyAnnotationsSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
+    public boolean containsEntityInOntologyAnnotationsSignature(@Nonnull OWLEntity entity, @Nonnull OntologyDocumentId ontologyDocumentId) {
         if(!entity.isOWLAnnotationProperty()) {
             return false;
         }
-        return contains(entity.asOWLAnnotationProperty(),
-                        ontologyId);
+        return contains(entity.asOWLAnnotationProperty(), ontologyDocumentId);
     }
 
     private boolean contains(@Nonnull OWLAnnotationProperty property,
-                             @Nonnull OWLOntologyID ontologyId) {
+                             @Nonnull OntologyDocumentId ontologyId) {
         return annotationsMap.get(ontologyId)
                       .stream()
                       .anyMatch(anno -> contains(property, anno));
@@ -80,8 +80,8 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
     }
 
     @Override
-    public boolean containsAnnotation(@Nonnull OWLAnnotation annotation, @Nonnull OWLOntologyID ontologyId) {
-        return annotationsMap.containsEntry(ontologyId, annotation);
+    public boolean containsAnnotation(@Nonnull OWLAnnotation annotation, @Nonnull OntologyDocumentId ontologyDocumentId) {
+        return annotationsMap.containsEntry(ontologyDocumentId, annotation);
     }
 
     @Override

@@ -38,6 +38,11 @@ public class IndexModule {
     }
 
     @Provides
+    OntologyIdIndex provideOntologyIdIndex(OntologyIdIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
     AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexWrapperImpl impl) {
         return impl;
     }

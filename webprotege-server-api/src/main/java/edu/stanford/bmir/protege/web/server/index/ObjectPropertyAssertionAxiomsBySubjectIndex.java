@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -21,11 +21,9 @@ public interface ObjectPropertyAssertionAxiomsBySubjectIndex extends Index {
      * Gets the {@link OWLObjectPropertyAssertionAxiom}s that have the specified individual as
      * a subject.
      * @param subject The subject.
-     * @param ontologyId The id of the ontology to examine.
+     * @param ontologyDocumentId The id of the ontology to examine.
      */
     @Nonnull
-    Stream<OWLObjectPropertyAssertionAxiom> getObjectPropertyAssertions(@Nonnull
-                                                                        OWLIndividual subject,
-                                                                        @Nonnull
-                                                                        OWLOntologyID ontologyId);
+    Stream<OWLObjectPropertyAssertionAxiom> getObjectPropertyAssertions(@Nonnull OWLIndividual subject,
+                                                                        @Nonnull OntologyDocumentId ontologyDocumentId);
 }

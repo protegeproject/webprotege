@@ -10,8 +10,9 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.project.BranchId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -171,16 +172,16 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         // Get the axioms that were consumed in the translation
         var fromAxioms = getAxiomsForFrame(frameUpdate.getFromFrame(), Mode.MAXIMAL);
 
-        var ontologyIds = projectOntologiesIndex.getOntologyIds()
+        var ontologyIds = projectOntologiesIndex.getOntologyDocumentIds()
                                                 .collect(toList());
 
         var toAxioms = getAxiomsForFrame(frameUpdate.getToFrame(), Mode.MINIMAL);
 
 
-        var axiom2OntologyMap = LinkedHashMultimap.<OWLAxiom, OWLOntologyID>create();
+        var axiom2OntologyMap = LinkedHashMultimap.<OWLAxiom, OntologyDocumentId>create();
 
         // Generate a map of existing axioms so we can ensure they stay in the correct place
-        for(OWLOntologyID ontologyId : ontologyIds) {
+        for(var ontologyId : ontologyIds) {
             for(OWLAxiom fromAxiom : fromAxioms) {
                 if(isContainedInOntology(fromAxiom, ontologyId)) {
                     axiom2OntologyMap.put(fromAxiom, ontologyId);
@@ -189,10 +190,10 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         }
 
 
-        var mutatedOntologies = Sets.<OWLOntologyID>newLinkedHashSet();
+        var mutatedOntologies = Sets.<OntologyDocumentId>newLinkedHashSet();
         List<OntologyChange> changes = Lists.newArrayList();
         for(OWLAxiom fromAxiom : fromAxioms) {
-            for(OWLOntologyID ontologyId : ontologyIds) {
+            for(var ontologyId : ontologyIds) {
                 if(isContainedInOntology(fromAxiom, ontologyId) && !toAxioms.contains(fromAxiom)) {
                     mutatedOntologies.add(ontologyId);
                 }
@@ -205,7 +206,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
 
 
         for(OWLAxiom toAxiom : toAxioms) {
-            Collection<OWLOntologyID> existingLocations = axiom2OntologyMap.get(toAxiom);
+            Collection<OntologyDocumentId> existingLocations = axiom2OntologyMap.get(toAxiom);
             if(existingLocations.isEmpty()) {
                 // Fresh axiom to be placed somewhere
                 if(mutatedOntologies.size() == 1) {
@@ -216,13 +217,13 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
                 else {
                     // Multiple ontologies were affected.  We now need to place the fresh axiom in the appropriate
                     // ontology
-                    OWLOntologyID freshAxiomOntology = getFreshAxiomOntology(fromAxioms, ontologyIds);
+                    OntologyDocumentId freshAxiomOntology = getFreshAxiomOntology(fromAxioms, ontologyIds);
                     changes.add(AddAxiomChange.of(freshAxiomOntology, toAxiom));
                 }
             }
             else {
                 // Ensure it is still in there
-                for(OWLOntologyID ontId : existingLocations) {
+                for(OntologyDocumentId ontId : existingLocations) {
                     changes.add(AddAxiomChange.of(ontId, toAxiom));
                 }
             }
@@ -230,19 +231,19 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         return changes;
     }
 
-    private boolean isContainedInOntology(OWLAxiom axiom, OWLOntologyID ontologyId) {
+    private boolean isContainedInOntology(OWLAxiom axiom, OntologyDocumentId ontologyId) {
         return axiomsIndex.containsAxiomIgnoreAnnotations(axiom, ontologyId);
     }
 
-    private OWLOntologyID getFreshAxiomOntology(Set<OWLAxiom> fromAxioms, List<OWLOntologyID> importsClosure) {
-        for(OWLOntologyID ontId : importsClosure) {
+    private OntologyDocumentId getFreshAxiomOntology(Set<OWLAxiom> fromAxioms, List<OntologyDocumentId> importsClosure) {
+        for(OntologyDocumentId ontId : importsClosure) {
             for(OWLAxiom existingFrameAxiom : fromAxioms) {
                 if(isContainedInOntology(existingFrameAxiom, ontId)) {
                     return ontId;
                 }
             }
         }
-        return defaultOntologyIdManager.getDefaultOntologyId();
+        return defaultOntologyIdManager.getDefaultOntologyDocumentId();
     }
 
     @Override

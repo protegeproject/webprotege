@@ -90,7 +90,7 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
                                           @Nonnull ImmutableList<OWLEntity> parents,
                                           @Nonnull final EntityCrudContext context,
                                           @Nonnull final OntologyChangeList.Builder<E> builder) {
-        var targetOntology = context.getTargetOntologyId();
+        var targetOntology = context.getTargetOntologyDocumentId();
         var suppliedName = shortForm.getShortForm();
         var parsedIRI = new IRIParser().parseIRI(suppliedName);
         final IRI entityIRI;

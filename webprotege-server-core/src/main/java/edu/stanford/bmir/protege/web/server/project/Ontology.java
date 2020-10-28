@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLImportsDeclaration;
@@ -20,18 +21,23 @@ import java.util.Set;
 @AutoValue
 public abstract class Ontology {
 
-    public static Ontology get(@Nonnull OWLOntologyID ontologyId,
+    public static Ontology get(@Nonnull OntologyDocumentId ontologyDocumentId,
+                               @Nonnull OWLOntologyID ontologyID,
                                @Nonnull Set<OWLImportsDeclaration> importsDeclarations,
                                @Nonnull Set<OWLAnnotation> ontologyAnnotations,
                                @Nonnull Set<OWLAxiom> ontologyAxioms) {
-        return new AutoValue_Ontology(ontologyId,
+        return new AutoValue_Ontology(ontologyDocumentId,
+                                      ontologyID,
                                       ImmutableSet.copyOf(importsDeclarations),
                                       ImmutableSet.copyOf(ontologyAnnotations),
                                       ImmutableSet.copyOf(ontologyAxioms));
     }
 
     @Nonnull
-    public abstract OWLOntologyID getOntologyId();
+    public abstract OntologyDocumentId getOntologyDocumentId();
+
+    @Nonnull
+    public abstract OWLOntologyID getOntologyID();
 
     @Nonnull
     public abstract ImmutableSet<OWLImportsDeclaration> getImportsDeclarations();

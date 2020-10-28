@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.util;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +43,7 @@ public class ReferenceFinder_TestCase {
     private IRI entityIri;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAxiom axiom;
@@ -157,7 +158,7 @@ public class ReferenceFinder_TestCase {
 
     @Test
     public void shouldReturnEmptyResultForUnknownOntologyId() {
-        var referenceSet = referenceFinder.getReferenceSet(Collections.emptySet(), mock(OWLOntologyID.class));
+        var referenceSet = referenceFinder.getReferenceSet(Collections.emptySet(), mock(OntologyDocumentId.class));
         assertThatReferenceSetIsEmpty(referenceSet);
     }
 

@@ -47,7 +47,7 @@ public class AnnotationAssertionAxiomsIndexWrapperImpl implements AnnotationAsse
 
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms() {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_ASSERTION, ontId));
     }
 

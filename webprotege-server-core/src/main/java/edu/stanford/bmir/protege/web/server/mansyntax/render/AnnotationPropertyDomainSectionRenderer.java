@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationPropertyDomainAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,15 +42,15 @@ public class AnnotationPropertyDomainSectionRenderer extends AbstractOWLAxiomIte
 
     @Override
     protected Set<OWLAnnotationPropertyDomainAxiom> getAxiomsInOntology(OWLAnnotationProperty subject,
-                                                                        OWLOntologyID ontologyId) {
-        return axiomsIndex.getAnnotationPropertyDomainAxioms(subject, ontologyId).collect(Collectors.toSet());
+                                                                        OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getAnnotationPropertyDomainAxioms(subject, ontologyDocumentId).collect(Collectors.toSet());
     }
 
 
     @Override
     public List<OWLObject> getRenderablesForItem(OWLAnnotationProperty subject,
                                                  OWLAnnotationPropertyDomainAxiom item,
-                                                 OWLOntologyID ontologyId) {
+                                                 OntologyDocumentId ontologyDocumentId) {
         return entitiesByIri.getEntitiesInSignature(item.getDomain()).collect(toList());
     }
 }

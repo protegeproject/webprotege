@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -132,7 +133,7 @@ public class RevisionManagerImpl_TestCase {
     @Test
     public void should_addRevision() {
         UserId userId = mock(UserId.class);
-        List<OntologyChange> changes = Collections.singletonList(AddAxiomChange.of(new OWLOntologyID(),
+        List<OntologyChange> changes = Collections.singletonList(AddAxiomChange.of(OntologyDocumentId.generate(),
                                                                                    mock(OWLAxiom.class)));
         manager.addRevision(userId, changes, HIGHLEVEL_DESC);
         ArgumentCaptor<Revision> revisionCaptor = ArgumentCaptor.forClass(Revision.class);

@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.annotation.Nonnull;
@@ -42,12 +42,12 @@ public class AnnotationsSectionRenderer<S extends OWLEntity> extends AbstractOWL
     }
 
     @Override
-    protected Set<OWLAnnotationAssertionAxiom> getAxiomsInOntology(S subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getAxiomsForSubject(subject.getIRI(), ontologyId).collect(toSet());
+    protected Set<OWLAnnotationAssertionAxiom> getAxiomsInOntology(S subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getAxiomsForSubject(subject.getIRI(), ontologyDocumentId).collect(toSet());
     }
 
     @Override
-    public List<OWLObject> getRenderablesForItem(S subject, OWLAnnotationAssertionAxiom item, OWLOntologyID ontologyId) {
+    public List<OWLObject> getRenderablesForItem(S subject, OWLAnnotationAssertionAxiom item, OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getProperty(), item.getValue());
     }
 

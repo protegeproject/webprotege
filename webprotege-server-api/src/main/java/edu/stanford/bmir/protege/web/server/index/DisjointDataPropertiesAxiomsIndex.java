@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -19,5 +19,5 @@ public interface DisjointDataPropertiesAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLDisjointDataPropertiesAxiom> getDisjointDataPropertiesAxioms(@Nonnull OWLDataProperty subject,
-                                                                           @Nonnull OWLOntologyID ontologyId);
+                                                                           @Nonnull OntologyDocumentId ontologyDocumentId);
 }

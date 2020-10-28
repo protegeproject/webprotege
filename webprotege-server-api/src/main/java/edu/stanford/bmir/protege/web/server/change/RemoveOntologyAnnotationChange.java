@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.change.RemoveOntologyAnnotationData;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class RemoveOntologyAnnotationChange implements OntologyAnnotationChange {
 
-    public static RemoveOntologyAnnotationChange of(@Nonnull OWLOntologyID ontologyId,
+    public static RemoveOntologyAnnotationChange of(@Nonnull OntologyDocumentId ontologyId,
                                                     @Nonnull OWLAnnotation annotation) {
         return new AutoValue_RemoveOntologyAnnotationChange(ontologyId, annotation);
     }
@@ -32,19 +32,13 @@ public abstract class RemoveOntologyAnnotationChange implements OntologyAnnotati
 
     @Nonnull
     @Override
-    public RemoveOntologyAnnotationChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
+    public RemoveOntologyAnnotationChange replaceOntologyId(@Nonnull OntologyDocumentId ontologyId) {
         if(getOntologyDocumentId().equals(ontologyId)) {
             return this;
         }
         else {
             return RemoveOntologyAnnotationChange.of(ontologyId, getAnnotation());
         }
-    }
-
-    @Nonnull
-    @Override
-    public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
-        return new OWLOntologyChangeRecord(getOntologyDocumentId(), new RemoveOntologyAnnotationData(getAnnotation()));
     }
 
     @Override

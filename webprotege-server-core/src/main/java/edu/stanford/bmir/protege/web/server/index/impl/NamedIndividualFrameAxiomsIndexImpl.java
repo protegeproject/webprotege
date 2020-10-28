@@ -58,19 +58,19 @@ public class NamedIndividualFrameAxiomsIndexImpl implements NamedIndividualFrame
 
     private Stream<OWLAxiom> getPropertyAssertionAxioms(OWLNamedIndividual subject) {
         return projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> assertionsBySubject.getPropertyAssertions(subject, ontId));
     }
 
     private Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(OWLNamedIndividual subjectIndividual) {
         return projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> classAssertionsByIndividual.getClassAssertionAxioms(subjectIndividual, ontId));
     }
 
     private Stream<OWLSameIndividualAxiom> getSameIndividualAxioms(OWLNamedIndividual subjectIndividual) {
         return projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> sameIndividualAxiomsIndex.getSameIndividualAxioms(subjectIndividual, ontId));
     }
 

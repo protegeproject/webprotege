@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,15 +33,17 @@ public class EntitiesInOntologySignatureIndexImpl implements EntitiesInOntologyS
 
 
     @Override
-    public boolean containsEntityInSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+    public boolean containsEntityInSignature(@Nonnull OWLEntity entity, @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(entity);
-        var inAxiomsSignature = ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity, ontologyId);
+        var inAxiomsSignature = ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity,
+                                                                                                     ontologyDocumentId);
         if(inAxiomsSignature) {
             return true;
         }
         if(entity.isOWLAnnotationProperty()) {
-            return ontologyAnnotationsSignatureIndex.containsEntityInOntologyAnnotationsSignature(entity, ontologyId);
+            return ontologyAnnotationsSignatureIndex.containsEntityInOntologyAnnotationsSignature(entity,
+                                                                                                  ontologyDocumentId);
         }
         return false;
 

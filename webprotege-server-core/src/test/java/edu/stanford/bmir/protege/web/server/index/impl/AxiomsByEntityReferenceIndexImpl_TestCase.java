@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
     AxiomsByEntityReferenceIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     private OWLClass cls = createClass();
 
@@ -75,39 +76,39 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
                 .thenReturn(datatype);
 
         impl = new AxiomsByEntityReferenceIndexImpl(entityProvider);
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, clsDecl),
-                                           AddAxiomChange.of(ontologyId, objectPropertyDecl),
-                                           AddAxiomChange.of(ontologyId, dataPropertyDecl),
-                                           AddAxiomChange.of(ontologyId, annotationPropertyDecl),
-                                           AddAxiomChange.of(ontologyId, namedIndividualDecl),
-                                           AddAxiomChange.of(ontologyId, datatypeDecl)
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, clsDecl),
+                                           AddAxiomChange.of(ontologyDocumentId, objectPropertyDecl),
+                                           AddAxiomChange.of(ontologyDocumentId, dataPropertyDecl),
+                                           AddAxiomChange.of(ontologyDocumentId, annotationPropertyDecl),
+                                           AddAxiomChange.of(ontologyDocumentId, namedIndividualDecl),
+                                           AddAxiomChange.of(ontologyDocumentId, datatypeDecl)
         ));
     }
 
     @Test
     public void shouldRetrieveAxiomByClassReference() {
-        var axiomStream = impl.getReferencingAxioms(cls, ontologyId);
+        var axiomStream = impl.getReferencingAxioms(cls, ontologyDocumentId);
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms, hasItem(clsDecl));
     }
 
     @Test
     public void shouldRetrieveAxiomByObjectPropertyReference() {
-        var axiomStream = impl.getReferencingAxioms(objectProperty, ontologyId);
+        var axiomStream = impl.getReferencingAxioms(objectProperty, ontologyDocumentId);
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms, hasItem(objectPropertyDecl));
     }
 
     @Test
     public void shouldRetrieveAxiomByDataPropertyReference() {
-        var axiomStream = impl.getReferencingAxioms(dataProperty, ontologyId);
+        var axiomStream = impl.getReferencingAxioms(dataProperty, ontologyDocumentId);
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms, hasItem(dataPropertyDecl));
     }
 
     @Test
     public void shouldRetrieveAxiomByAnnotationPropertyReference() {
-        var axiomStream = impl.getReferencingAxioms(annotationProperty, ontologyId);
+        var axiomStream = impl.getReferencingAxioms(annotationProperty, ontologyDocumentId);
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyDecl));
     }
@@ -115,21 +116,21 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
 
     @Test
     public void shouldRetrieveAxiomByDataypeReference() {
-        var axiomStream = impl.getReferencingAxioms(datatype, ontologyId);
+        var axiomStream = impl.getReferencingAxioms(datatype, ontologyDocumentId);
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms, hasItem(datatypeDecl));
     }
 
     @Test
     public void shouldRetrieveAxiomByIndividualReference() {
-        var axiomStream = impl.getReferencingAxioms(namedIndividual, ontologyId);
+        var axiomStream = impl.getReferencingAxioms(namedIndividual, ontologyDocumentId);
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms, hasItem(namedIndividualDecl));
     }
 
     @Test
     public void shouldRetrieveEmptyStreamForUnknownOntology() {
-        var axiomStream = impl.getReferencingAxioms(cls, mock(OWLOntologyID.class));
+        var axiomStream = impl.getReferencingAxioms(cls, mock(OntologyDocumentId.class));
         var axioms = axiomStream.collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
@@ -137,7 +138,7 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPEForNullOntology() {
-        impl.getReferencingAxioms(null, ontologyId);
+        impl.getReferencingAxioms(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -148,110 +149,110 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
 
     @Test
     public void shouldGetClassInSignatureWithIri() {
-        var signature = impl.getEntitiesInSignatureWithIri(cls.getIRI(), ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignatureWithIri(cls.getIRI(), ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(cls));
     }
 
     @Test
     public void shouldGetObjectPropertyInSignatureWithIri() {
-        var signature = impl.getEntitiesInSignatureWithIri(objectProperty.getIRI(), ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignatureWithIri(objectProperty.getIRI(), ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(objectProperty));
     }
 
     @Test
     public void shouldGetDataPropertyInSignatureWithIri() {
-        var signature = impl.getEntitiesInSignatureWithIri(dataProperty.getIRI(), ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignatureWithIri(dataProperty.getIRI(), ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(dataProperty));
     }
 
     @Test
     public void shouldGetAnnotationPropertyInSignatureWithIri() {
-        var signature = impl.getEntitiesInSignatureWithIri(annotationProperty.getIRI(), ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignatureWithIri(annotationProperty.getIRI(), ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(annotationProperty));
     }
 
     @Test
     public void shouldGetIndividualInSignatureWithIri() {
-        var signature = impl.getEntitiesInSignatureWithIri(namedIndividual.getIRI(), ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignatureWithIri(namedIndividual.getIRI(), ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(namedIndividual));
     }
 
 
     @Test
     public void shouldGetDatatypeInSignatureWithIri() {
-        var signature = impl.getEntitiesInSignatureWithIri(datatype.getIRI(), ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignatureWithIri(datatype.getIRI(), ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(datatype));
     }
 
     @Test
     public void shouldContainEntity_Class_InOntologyAxiomsSignature() {
-        var inSignature = impl.containsEntityInOntologyAxiomsSignature(cls, ontologyId);
+        var inSignature = impl.containsEntityInOntologyAxiomsSignature(cls, ontologyDocumentId);
         assertThat(inSignature, is(true));
     }
 
     @Test
     public void shouldContainEntity_ObjectProperty_InOntologyAxiomsSignature() {
-        var inSignature = impl.containsEntityInOntologyAxiomsSignature(objectProperty, ontologyId);
+        var inSignature = impl.containsEntityInOntologyAxiomsSignature(objectProperty, ontologyDocumentId);
         assertThat(inSignature, is(true));
     }
 
     @Test
     public void shouldContainEntity_DataProperty_InOntologyAxiomsSignature() {
-        var inSignature = impl.containsEntityInOntologyAxiomsSignature(dataProperty, ontologyId);
+        var inSignature = impl.containsEntityInOntologyAxiomsSignature(dataProperty, ontologyDocumentId);
         assertThat(inSignature, is(true));
     }
 
     @Test
     public void shouldContainEntity_AnnotationProperty_InOntologyAxiomsSignature() {
-        var inSignature = impl.containsEntityInOntologyAxiomsSignature(annotationProperty, ontologyId);
+        var inSignature = impl.containsEntityInOntologyAxiomsSignature(annotationProperty, ontologyDocumentId);
         assertThat(inSignature, is(true));
     }
 
     @Test
     public void shouldContainEntity_NamedIndividual_InOntologyAxiomsSignature() {
-        var inSignature = impl.containsEntityInOntologyAxiomsSignature(namedIndividual, ontologyId);
+        var inSignature = impl.containsEntityInOntologyAxiomsSignature(namedIndividual, ontologyDocumentId);
         assertThat(inSignature, is(true));
     }
 
     @Test
     public void shouldContainEntity_Datatype_InOntologyAxiomsSignature() {
-        var inSignature = impl.containsEntityInOntologyAxiomsSignature(datatype, ontologyId);
+        var inSignature = impl.containsEntityInOntologyAxiomsSignature(datatype, ontologyDocumentId);
         assertThat(inSignature, is(true));
     }
 
     @Test
     public void should_getOntologyAxiomsSignature_ForClass() {
-        var signature = impl.getOntologyAxiomsSignature(EntityType.CLASS, ontologyId).collect(toSet());
+        var signature = impl.getOntologyAxiomsSignature(EntityType.CLASS, ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(cls));
     }
 
     @Test
     public void should_getOntologyAxiomsSignature_ForObjectProperty() {
-        var signature = impl.getOntologyAxiomsSignature(EntityType.OBJECT_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getOntologyAxiomsSignature(EntityType.OBJECT_PROPERTY, ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(objectProperty));
     }
 
     @Test
     public void should_getOntologyAxiomsSignature_ForDataProperty() {
-        var signature = impl.getOntologyAxiomsSignature(EntityType.DATA_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getOntologyAxiomsSignature(EntityType.DATA_PROPERTY, ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(dataProperty));
     }
 
     @Test
     public void should_getOntologyAxiomsSignature_ForAnnotationProperty() {
-        var signature = impl.getOntologyAxiomsSignature(EntityType.ANNOTATION_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getOntologyAxiomsSignature(EntityType.ANNOTATION_PROPERTY, ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(annotationProperty));
     }
 
     @Test
     public void should_getOntologyAxiomsSignature_ForNamedIndivdual() {
-        var signature = impl.getOntologyAxiomsSignature(EntityType.NAMED_INDIVIDUAL, ontologyId).collect(toSet());
+        var signature = impl.getOntologyAxiomsSignature(EntityType.NAMED_INDIVIDUAL, ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(namedIndividual));
     }
 
     @Test
     public void should_getOntologyAxiomsSignature_ForDatatype() {
-        var signature = impl.getOntologyAxiomsSignature(EntityType.DATATYPE, ontologyId).collect(toSet());
+        var signature = impl.getOntologyAxiomsSignature(EntityType.DATATYPE, ontologyDocumentId).collect(toSet());
         assertThat(signature, contains(datatype));
     }
 
@@ -293,7 +294,7 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
 
     @Test
     public void shouldRemoveClassAxiom() {
-        impl.applyChanges(ImmutableList.of(RemoveAxiomChange.of(ontologyId, clsDecl)));
-        assertThat(impl.getReferencingAxioms(cls, ontologyId).count(), is(0L));
+        impl.applyChanges(ImmutableList.of(RemoveAxiomChange.of(ontologyDocumentId, clsDecl)));
+        assertThat(impl.getReferencingAxioms(cls, ontologyDocumentId).count(), is(0L));
     }
 }

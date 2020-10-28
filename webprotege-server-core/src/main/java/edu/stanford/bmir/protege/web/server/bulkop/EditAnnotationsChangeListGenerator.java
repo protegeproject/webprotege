@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.bulkop.NewAnnotationData;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -98,7 +99,7 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
             p = ".*";
         }
         var pattern = Pattern.compile(p, Pattern.DOTALL);
-        projectOntologiesIndex.getOntologyIds()
+        projectOntologiesIndex.getOntologyDocumentIds()
                               .forEach(ontId -> {
                                   entities.forEach(entity -> {
                                       annotationAssertionsIndex.getAxiomsForSubject(entity.getIRI(), ontId)
@@ -112,7 +113,7 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
         return builder.build(true);
     }
 
-    private void processAnnotationAssertion(OWLOntologyID ontologyId,
+    private void processAnnotationAssertion(OntologyDocumentId ontologyId,
                                             OWLEntity entity,
                                             OWLAnnotationAssertionAxiom ax,
                                             Pattern pattern,

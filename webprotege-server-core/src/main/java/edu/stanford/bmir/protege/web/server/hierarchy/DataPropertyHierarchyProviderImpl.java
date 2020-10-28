@@ -61,7 +61,7 @@ public class DataPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierar
         if(getRoot().equals(property)) {
             return getChildrenOfRoot();
         }
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(SUB_DATA_PROPERTY, ontId))
                                      .filter(ax -> ax.getSuperProperty().equals(property))
                                      .map(OWLSubDataPropertyOfAxiom::getSubProperty)
@@ -73,7 +73,7 @@ public class DataPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierar
     @Override
     public Collection<OWLDataProperty> getParents(OWLDataProperty property) {
         rebuildIfNecessary();
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
                                              property,
                                              ontId))

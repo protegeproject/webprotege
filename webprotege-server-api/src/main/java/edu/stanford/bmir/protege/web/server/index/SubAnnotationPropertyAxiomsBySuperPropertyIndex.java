@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
@@ -19,5 +19,5 @@ public interface SubAnnotationPropertyAxiomsBySuperPropertyIndex extends Index {
 
     @Nonnull
     Stream<OWLSubAnnotationPropertyOfAxiom> getAxiomsForSuperProperty(@Nonnull OWLAnnotationProperty property,
-                                                                      @Nonnull OWLOntologyID ontologyId);
+                                                                      @Nonnull OntologyDocumentId ontologyDocumentId);
 }

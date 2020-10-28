@@ -108,7 +108,7 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
         if(!(term.isOWLClass())) {
             return emptyOboTermDefinition();
         }
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(term.getIRI(),
                                                                                                      ontId))
                                      .filter(this::isOboTermDefinitionAxiom)
@@ -163,7 +163,7 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
                                                                     xrefsAsAnnotations);
 
         List<OntologyChange> changes = new ArrayList<>();
-        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontId -> {
             annotationAssertionsIndex.getAxiomsForSubject(subject, ontId)
                                      .filter(this::isOboTermDefinitionAxiom)
                                      .forEach(ax -> {
@@ -178,7 +178,7 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
         });
         if(changes.isEmpty()) {
             // New
-            var ontId = defaultOntologyIdManager.getDefaultOntologyId();
+            var ontId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
             changes.add(AddAxiomChange.of(ontId, definitionAssertion));
         }
         var message = messageFormatter.format("Edited the term definition for {0}", term);

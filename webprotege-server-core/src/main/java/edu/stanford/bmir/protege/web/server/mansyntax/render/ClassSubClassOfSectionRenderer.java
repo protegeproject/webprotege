@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.index.SubClassOfAxiomsBySubClassIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import javax.annotation.Nonnull;
@@ -35,14 +35,14 @@ public class ClassSubClassOfSectionRenderer extends AbstractOWLAxiomItemSectionR
     }
 
     @Override
-    protected Set<OWLSubClassOfAxiom> getAxiomsInOntology(OWLClass subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getSubClassOfAxiomsForSubClass(subject, ontologyId).collect(toSet());
+    protected Set<OWLSubClassOfAxiom> getAxiomsInOntology(OWLClass subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getSubClassOfAxiomsForSubClass(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLClassExpression> getRenderablesForItem(OWLClass subject,
                                                           OWLSubClassOfAxiom item,
-                                                          OWLOntologyID ontologyId) {
+                                                          OntologyDocumentId ontologyDocumentId) {
         return singletonList(item.getSuperClass());
     }
 

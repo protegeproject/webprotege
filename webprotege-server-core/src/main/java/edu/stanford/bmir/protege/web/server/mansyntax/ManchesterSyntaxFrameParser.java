@@ -53,7 +53,7 @@ public class ManchesterSyntaxFrameParser {
         );
         ManchesterOWLSyntaxFramesParser parser = new ManchesterOWLSyntaxFramesParser(dataFactory, entityChecker);
         parser.setOWLOntologyChecker(ontologyChecker);
-        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         parser.setDefaultOntology(new ShellOwlOntology(defaultOntologyId));
         return parser.parse(syntax);
     }

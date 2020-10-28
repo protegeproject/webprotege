@@ -67,7 +67,7 @@ public class TermSynonymsManager {
 
     public Collection<OBOTermSynonym> getSynonyms(OWLEntity term) {
         var subject = term.getIRI();
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject, ontId))
                                      .filter(ax -> getSynonymScope(ax) != null)
                                      .map(ax -> new OBOTermSynonym(xRefExtractor.getXRefs(ax),
@@ -127,7 +127,7 @@ public class TermSynonymsManager {
 
         var changes = new ArrayList<OntologyChange>();
         var subject = term.getIRI();
-        projectOntologiesIndex.getOntologyIds()
+        projectOntologiesIndex.getOntologyDocumentIds()
                               .forEach(ontId -> {
                                   annotationAssertionsIndex.getAxiomsForSubject(subject, ontId)
                                                            .filter(ax -> getSynonymScope(ax) != null)

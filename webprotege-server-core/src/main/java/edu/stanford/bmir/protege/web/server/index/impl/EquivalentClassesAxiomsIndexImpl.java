@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,10 +34,10 @@ public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxioms
     @Nonnull
     @Override
     public Stream<OWLEquivalentClassesAxiom> getEquivalentClassesAxioms(@Nonnull OWLClass cls,
-                                                                        @Nonnull OWLOntologyID ontologyID) {
+                                                                        @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(cls);
-        checkNotNull(ontologyID);
-        return index.getAxioms(cls, ontologyID);
+        checkNotNull(ontologyDocumentId);
+        return index.getAxioms(cls, ontologyDocumentId);
     }
 
     @Override

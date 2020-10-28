@@ -114,7 +114,7 @@ public class TermCrossProductsManager {
     @Nonnull
     private Optional<OWLEquivalentClassesAxiom> getCrossProductEquivalentClassesAxiom(@Nonnull OWLClass cls) {
         Set<OWLEquivalentClassesAxiom> candidates = new TreeSet<>();
-        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontId -> {
             equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(cls, ontId).forEach(ax -> {
                 var equivalentClasses = ax.getClassExpressionsMinus(cls);
                 int namedCount = 0;
@@ -175,7 +175,7 @@ public class TermCrossProductsManager {
         Optional<OWLEquivalentClassesAxiom> existingXPAxiom = getCrossProductEquivalentClassesAxiom(term);
 
         List<OntologyChange> changes = new ArrayList<>();
-        var rootOntology = defaultOntologyIdManager.getDefaultOntologyId();
+        var rootOntology = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         changes.add(AddAxiomChange.of(rootOntology, newXPAxiom));
         existingXPAxiom.ifPresent(ax -> changes.add(RemoveAxiomChange.of(rootOntology, ax)));
         changeManager.applyChanges(userId,

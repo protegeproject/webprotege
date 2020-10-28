@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,9 @@ public class Ontology_TestCase {
     private Ontology ontology;
 
     @Mock
+    private OntologyDocumentId ontologyDocumentId;
+
+    @Mock
     private OWLOntologyID ontologyId;
 
     @Mock
@@ -39,7 +43,8 @@ public class Ontology_TestCase {
 
     @Before
     public void setUp() {
-        ontology = Ontology.get(ontologyId,
+        ontology = Ontology.get(ontologyDocumentId,
+                                ontologyId,
                                 ImmutableSet.of(importsDeclaration),
                                 ImmutableSet.of(annotation),
                                 ImmutableSet.of(axiom));
@@ -47,7 +52,7 @@ public class Ontology_TestCase {
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        assertThat(ontology.getOntologyId(), is(ontologyId));
+        assertThat(ontology.getOntologyID(), is(ontologyId));
     }
 
     @Test

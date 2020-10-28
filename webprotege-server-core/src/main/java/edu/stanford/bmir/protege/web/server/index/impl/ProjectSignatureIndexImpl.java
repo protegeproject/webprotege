@@ -42,7 +42,7 @@ public class ProjectSignatureIndexImpl implements ProjectSignatureIndex, Depende
     @Nonnull
     @Override
     public Stream<OWLEntity> getSignature() {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontologySignatureIndex::getEntitiesInSignature);
     }
 }

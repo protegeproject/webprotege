@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.DisjointDataPropertiesAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,14 +35,14 @@ public class DataPropertyDisjointWithSectionRenderer extends AbstractOWLAxiomIte
     }
 
     @Override
-    protected Set<OWLDisjointDataPropertiesAxiom> getAxiomsInOntology(OWLDataProperty subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getDisjointDataPropertiesAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLDisjointDataPropertiesAxiom> getAxiomsInOntology(OWLDataProperty subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getDisjointDataPropertiesAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLDataPropertyExpression> getRenderablesForItem(OWLDataProperty subject,
                                                                  OWLDisjointDataPropertiesAxiom item,
-                                                                 OWLOntologyID ontologyId) {
+                                                                 OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getPropertiesMinus(subject));
     }
 }

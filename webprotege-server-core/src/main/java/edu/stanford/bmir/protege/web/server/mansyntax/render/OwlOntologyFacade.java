@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.AxiomAnnotations;
@@ -34,7 +35,7 @@ public class OwlOntologyFacade implements OWLOntology {
     private static final String METHOD_NOT_AVAILABLE_WITH_OWL_ONTOLOGY_FACADE = "Method not available with OwlOntologyFacade";
 
     @Nonnull
-    private final OWLOntologyID ontologyID;
+    private final OntologyDocumentId ontologyDocumentId;
 
     @Nonnull
     private final OntologyAnnotationsIndex ontologyAnnotationsIndex;
@@ -54,8 +55,11 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final OWLOntologyID ontologyID;
+
     @AutoFactory
-    public OwlOntologyFacade(@Nonnull OWLOntologyID ontologyID,
+    public OwlOntologyFacade(@Nonnull OntologyDocumentId ontologyDocumentId,
                              @Provided @Nonnull OntologyAnnotationsIndex ontologyAnnotationsIndex,
                              @Provided @Nonnull OntologySignatureIndex ontologySignatureIndex,
                              @Provided @Nonnull OntologyAxiomsIndex ontologyAxiomsIndex,
@@ -87,7 +91,7 @@ public class OwlOntologyFacade implements OWLOntology {
                              @Provided @Nonnull ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertionAxiomsBySubjectIndex,
                              @Provided @Nonnull SameIndividualAxiomsIndex sameIndividualAxiomsIndex,
                              @Provided @Nonnull DifferentIndividualsAxiomsIndex differentIndividualsAxiomsIndex) {
-        this.ontologyID = ontologyID;
+        this.ontologyDocumentId = ontologyDocumentId;
         this.ontologyAnnotationsIndex = ontologyAnnotationsIndex;
         this.ontologySignatureIndex = ontologySignatureIndex;
         this.ontologyAxiomsIndex = ontologyAxiomsIndex;
@@ -119,6 +123,8 @@ public class OwlOntologyFacade implements OWLOntology {
         this.objectPropertyAssertionAxiomsBySubjectIndex = objectPropertyAssertionAxiomsBySubjectIndex;
         this.sameIndividualAxiomsIndex = sameIndividualAxiomsIndex;
         this.differentIndividualsAxiomsIndex = differentIndividualsAxiomsIndex;
+
+        this.ontologyID = new OWLOntologyID(IRI.create("urn:ontology:" + ontologyDocumentId.getId()));
     }
 
     @Override
@@ -151,13 +157,13 @@ public class OwlOntologyFacade implements OWLOntology {
 
     @Override
     public boolean isAnonymous() {
-        return ontologyID.isAnonymous();
+        return false;
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotation> getAnnotations() {
-        return ontologyAnnotationsIndex.getOntologyAnnotations(ontologyID)
+        return ontologyAnnotationsIndex.getOntologyAnnotations(ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -227,7 +233,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLEntity> getSignature() {
-        return ontologySignatureIndex.getEntitiesInSignature(ontologyID)
+        return ontologySignatureIndex.getEntitiesInSignature(ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -240,7 +246,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Override
     public boolean isDeclared(@Nonnull OWLEntity owlEntity) {
         var declAx = dataFactory.getOWLDeclarationAxiom(owlEntity);
-        return ontologyAxiomsIndex.containsAxiomIgnoreAnnotations(declAx, ontologyID);
+        return ontologyAxiomsIndex.containsAxiomIgnoreAnnotations(declAx, ontologyDocumentId);
     }
 
     @Override
@@ -294,7 +300,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIRI) {
-        return entitiesInOntologySignatureByIriIndex.getEntitiesInSignature(entityIRI, ontologyID)
+        return entitiesInOntologySignatureByIriIndex.getEntitiesInSignature(entityIRI, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -562,7 +568,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public <T extends OWLAxiom> Set<T> getAxioms(@Nonnull AxiomType<T> axiomType) {
-        return axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyID)
+        return axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -617,7 +623,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLSubAnnotationPropertyOfAxiom> getSubAnnotationPropertyOfAxioms(@Nonnull OWLAnnotationProperty subProperty) {
-        return subAnnotationPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(subProperty, ontologyID)
+        return subAnnotationPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(subProperty, ontologyDocumentId)
         .collect(toSet());
     }
 
@@ -627,7 +633,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAnnotationPropertyDomainAxiom> getAnnotationPropertyDomainAxioms(@Nonnull OWLAnnotationProperty property) {
-        return annotationPropertyDomainAxiomsIndex.getAnnotationPropertyDomainAxioms(property, ontologyID)
+        return annotationPropertyDomainAxiomsIndex.getAnnotationPropertyDomainAxioms(property, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -636,14 +642,14 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAnnotationPropertyRangeAxiom> getAnnotationPropertyRangeAxioms(@Nonnull OWLAnnotationProperty property) {
-        return annotationPropertyRangeAxiomsIndex.getAnnotationPropertyRangeAxioms(property, ontologyID)
+        return annotationPropertyRangeAxiomsIndex.getAnnotationPropertyRangeAxioms(property, ontologyDocumentId)
                 .collect(toSet());
     }
 
     @Nonnull
     @Override
     public Set<OWLDeclarationAxiom> getDeclarationAxioms(@Nonnull OWLEntity subject) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DECLARATION, ontologyID)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DECLARATION, ontologyDocumentId)
                 .filter(ax -> ax.getEntity().equals(subject))
                 .collect(toSet());
     }
@@ -651,8 +657,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject entity) {
-        return annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(entity,
-                                                                           ontologyID)
+        return annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(entity, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -662,7 +667,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLSubClassOfAxiom> getSubClassAxiomsForSubClass(@Nonnull OWLClass cls) {
-        return subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(cls, ontologyID)
+        return subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(cls, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -682,7 +687,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLEquivalentClassesAxiom> getEquivalentClassesAxioms(@Nonnull OWLClass cls) {
-        return equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(cls, ontologyID)
+        return equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(cls, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -692,7 +697,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDisjointClassesAxiom> getDisjointClassesAxioms(@Nonnull OWLClass cls) {
-        return disjointClassesAxiomsIndex.getDisjointClassesAxioms(cls, ontologyID)
+        return disjointClassesAxiomsIndex.getDisjointClassesAxioms(cls, ontologyDocumentId)
                                   .collect(toSet());
     }
 
@@ -700,7 +705,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDisjointUnionAxiom> getDisjointUnionAxioms(@Nonnull OWLClass owlClass) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DISJOINT_UNION, ontologyID)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DISJOINT_UNION, ontologyDocumentId)
                 .filter(ax -> ax.getOWLClass().equals(owlClass))
                 .collect(toSet());
     }
@@ -710,8 +715,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLHasKeyAxiom> getHasKeyAxioms(@Nonnull OWLClass cls) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.HAS_KEY,
-                                                 ontologyID)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.HAS_KEY, ontologyDocumentId)
                 .filter(ax -> ax.getClassExpression().equals(cls))
                 .collect(toSet());
     }
@@ -727,7 +731,7 @@ public class OwlOntologyFacade implements OWLOntology {
             return Collections.emptySet();
         }
         return subObjectPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(subProperty.asOWLObjectProperty(),
-                                                                                ontologyID)
+                                                                                ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -749,7 +753,7 @@ public class OwlOntologyFacade implements OWLOntology {
             return Collections.emptySet();
         }
         return objectPropertyDomainAxiomsIndex.getObjectPropertyDomainAxioms(property.asOWLObjectProperty(),
-                                                                      ontologyID)
+                                                                             ontologyDocumentId)
                                        .collect(toSet());
     }
 
@@ -763,7 +767,7 @@ public class OwlOntologyFacade implements OWLOntology {
             return Collections.emptySet();
         }
         return objectPropertyRangeAxiomsIndex.getObjectPropertyRangeAxioms(property.asOWLObjectProperty(),
-                                                                    ontologyID)
+                                                                           ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -777,7 +781,7 @@ public class OwlOntologyFacade implements OWLOntology {
             return Collections.emptySet();
         }
         return inverseObjectPropertyAxiomsIndex.getInverseObjectPropertyAxioms(property.asOWLObjectProperty(),
-                                                                        ontologyID)
+                                                                               ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -791,7 +795,7 @@ public class OwlOntologyFacade implements OWLOntology {
             return Collections.emptySet();
         }
         return equivalentObjectPropertiesAxiomsIndex.getEquivalentObjectPropertiesAxioms(property.asOWLObjectProperty(),
-                                                                                         ontologyID)
+                                                                                         ontologyDocumentId)
                 .collect(Collectors.toSet());
     }
 
@@ -802,7 +806,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Override
     public Set<OWLDisjointObjectPropertiesAxiom> getDisjointObjectPropertiesAxioms(@Nonnull OWLObjectPropertyExpression property) {
         return disjointObjectPropertiesAxiomsIndex.getDisjointObjectPropertiesAxioms(property.asOWLObjectProperty(),
-                                                                                     ontologyID)
+                                                                                     ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -813,7 +817,7 @@ public class OwlOntologyFacade implements OWLOntology {
             return Collections.emptySet();
         }
         return axiomsByReferenceIndex.getReferencingAxioms(Collections.singleton(property.asOWLObjectProperty()),
-                                                           ontologyID)
+                                                           ontologyDocumentId)
                 .filter(cls::isInstance)
                 .map(cls::cast)
                 .collect(toSet());
@@ -867,8 +871,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLSubDataPropertyOfAxiom> getDataSubPropertyAxiomsForSubProperty(@Nonnull OWLDataProperty subProperty) {
-        return subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(subProperty,
-                                                                              ontologyID)
+        return subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(subProperty, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -884,8 +887,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDataPropertyDomainAxiom> getDataPropertyDomainAxioms(@Nonnull OWLDataProperty property) {
-        return dataPropertyDomainAxiomsIndex.getDataPropertyDomainAxioms(property,
-                                                                         ontologyID)
+        return dataPropertyDomainAxiomsIndex.getDataPropertyDomainAxioms(property, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -895,8 +897,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDataPropertyRangeAxiom> getDataPropertyRangeAxioms(@Nonnull OWLDataProperty property) {
-        return dataPropertyRangeAxiomsIndex.getDataPropertyRangeAxioms(property,
-                                                                ontologyID)
+        return dataPropertyRangeAxiomsIndex.getDataPropertyRangeAxioms(property, ontologyDocumentId)
                                     .collect(toSet());
     }
 
@@ -905,8 +906,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLEquivalentDataPropertiesAxiom> getEquivalentDataPropertiesAxioms(@Nonnull OWLDataProperty property) {
-        return equivalentDataPropertiesAxiomsIndex.getEquivalentDataPropertiesAxioms(property,
-                                                                                     ontologyID)
+        return equivalentDataPropertiesAxiomsIndex.getEquivalentDataPropertiesAxioms(property, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -915,8 +915,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDisjointDataPropertiesAxiom> getDisjointDataPropertiesAxioms(@Nonnull OWLDataProperty property) {
-        return disjointDataPropertiesAxiomsIndex.getDisjointDataPropertiesAxioms(property,
-                                                                                 ontologyID)
+        return disjointDataPropertiesAxiomsIndex.getDisjointDataPropertiesAxioms(property, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -924,7 +923,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLFunctionalDataPropertyAxiom> getFunctionalDataPropertyAxioms(@Nonnull OWLDataPropertyExpression property) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyID)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyDocumentId)
                               .filter(ax -> ax.getProperty().equals(property))
                 .collect(toSet());
     }
@@ -935,7 +934,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(individual, ontologyID)
+        return classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(individual, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -947,7 +946,7 @@ public class OwlOntologyFacade implements OWLOntology {
         if(ce.isAnonymous()) {
             return Collections.emptySet();
         }
-        return classAssertionAxiomsByClassIndex.getClassAssertionAxioms(ce.asOWLClass(), ontologyID)
+        return classAssertionAxiomsByClassIndex.getClassAssertionAxioms(ce.asOWLClass(), ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -957,7 +956,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDataPropertyAssertionAxiom> getDataPropertyAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return dataPropertyAssertionAxiomsBySubjectIndex.getDataPropertyAssertions(individual, ontologyID)
+        return dataPropertyAssertionAxiomsBySubjectIndex.getDataPropertyAssertions(individual, ontologyDocumentId)
                                                  .collect(Collectors.toSet());
     }
 
@@ -967,7 +966,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLObjectPropertyAssertionAxiom> getObjectPropertyAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return objectPropertyAssertionAxiomsBySubjectIndex.getObjectPropertyAssertions(individual, ontologyID)
+        return objectPropertyAssertionAxiomsBySubjectIndex.getObjectPropertyAssertions(individual, ontologyDocumentId)
                 .collect(toSet());
     }
     @Nonnull
@@ -988,7 +987,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLSameIndividualAxiom> getSameIndividualAxioms(@Nonnull OWLIndividual individual) {
-        return sameIndividualAxiomsIndex.getSameIndividualAxioms(individual, ontologyID)
+        return sameIndividualAxiomsIndex.getSameIndividualAxioms(individual, ontologyDocumentId)
                 .collect(toSet());
     }
 
@@ -998,14 +997,14 @@ public class OwlOntologyFacade implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDifferentIndividualsAxiom> getDifferentIndividualAxioms(@Nonnull OWLIndividual individual) {
-        return differentIndividualsAxiomsIndex.getDifferentIndividualsAxioms(individual, ontologyID)
+        return differentIndividualsAxiomsIndex.getDifferentIndividualsAxioms(individual, ontologyDocumentId)
                 .collect(toSet());
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatypeDefinitionAxiom> getDatatypeDefinitions(@Nonnull OWLDatatype datatype) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DATATYPE_DEFINITION, ontologyID)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DATATYPE_DEFINITION, ontologyDocumentId)
                 .filter(ax -> ax.getDatatype().equals(datatype))
                 .collect(toSet());
     }
@@ -1329,7 +1328,7 @@ public class OwlOntologyFacade implements OWLOntology {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(OwlOntologyFacade.class)
-                .addValue(ontologyID)
+                .addValue(ontologyDocumentId)
                 .toString();
     }
 }

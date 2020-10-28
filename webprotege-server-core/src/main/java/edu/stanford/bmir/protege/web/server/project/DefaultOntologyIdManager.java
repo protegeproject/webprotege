@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.index.Index;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 
 import javax.annotation.Nonnull;
 
@@ -13,5 +13,5 @@ import javax.annotation.Nonnull;
 public interface DefaultOntologyIdManager extends Index {
 
     @Nonnull
-    OWLOntologyID getDefaultOntologyId();
+    OntologyDocumentId getDefaultOntologyDocumentId();
 }

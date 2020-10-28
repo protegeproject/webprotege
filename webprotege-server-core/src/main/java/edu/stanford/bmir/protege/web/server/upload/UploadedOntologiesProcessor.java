@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.project.RawProjectSourcesImporter;
 import edu.stanford.bmir.protege.web.server.project.UploadedProjectSourcesExtractor;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -63,7 +64,8 @@ public class UploadedOntologiesProcessor {
     }
 
     private Ontology toOntology(OWLOntology ont) {
-        return Ontology.get(ont.getOntologyID(),
+        return Ontology.get(OntologyDocumentId.generate(),
+                            ont.getOntologyID(),
                             ont.getImportsDeclarations(),
                             ont.getAnnotations(),
                             ont.getAxioms());

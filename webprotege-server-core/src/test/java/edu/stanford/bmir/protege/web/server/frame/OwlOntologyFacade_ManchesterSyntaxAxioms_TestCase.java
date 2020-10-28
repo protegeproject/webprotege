@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.OwlOntologyFacade;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxFrameRenderer;
@@ -25,7 +26,7 @@ public class OwlOntologyFacade_ManchesterSyntaxAxioms_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        var ontologyFacade = new OwlOntologyFacade(mock(OWLOntologyID.class),
+        var ontologyFacade = new OwlOntologyFacade(mock(OntologyDocumentId.class),
                                                    mock(OntologyAnnotationsIndex.class),
                                                    mock(OntologySignatureIndex.class),
                                                    mock(OntologyAxiomsIndex.class),

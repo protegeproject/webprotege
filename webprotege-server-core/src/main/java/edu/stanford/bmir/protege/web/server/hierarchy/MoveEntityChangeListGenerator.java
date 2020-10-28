@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import org.semanticweb.owlapi.model.*;
@@ -234,14 +235,14 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
                                            @Nonnull Optional<E> fromParent,
                                            @Nonnull Optional<E> toParent,
                                            @Nonnull DropType dropType,
-                                           @Nonnull BiFunction<OWLOntologyID, E, Stream<A>> axiomExtractor,
+                                           @Nonnull BiFunction<OntologyDocumentId, E, Stream<A>> axiomExtractor,
                                            @Nonnull RemoveAxiomFilter<A> axiomFilter,
                                            @Nonnull ReparentingAxiomFactory<A, E> reparentingAxiomFactory
     ) {
         OntologyChangeList.Builder<Boolean> changeList = OntologyChangeList.builder();
         Set<OWLAxiom> removedAxioms = new HashSet<>();
         if (dropType == DropType.MOVE && fromParent.isPresent()) {
-            projectOntologiesIndex.getOntologyIds()
+            projectOntologiesIndex.getOntologyDocumentIds()
                           .forEach(ontId -> moveEntityInOntology(ontId, move, toParent,
                                                                  axiomExtractor,
                                                                  axiomFilter,
@@ -251,7 +252,7 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         }
         if (removedAxioms.isEmpty()) {
             toParent.ifPresent(par -> {
-                var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+                var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
                 var reparentingAxiom = reparentingAxiomFactory.createReparentingAxiom(move, par, emptySet());
                 changeList.add(AddAxiomChange.of(defaultOntologyId, reparentingAxiom));
             });
@@ -260,10 +261,10 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
     }
 
     private <A extends OWLAxiom, E extends OWLEntity>
-    void moveEntityInOntology(@Nonnull OWLOntologyID ontId,
+    void moveEntityInOntology(@Nonnull OntologyDocumentId ontId,
                               @Nonnull E move,
                               @Nonnull Optional<E> toParent,
-                              @Nonnull BiFunction<OWLOntologyID, E, Stream<A>> axiomExtractor,
+                              @Nonnull BiFunction<OntologyDocumentId, E, Stream<A>> axiomExtractor,
                               @Nonnull RemoveAxiomFilter<A> axiomFilter,
                               @Nonnull ReparentingAxiomFactory<A, E> reparentingAxiomFactory,
                               @Nonnull OntologyChangeList.Builder<Boolean> changeList,
@@ -289,7 +290,7 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
 
     private boolean isPlacedByEquivalentClassesAxiom(@Nonnull OWLClass subClass,
                                                      @Nonnull OWLClass superClass) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(subClass, ontId))
                 .flatMap(ax -> ax.getClassExpressions().stream())
                 .flatMap(ce -> ce.asConjunctSet().stream())

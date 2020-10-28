@@ -35,7 +35,7 @@ public class NamedIndividualClassAncestorChecker implements HasHasAncestor<OWLNa
 
     @Override
     public boolean hasAncestor(OWLNamedIndividual ind, OWLClass cls) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                               .flatMap(ontId -> axiomsIndex.getClassAssertionAxioms(ind, ontId))
                               .map(OWLClassAssertionAxiom::getClassExpression)
                               .filter(OWLClassExpression::isNamed)

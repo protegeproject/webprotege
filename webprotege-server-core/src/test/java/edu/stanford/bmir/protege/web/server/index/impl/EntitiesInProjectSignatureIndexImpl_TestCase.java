@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.EntitiesInProjectSignatureIndexImpl;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ public class EntitiesInProjectSignatureIndexImpl_TestCase {
     private ProjectOntologiesIndex projectOntologiesIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLEntity entity;
@@ -44,7 +44,7 @@ public class EntitiesInProjectSignatureIndexImpl_TestCase {
     public void setUp() {
         impl = new EntitiesInProjectSignatureIndexImpl(projectOntologiesIndex,
                                                        entitiesInOntologySignatureIndex);
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontologyId));
         when(entitiesInOntologySignatureIndex.containsEntityInSignature(entity, ontologyId))
                 .thenReturn(true);
@@ -69,7 +69,7 @@ public class EntitiesInProjectSignatureIndexImpl_TestCase {
 
     @Test
     public void shouldReturnFalseForEmptySetOfProjectOntologies() {
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.empty());
         var contains = impl.containsEntityInSignature(entity);
         assertThat(contains, is(false));

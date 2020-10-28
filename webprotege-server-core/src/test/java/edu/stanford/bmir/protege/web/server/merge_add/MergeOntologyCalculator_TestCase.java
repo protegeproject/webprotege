@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.merge_add;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
+import org.apache.commons.lang.NotImplementedException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,8 +59,8 @@ public class MergeOntologyCalculator_TestCase {
         uploadedOntologies.add(ontologyE);
 
         selectedOntologies = new ArrayList<>();
-        selectedOntologies.add(ontologyIDA);
-        selectedOntologies.add(ontologyIDD);
+//        selectedOntologies.add(ontologyIDA);
+//        selectedOntologies.add(ontologyIDD);
 
         when(ontologyA.getAnnotations())
                 .thenReturn(ImmutableSet.of(annotationA, annotationB));
@@ -83,11 +85,13 @@ public class MergeOntologyCalculator_TestCase {
         when(ontologyE.getAxioms())
                 .thenReturn(ImmutableSet.of(axiomD, axiomE));
 
-        when(ontologyA.getOntologyId()).thenReturn(ontologyIDA);
-        when(ontologyB.getOntologyId()).thenReturn(ontologyIDB);
-        when(ontologyC.getOntologyId()).thenReturn(ontologyIDC);
-        when(ontologyD.getOntologyId()).thenReturn(ontologyIDD);
-        when(ontologyE.getOntologyId()).thenReturn(ontologyIDE);
+        when(ontologyA.getOntologyID()).thenReturn(ontologyIDA);
+        when(ontologyB.getOntologyID()).thenReturn(ontologyIDB);
+        when(ontologyC.getOntologyID()).thenReturn(ontologyIDC);
+        when(ontologyD.getOntologyID()).thenReturn(ontologyIDD);
+        when(ontologyE.getOntologyID()).thenReturn(ontologyIDE);
+
+        throw new NotImplementedException();
 
     }
 

@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLFunctionalDataPropertyAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,8 +36,8 @@ public class DataPropertyCharacteristicsSectionRenderer extends AbstractOWLAxiom
 
     @Override
     protected Set<OWLFunctionalDataPropertyAxiom> getAxiomsInOntology(OWLDataProperty subject,
-                                                                      OWLOntologyID ontologyId) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyId)
+                                                                      OntologyDocumentId ontologyDocumentId) {
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyDocumentId)
                                 .filter(ax -> ax.getProperty()
                                                 .equals(subject))
                                 .collect(toSet());
@@ -46,7 +46,7 @@ public class DataPropertyCharacteristicsSectionRenderer extends AbstractOWLAxiom
     @Override
     public List<ManchesterOWLSyntax> getRenderablesForItem(OWLDataProperty subject,
                                                            OWLFunctionalDataPropertyAxiom item,
-                                                           OWLOntologyID ontologyId) {
+                                                           OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(ManchesterOWLSyntax.FUNCTIONAL);
     }
 }

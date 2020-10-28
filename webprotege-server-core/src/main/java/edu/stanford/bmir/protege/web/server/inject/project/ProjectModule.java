@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
+import edu.stanford.bmir.protege.web.server.project.OntologyDocumentIdDisplayNameProviderImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
@@ -56,6 +57,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -292,11 +294,6 @@ public class ProjectModule {
         return () -> "en";
     }
 
-    @Provides
-    @ProjectSingleton
-    public OntologyIRIShortFormProvider provideOntologyIRIShortFormProvider(WebProtegeOntologyIRIShortFormProvider provider) {
-        return provider;
-    }
 
     @Provides
     public EntityIRIChecker provideEntityIRIChecker(EntityIRICheckerImpl iriChecker) {
@@ -723,6 +720,13 @@ public class ProjectModule {
     @Provides
     @ProjectSingleton
     ProjectEntitySearchFiltersManager provideProjectEntitySearchFiltersManager(ProjectEntitySearchFiltersManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    OntologyDocumentIdDisplayNameProvider provideOntologyDocumentIdDisplayNameProvider(
+            OntologyDocumentIdDisplayNameProviderImpl impl) {
         return impl;
     }
 }

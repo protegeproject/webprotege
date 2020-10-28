@@ -5,10 +5,10 @@ import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyCharacteristicsIndex;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyCharacteristicAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,12 +41,12 @@ public class ObjectPropertyCharacteristicsIndexImpl implements ObjectPropertyCha
     @Override
     public boolean hasCharacteristic(@Nonnull OWLObjectProperty property,
                                      @Nonnull ObjectPropertyCharacteristic characteristic,
-                                     @Nonnull OWLOntologyID ontologyId) {
+                                     @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(property);
         checkNotNull(characteristic);
-        checkNotNull(ontologyId);
+        checkNotNull(ontologyDocumentId);
         var axiomType = getAxiomType(characteristic);
-        return axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyId)
+        return axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyDocumentId)
                                 .anyMatch(ax -> ax.getProperty()
                                                   .equals(property));
     }

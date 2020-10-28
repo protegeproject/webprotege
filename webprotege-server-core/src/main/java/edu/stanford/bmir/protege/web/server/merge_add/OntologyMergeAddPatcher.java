@@ -2,12 +2,16 @@ package edu.stanford.bmir.protege.web.server.merge_add;
 
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.index.OntologyIdIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,21 +21,19 @@ public class OntologyMergeAddPatcher {
     @Nonnull
     private final HasApplyChanges changeManager;
 
+    @Inject
     public OntologyMergeAddPatcher(@Nonnull HasApplyChanges changeManager) {
         this.changeManager = changeManager;
     }
 
-    List<OntologyChange> addAxiomsAndAnnotations(Set<OWLAxiom> axioms, Set<OWLAnnotation> annotations, OWLOntologyID ontologyID){
+    public List<OntologyChange> addAxiomsAndAnnotations(Set<OWLAxiom> axioms, Set<OWLAnnotation> annotations, OntologyDocumentId ontologyDocumentId){
         var changeList = new ArrayList<OntologyChange>();
-
         for (OWLAxiom axiom: axioms) {
-            changeList.add(AddAxiomChange.of(ontologyID,axiom));
+            changeList.add(AddAxiomChange.of(ontologyDocumentId, axiom));
         }
-
         for (OWLAnnotation annotation: annotations){
-            changeList.add(AddOntologyAnnotationChange.of(ontologyID, annotation));
+            changeList.add(AddOntologyAnnotationChange.of(ontologyDocumentId, annotation));
         }
-
         return changeList;
     }
 

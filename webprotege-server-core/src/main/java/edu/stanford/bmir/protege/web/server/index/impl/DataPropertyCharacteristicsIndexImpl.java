@@ -4,9 +4,9 @@ import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyCharacteristicsIndex;
 import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -38,10 +38,10 @@ public class DataPropertyCharacteristicsIndexImpl implements DataPropertyCharact
 
     @Override
     public boolean isFunctional(@Nonnull OWLDataProperty dataProperty,
-                                @Nonnull OWLOntologyID ontologyId) {
+                                @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(dataProperty);
-        checkNotNull(ontologyId);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyId)
+        checkNotNull(ontologyDocumentId);
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyDocumentId)
                 .anyMatch(axiom -> axiom.getProperty().equals(dataProperty));
     }
 }

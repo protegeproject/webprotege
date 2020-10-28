@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class AnnotationPropertyHierarchyProviderImpl_TestCase {
             propertyD = createAnnotationProperty();
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private SubAnnotationPropertyAxiomsBySuperPropertyIndex subPropertyAxiomsBySuperPropertyIndex;
@@ -70,7 +71,7 @@ public class AnnotationPropertyHierarchyProviderImpl_TestCase {
         when(projectSignatureIndex.getSignature(EntityType.ANNOTATION_PROPERTY))
                 .thenAnswer(invocation -> Stream.of(propertyA, propertyB, propertyC, propertyD));
 
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(invocation -> Stream.of(ontologyId));
 
         var propertyASubPropertyOfB = new OWLSubAnnotationPropertyOfAxiomImpl(propertyA, propertyB,

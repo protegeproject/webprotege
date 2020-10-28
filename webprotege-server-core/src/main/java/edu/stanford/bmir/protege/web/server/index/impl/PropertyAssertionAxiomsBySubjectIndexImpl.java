@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -47,12 +48,14 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl implements PropertyAssert
     @Nonnull
     @Override
     public Stream<OWLAxiom> getPropertyAssertions(@Nonnull OWLIndividual subject,
-                                                  @Nonnull OWLOntologyID ontologyId) {
+                                                  @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(subject);
-        checkNotNull(ontologyId);
-        var annotationAssertions = getAnnotationAssertionAxioms(subject, ontologyId);
-        var objectPropertyAssertions = objectPropertyAssertionAxiomsBySubject.getObjectPropertyAssertions(subject, ontologyId);
-        var dataPropertyAssertions = dataPropertyAssertionAxiomsBySubject.getDataPropertyAssertions(subject, ontologyId);
+        checkNotNull(ontologyDocumentId);
+        var annotationAssertions = getAnnotationAssertionAxioms(subject, ontologyDocumentId);
+        var objectPropertyAssertions = objectPropertyAssertionAxiomsBySubject.getObjectPropertyAssertions(subject,
+                                                                                                          ontologyDocumentId);
+        var dataPropertyAssertions = dataPropertyAssertionAxiomsBySubject.getDataPropertyAssertions(subject,
+                                                                                                    ontologyDocumentId);
         return Stream
                 .of(annotationAssertions,
                     dataPropertyAssertions,
@@ -61,7 +64,7 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl implements PropertyAssert
     }
 
     private Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLIndividual subject,
-                                                                             @Nonnull OWLOntologyID ontologyId) {
+                                                                             @Nonnull OntologyDocumentId ontologyId) {
         OWLAnnotationSubject annotationSubject;
         if(subject instanceof OWLNamedIndividual) {
             annotationSubject = ((OWLNamedIndividual) subject).getIRI();

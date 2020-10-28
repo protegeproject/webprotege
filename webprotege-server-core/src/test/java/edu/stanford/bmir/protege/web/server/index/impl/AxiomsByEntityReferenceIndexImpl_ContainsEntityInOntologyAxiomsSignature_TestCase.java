@@ -2,25 +2,21 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.Class;
 import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.SubClassOf;
 
@@ -38,7 +34,7 @@ public class AxiomsByEntityReferenceIndexImpl_ContainsEntityInOntologyAxiomsSign
     private OWLEntityProvider entityProvider;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private IRI subClsIri;
@@ -56,23 +52,23 @@ public class AxiomsByEntityReferenceIndexImpl_ContainsEntityInOntologyAxiomsSign
         superCls = Class(superClsIri);
         var axiom = SubClassOf(subCls, superCls);
         impl = new AxiomsByEntityReferenceIndexImpl(entityProvider);
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldContainSubClass() {
-        assertThat(impl.containsEntityInOntologyAxiomsSignature(subCls, ontologyId), is(true));
+        assertThat(impl.containsEntityInOntologyAxiomsSignature(subCls, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldContainSuperClass() {
-        assertThat(impl.containsEntityInOntologyAxiomsSignature(superCls, ontologyId), is(true));
+        assertThat(impl.containsEntityInOntologyAxiomsSignature(superCls, ontologyDocumentId), is(true));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfEntityIsNull() {
-        impl.containsEntityInOntologyAxiomsSignature(null, ontologyId);
+        impl.containsEntityInOntologyAxiomsSignature(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -83,11 +79,11 @@ public class AxiomsByEntityReferenceIndexImpl_ContainsEntityInOntologyAxiomsSign
 
     @Test
     public void shouldReturnFalseForUnknownEntity() {
-        assertThat(impl.containsEntityInOntologyAxiomsSignature(Class(mock(IRI.class)), ontologyId), is(false));
+        assertThat(impl.containsEntityInOntologyAxiomsSignature(Class(mock(IRI.class)), ontologyDocumentId), is(false));
     }
 
     @Test
     public void shouldReturnFalseForUnknowOntology() {
-        assertThat(impl.containsEntityInOntologyAxiomsSignature(subCls, mock(OWLOntologyID.class)), is(false));
+        assertThat(impl.containsEntityInOntologyAxiomsSignature(subCls, mock(OntologyDocumentId.class)), is(false));
     }
 }

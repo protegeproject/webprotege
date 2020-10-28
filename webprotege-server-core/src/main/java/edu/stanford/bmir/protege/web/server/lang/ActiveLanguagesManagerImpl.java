@@ -158,7 +158,7 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
     private void rebuild() {
         activeLangs.clear();
         Stopwatch stopwatch = Stopwatch.createStarted();
-        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontId -> {
             Stream.of(WellKnownLabellingIris.values())
                   .map(labellingIri -> new OWLAnnotationPropertyImpl(labellingIri.getIri()))
                   .flatMap(prop -> axiomsByEntityReferenceIndex.getReferencingAxioms(prop, ontId))

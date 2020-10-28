@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
@@ -20,16 +21,14 @@ import java.util.List;
 
 /**
  * @author Matthew Horridge,
- *         Stanford University,
- *         Bio-Medical Informatics Research Group
- *         Date: 20/02/2014
+ * Stanford University,
+ * Bio-Medical Informatics Research Group
+ * Date: 20/02/2014
  */
 @ProjectSingleton
 public class ManchesterSyntaxEntityFrameRenderer {
 
     private ShortFormProvider shortFormProvider;
-
-    private OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
     private ManchesterSyntaxObjectRenderer objectRenderer;
 
@@ -79,10 +78,10 @@ public class ManchesterSyntaxEntityFrameRenderer {
 
     private final DataPropertyFrameRenderer dataPropertyFrameRenderer;
 
+    private final OntologyDocumentIdDisplayNameProvider ontologyDocumentIdDisplayNameProvider;
 
     @Inject
     public ManchesterSyntaxEntityFrameRenderer(ShortFormProvider shortFormProvider,
-                                               OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                                                ManchesterSyntaxObjectRenderer objectRenderer,
                                                HighlightedEntityChecker highlightChecker,
                                                DeprecatedEntityChecker deprecatedChecker,
@@ -94,8 +93,8 @@ public class ManchesterSyntaxEntityFrameRenderer {
                                                ObjectPropertyFrameRenderer objectPropertyFrameRenderer,
                                                NamedIndividualFrameRenderer namedIndividualFrameRenderer,
                                                AnnotationPropertyFrameRenderer annotationPropertyFrameRenderer,
-                                               DataPropertyFrameRenderer dataPropertyFrameRenderer) {
-        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
+                                               DataPropertyFrameRenderer dataPropertyFrameRenderer,
+                                               OntologyDocumentIdDisplayNameProvider ontologyDocumentIdDisplayNameProvider) {
         this.shortFormProvider = shortFormProvider;
         this.objectRenderer = objectRenderer;
         this.highlightChecker = highlightChecker;
@@ -109,6 +108,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
         this.namedIndividualFrameRenderer = namedIndividualFrameRenderer;
         this.annotationPropertyFrameRenderer = annotationPropertyFrameRenderer;
         this.dataPropertyFrameRenderer = dataPropertyFrameRenderer;
+        this.ontologyDocumentIdDisplayNameProvider = ontologyDocumentIdDisplayNameProvider;
     }
 
     public void render(OWLOntology ontology, StringBuilder builder) {
@@ -213,7 +213,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
     private <E extends OWLObject> void writeFrame(FrameRenderer<E> renderer, E subject, StringBuilder builder) {
-        for(FrameSectionRenderer<E, ?, ?> ren : renderer.getSectionRenderers()) {
+        for (FrameSectionRenderer<E, ?, ?> ren : renderer.getSectionRenderers()) {
             renderSection(ren, subject, builder);
         }
     }
@@ -243,14 +243,16 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
 
-    private <E extends OWLObject, I, R> void renderSection(FrameSectionRenderer<E, I, R> renderer, E subject, StringBuilder builder) {
-        Multimap<OWLOntologyID, I> items = getOntologyObjectPairs2(renderer, subject);
+    private <E extends OWLObject, I, R> void renderSection(FrameSectionRenderer<E, I, R> renderer,
+                                                           E subject,
+                                                           StringBuilder builder) {
+        Multimap<OntologyDocumentId, I> items = getOntologyObjectPairs2(renderer, subject);
         if (items.isEmpty()) {
             return;
         }
-        for (OWLOntologyID ontologyId : items.keySet()) {
+        for (var ontologyId : items.keySet()) {
             Collection<I> sectionItems = items.get(ontologyId);
-            if(sectionItems.isEmpty()) {
+            if (sectionItems.isEmpty()) {
                 break;
             }
             sectionTagRenderer.renderOpeningTag(builder);
@@ -272,7 +274,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
                 for (int index = 0; index < renderables.size(); index++) {
                     Object renderable = renderables.get(index);
                     String rendering = getRendering(renderable, renderer);
-                        builder.append(rendering);
+                    builder.append(rendering);
                     boolean hasNext = index < renderables.size() - 1;
                     if (hasNext) {
                         builder.append(renderer.getSeparatorAfter(index, renderables));
@@ -281,7 +283,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
                 if (sectionItemIt.hasNext()) {
                     renderItemSeparator(builder);
                 }
-                if(nestedAnnotationStyle == NestedAnnotationStyle.COMPACT) {
+                if (nestedAnnotationStyle == NestedAnnotationStyle.COMPACT) {
                     renderAnnotations(renderer, builder, annotations);
                 }
                 elementTagRenderer.renderClosingTag(builder);
@@ -291,17 +293,16 @@ public class ManchesterSyntaxEntityFrameRenderer {
         }
     }
 
-    private <E extends OWLObject, I, R> void renderAnnotations(
-            FrameSectionRenderer<E, I, R> renderer,
-            StringBuilder builder,
-            List<OWLAnnotation> annotations) {
+    private <E extends OWLObject, I, R> void renderAnnotations(FrameSectionRenderer<E, I, R> renderer,
+                                                               StringBuilder builder,
+                                                               List<OWLAnnotation> annotations) {
         if (!annotations.isEmpty()) {
             annotationsTagRenderer.renderOpeningTag(builder);
             if (nestedAnnotationStyle != NestedAnnotationStyle.COMPACT) {
                 renderSectionHeader(ManchesterOWLSyntax.ANNOTATIONS, builder, java.util.Optional.empty());
             }
             annotationsBlockTagRenderer.renderOpeningTag(builder);
-            for(OWLAnnotation annotation : annotations) {
+            for (OWLAnnotation annotation : annotations) {
                 String annoRendering = getRendering(annotation, renderer);
                 ElementTagRenderer annotationItemTagRenderer = new ElementRenderer("div", "ms-nested-annotation");
                 annotationItemTagRenderer.renderOpeningTag(builder);
@@ -321,7 +322,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
     private ElementTagRenderer getSectionItemTagRenderer(FrameSectionRenderer<?, ?, ?> renderer) {
-        if(renderer.getSectionFormatting() == FrameSectionRenderer.Formatting.LINE_PER_ITEM) {
+        if (renderer.getSectionFormatting() == FrameSectionRenderer.Formatting.LINE_PER_ITEM) {
             return new ElementRenderer("div", "ms-section-item");
         }
         else {
@@ -330,34 +331,32 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
 
-    private void renderSectionHeader(ManchesterOWLSyntax sectionKeyword, StringBuilder builder, java.util.Optional<OWLOntologyID> ont) {
+    private void renderSectionHeader(ManchesterOWLSyntax sectionKeyword,
+                                     StringBuilder builder,
+                                     java.util.Optional<OntologyDocumentId> ont) {
         sectionKwTagRenderer.renderOpeningTag(builder);
         builder.append(sectionKeyword.keyword());
         sectionKwTagRenderer.renderClosingTag(builder);
         if (ont.isPresent()) {
-            OWLOntologyID ontologyId = ont.get();
-            if (!ontologyId.isAnonymous()) {
-                inOntologyTagRenderer.renderOpeningTag(builder);
-                Optional<IRI> ontologyIRI = ontologyId.getOntologyIRI();
-                if (ontologyIRI.isPresent()) {
-                    builder.append("    [in ");
-                    builder.append(ontologyIRIShortFormProvider.getShortForm(ontologyIRI.get()));
-                    builder.append("]");
-                }
-                inOntologyTagRenderer.renderClosingTag(builder);
-            }
+            var ontologyId = ont.get();
+            inOntologyTagRenderer.renderOpeningTag(builder);
+            var displayName = ontologyDocumentIdDisplayNameProvider.getDisplayName(ontologyId);
+            builder.append("    [in ");
+            builder.append(displayName);
+            builder.append("]");
+            inOntologyTagRenderer.renderClosingTag(builder);
         }
     }
 
-    private String getRendering(Object renderable, FrameSectionRenderer<?,?,?> renderer) {
+    private String getRendering(Object renderable, FrameSectionRenderer<?, ?, ?> renderer) {
         String rendering = "";
         if (renderable instanceof OWLObject) {
             java.util.Optional<String> itemStyle = itemStyleProvider.getItemStyle(renderable);
-            if(itemStyle.isPresent()) {
+            if (itemStyle.isPresent()) {
                 rendering = "<span class=\"" + itemStyle.get() + "\">";
             }
             rendering += objectRenderer.render((OWLObject) renderable, highlightChecker, deprecatedChecker);
-            if(itemStyle.isPresent()) {
+            if (itemStyle.isPresent()) {
                 rendering += "</span>";
             }
         }
@@ -368,10 +367,10 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
 
-
-    public <S extends OWLObject, I> Multimap<OWLOntologyID, I> getOntologyObjectPairs2(FrameSectionRenderer<S,I,?> renderer, S subject) {
-        Multimap<OWLOntologyID, I> result = LinkedHashMultimap.create();
-        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+    public <S extends OWLObject, I> Multimap<OntologyDocumentId, I> getOntologyObjectPairs2(FrameSectionRenderer<S, I, ?> renderer,
+                                                                                            S subject) {
+        Multimap<OntologyDocumentId, I> result = LinkedHashMultimap.create();
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontId -> {
             for (I item : renderer.getItemsInOntology(subject, ontId, shortFormProvider, null)) {
                 result.put(ontId, item);
             }
@@ -380,10 +379,10 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
 
-
-
     private interface ElementTagRenderer {
+
         void renderOpeningTag(StringBuilder stringBuilder);
+
         void renderClosingTag(StringBuilder stringBuilder);
     }
 

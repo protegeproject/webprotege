@@ -77,7 +77,7 @@ public class GetUsageActionHandler extends AbstractProjectActionHandler<GetUsage
         var subject = action.getSubject();
         var referencingAxiomVisitor = referencingAxiomVisitorFactory.create(subject);
         var usageFilter = action.getUsageFilter();
-        var referencingAxioms = projectOntologiesIndex.getOntologyIds()
+        var referencingAxioms = projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> axiomsByReferenceIndex.getReferencingAxioms(Collections.singleton(subject), ontId))
                          .collect(toImmutableList());
 

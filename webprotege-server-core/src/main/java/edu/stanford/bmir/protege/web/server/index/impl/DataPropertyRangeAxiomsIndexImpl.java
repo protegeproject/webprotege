@@ -4,10 +4,10 @@ import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyRangeAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,10 +41,10 @@ public class DataPropertyRangeAxiomsIndexImpl implements DataPropertyRangeAxioms
     @Nonnull
     @Override
     public Stream<OWLDataPropertyRangeAxiom> getDataPropertyRangeAxioms(@Nonnull OWLDataProperty dataProperty,
-                                                                        @Nonnull OWLOntologyID ontologyID) {
+                                                                        @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(dataProperty);
-        checkNotNull(ontologyID);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_RANGE, ontologyID)
+        checkNotNull(ontologyDocumentId);
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_RANGE, ontologyDocumentId)
                 .filter(ax -> ax.getProperty().equals(dataProperty));
     }
 }

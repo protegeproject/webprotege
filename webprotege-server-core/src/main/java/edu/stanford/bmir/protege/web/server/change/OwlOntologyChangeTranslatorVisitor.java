@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -19,48 +20,44 @@ public class OwlOntologyChangeTranslatorVisitor implements OWLOntologyChangeVisi
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull AddAxiom change) {
-        return AddAxiomChange.of(change.getOntology().getOntologyID(),
-                                 change.getAxiom());
+//        return AddAxiomChange.of(change.getOntology().getOntologyID(),
+//                                 change.getAxiom());
+        throw new NotImplementedException();
     }
 
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull RemoveAxiom change) {
-        return RemoveAxiomChange.of(change.getOntology().getOntologyID(),
-                                    change.getAxiom());
+        throw new NotImplementedException();
     }
 
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull SetOntologyID change) {
-        throw new UnsupportedOperationException("SetOntologyID changes are not supported");
+        throw new NotImplementedException();
     }
 
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull AddImport change) {
-        return AddImportChange.of(change.getOntology().getOntologyID(),
-                                  change.getImportDeclaration());
+        throw new NotImplementedException();
     }
 
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull RemoveImport change) {
-        return RemoveImportChange.of(change.getOntology().getOntologyID(),
-                                     change.getImportDeclaration());
+        throw new NotImplementedException();
     }
 
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull AddOntologyAnnotation change) {
-        return AddOntologyAnnotationChange.of(change.getOntology().getOntologyID(),
-                                              change.getAnnotation());
+        throw new NotImplementedException();
     }
 
     @Nonnull
     @Override
     public OntologyChange visit(@Nonnull RemoveOntologyAnnotation change) {
-        return RemoveOntologyAnnotationChange.of(change.getOntology().getOntologyID(),
-                                                 change.getAnnotation());
+        throw new NotImplementedException();
     }
 }

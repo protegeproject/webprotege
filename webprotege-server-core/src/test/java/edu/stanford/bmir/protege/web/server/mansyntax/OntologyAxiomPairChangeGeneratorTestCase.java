@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
+import edu.stanford.bmir.protege.web.server.owlapi.OwlApiOntologyDocumentTempOWLOntologyIDTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,5 +86,7 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
         var changes = generator.generateChanges(from, to);
         assertThat(changes, is(empty()));
     }
+
+
 
 }

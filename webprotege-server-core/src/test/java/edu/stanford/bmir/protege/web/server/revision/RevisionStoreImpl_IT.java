@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.inject.ChangeHistoryFileFactory;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -43,7 +44,7 @@ public class RevisionStoreImpl_IT {
 
     private RevisionStoreImpl store;
 
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     private OWLAxiom axiom;
 
@@ -71,7 +72,7 @@ public class RevisionStoreImpl_IT {
         dataFactory = new OWLDataFactoryImpl();
         changeRecordTranslator = new OntologyChangeRecordTranslatorImpl();
 
-        ontologyId = new OWLOntologyID(IRI.create("http://example.org/OntA"));
+        ontologyId = OntologyDocumentId.generate();
         var clsA = dataFactory.getOWLClass(IRI.create("http://example.org/A"));
         var clsB = dataFactory.getOWLClass(IRI.create("http://example.org/A"));
         axiom = SubClassOf(clsA, clsB);

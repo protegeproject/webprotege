@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.ProjectClassAssertionAxiomsByIndividualIndexImpl;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.stream.Stream;
 
@@ -40,7 +39,7 @@ public class ProjectClassAssertionAxiomsByIndividualIndexImpl_TestCase {
     private ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLClassAssertionAxiom classAssertionAxiom;
@@ -52,11 +51,11 @@ public class ProjectClassAssertionAxiomsByIndividualIndexImpl_TestCase {
     public void setUp() {
         impl = new ProjectClassAssertionAxiomsByIndividualIndexImpl(projectOntologiesIndex,
                                                                     classAssertionAxiomsIndex);
-        when(projectOntologiesIndex.getOntologyIds())
-                .thenReturn(Stream.of(ontologyId));
+        when(projectOntologiesIndex.getOntologyDocumentIds())
+                .thenReturn(Stream.of(ontologyDocumentId));
         when(classAssertionAxiomsIndex.getClassAssertionAxioms(any(), any()))
                 .thenReturn(Stream.empty());
-        when(classAssertionAxiomsIndex.getClassAssertionAxioms(individual, ontologyId))
+        when(classAssertionAxiomsIndex.getClassAssertionAxioms(individual, ontologyDocumentId))
                 .thenReturn(Stream.of(classAssertionAxiom));
     }
 

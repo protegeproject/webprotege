@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.PropertyAssertionAxiomsBySubjectIndexImpl;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +42,7 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
     private OWLNamedIndividual individual;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAnnotationAssertionAxiom annotationAssertion;
@@ -62,18 +62,18 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
 
         when(annotationAssertionAxiomsBySubject.getAxiomsForSubject(any(), any()))
                 .thenReturn(Stream.empty());
-        when(annotationAssertionAxiomsBySubject.getAxiomsForSubject(iri, ontologyId))
+        when(annotationAssertionAxiomsBySubject.getAxiomsForSubject(iri, ontologyDocumentId))
                 .thenReturn(Stream.of(annotationAssertion));
 
         when(objectPropertyAssertionAxiomsBySubject.getObjectPropertyAssertions(any(), any()))
                 .thenReturn(Stream.empty());
-        when(objectPropertyAssertionAxiomsBySubject.getObjectPropertyAssertions(individual, ontologyId))
+        when(objectPropertyAssertionAxiomsBySubject.getObjectPropertyAssertions(individual, ontologyDocumentId))
                 .thenReturn(Stream.of(objectPropertyAssertion));
 
         when(dataPropertyAssertionAxiomsBySubject.getDataPropertyAssertions(any(), any()))
                 .thenReturn(Stream.empty());
 
-        when(dataPropertyAssertionAxiomsBySubject.getDataPropertyAssertions(individual, ontologyId))
+        when(dataPropertyAssertionAxiomsBySubject.getDataPropertyAssertions(individual, ontologyDocumentId))
                 .thenReturn(Stream.of(dataPropertyAssertion));
         impl = new PropertyAssertionAxiomsBySubjectIndexImpl(annotationAssertionAxiomsBySubject,
                                                              objectPropertyAssertionAxiomsBySubject,
@@ -89,26 +89,26 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
 
     @Test
     public void shouldGetAssertionsForNamedIndividual() {
-        var axioms = impl.getPropertyAssertions(individual, ontologyId).collect(toSet());
+        var axioms = impl.getPropertyAssertions(individual, ontologyDocumentId).collect(toSet());
         assertThat(axioms, containsInAnyOrder(annotationAssertion, objectPropertyAssertion, dataPropertyAssertion));
     }
 
     @Test
     public void shouldGetEmptyForUnknownSubject() {
-        var axioms = impl.getPropertyAssertions(mock(OWLNamedIndividual.class), ontologyId).collect(toSet());
+        var axioms = impl.getPropertyAssertions(mock(OWLNamedIndividual.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms, is(empty()));
     }
 
     @Test
     public void shouldGetEmptyForUnknownOntologyId() {
-        var axioms = impl.getPropertyAssertions(individual, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getPropertyAssertions(individual, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms, is(empty()));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfSubjectIsNull() {
-        impl.getPropertyAssertions(null, ontologyId);
+        impl.getPropertyAssertions(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")

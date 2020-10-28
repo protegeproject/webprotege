@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -19,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SetOntologyAnnotationsAction extends AbstractHasProjectAction<SetOntologyAnnotationsResult> {
 
-    private OWLOntologyID owlOntologyId;
+    private OntologyDocumentId documentId;
 
     private Set<PropertyAnnotationValue> fromAnnotations;
 
@@ -30,16 +31,16 @@ public class SetOntologyAnnotationsAction extends AbstractHasProjectAction<SetOn
     }
 
     public SetOntologyAnnotationsAction(ProjectId projectId,
-                                        OWLOntologyID ontologyID,
+                                        OntologyDocumentId ontologyID,
                                         Set<PropertyAnnotationValue> fromAnnotations, Set<PropertyAnnotationValue> toAnnotations) {
         super(projectId);
-        this.owlOntologyId = checkNotNull(ontologyID);
+        this.documentId = checkNotNull(ontologyID);
         this.fromAnnotations = new HashSet<>(fromAnnotations);
         this.toAnnotations = new HashSet<>(toAnnotations);
     }
 
-    public OWLOntologyID getOntologyId() {
-        return owlOntologyId;
+    public OntologyDocumentId getOntologyId() {
+        return documentId;
     }
 
     public Set<PropertyAnnotationValue> getFromAnnotations() {

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.ProjectSignatureIndexImpl;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,7 @@ public class ProjectSignatureIndexImpl_TestCase {
     private OntologySignatureIndex ontologySignatureIndex;
 
     @Mock
-    private OWLOntologyID ontologyIdA, ontologyIdB;
+    private OntologyDocumentId ontologyIdA, ontologyIdB;
 
     @Mock
     private OWLEntity entityA, entityB;
@@ -45,7 +45,7 @@ public class ProjectSignatureIndexImpl_TestCase {
         impl = new ProjectSignatureIndexImpl(projectOntologiesIndex,
                                              ontologySignatureIndex);
 
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontologyIdA, ontologyIdB));
 
         when(ontologySignatureIndex.getEntitiesInSignature(ontologyIdA))

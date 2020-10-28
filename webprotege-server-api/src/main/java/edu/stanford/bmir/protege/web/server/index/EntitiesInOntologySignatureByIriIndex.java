@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -18,5 +17,5 @@ public interface EntitiesInOntologySignatureByIriIndex extends Index {
 
     @Nonnull
     Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri,
-                                             @Nonnull OWLOntologyID ontologyId);
+                                             @Nonnull OntologyDocumentId ontologyDocumentId);
 }

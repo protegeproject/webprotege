@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class ObjectPropertyHierarchyProviderImpl_TestCase {
     private EntitiesInProjectSignatureIndex entitiesInSignature;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     private OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
@@ -65,7 +66,7 @@ public class ObjectPropertyHierarchyProviderImpl_TestCase {
     @Before
     public void setUp() {
 
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(invocation -> Stream.of(ontologyId));
 
         var propertyASubPropertyOfB = dataFactory.getOWLSubObjectPropertyOfAxiom(propertyA, propertyB,

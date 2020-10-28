@@ -11,13 +11,9 @@ import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
 import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
@@ -367,7 +363,7 @@ public class ChangeManager implements HasApplyChanges {
                                  .forEach(decl -> prefixNameExpanderBuilder.withPrefixNamePrefix(decl.getPrefixName(),
                                                                                                  decl.getPrefix()));
         var prefixNameExpander = prefixNameExpanderBuilder.build();
-        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         return entityCrudContextFactory.create(userId,
                                                prefixNameExpander,
                                                defaultOntologyId);

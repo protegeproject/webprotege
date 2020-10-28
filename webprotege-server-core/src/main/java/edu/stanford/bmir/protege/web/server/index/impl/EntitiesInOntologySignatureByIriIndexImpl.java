@@ -6,9 +6,9 @@ import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureByI
 import edu.stanford.bmir.protege.web.server.index.Index;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,11 +41,12 @@ public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOnto
 
     @Nonnull
     @Override
-    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
+    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(iri);
-        checkNotNull(ontologyId);
-        var axiomsSignature = axiomsByEntityReferenceIndex.getEntitiesInSignatureWithIri(iri, ontologyId);
-        var ontologyAnnotationsSignature = ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId)
+        checkNotNull(ontologyDocumentId);
+        var axiomsSignature = axiomsByEntityReferenceIndex.getEntitiesInSignatureWithIri(iri, ontologyDocumentId);
+        var ontologyAnnotationsSignature = ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(
+                ontologyDocumentId)
                 .filter(entity -> entity.getIRI().equals(iri));
         return Streams.concat(axiomsSignature, ontologyAnnotationsSignature);
     }

@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.merge_add;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.merge.ProjectOntologiesBuilder;
@@ -10,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddResult;
-import org.semanticweb.owlapi.model.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
 public class NewOntologyMergeAddActionHandler extends AbstractProjectActionHandler<NewOntologyMergeAddAction, NewOntologyMergeAddResult> {
@@ -40,12 +39,13 @@ public class NewOntologyMergeAddActionHandler extends AbstractProjectActionHandl
     public NewOntologyMergeAddActionHandler(@Nonnull AccessManager accessManager,
                                             @Nonnull UploadedOntologiesCache uploadedOntologiesCache,
                                             @Nonnull ProjectOntologiesBuilder projectOntologiesBuilder,
-                                            @Nonnull HasApplyChanges changeManager) {
+                                            @Nonnull MergeOntologyCalculator mergeCalculator,
+                                            @Nonnull OntologyMergeAddPatcher patcher) {
         super(accessManager);
         this.uploadedOntologiesCache = uploadedOntologiesCache;
         this.projectOntologiesBuilder = projectOntologiesBuilder;
-        this.mergeCalculator = new MergeOntologyCalculator();
-        this.patcher = new OntologyMergeAddPatcher(changeManager);
+        this.mergeCalculator = mergeCalculator;
+        this.patcher = checkNotNull(patcher);
     }
 
     @Nonnull
@@ -63,9 +63,9 @@ public class NewOntologyMergeAddActionHandler extends AbstractProjectActionHandl
             var axioms = mergeCalculator.getMergeAxioms(projectOntologies, uploadedOntologies, ontologyList);
             var annotations = mergeCalculator.getMergeAnnotations(projectOntologies, uploadedOntologies, ontologyList);
 
-            OWLOntologyID newOntologyID = new OWLOntologyID();
+            var newOntologyID = OntologyDocumentId.generate();
 
-            List<OntologyChange> changes = patcher.addAxiomsAndAnnotations(axioms, annotations, newOntologyID);
+            var changes = patcher.addAxiomsAndAnnotations(axioms, annotations, newOntologyID);
 
             patcher.applyChanges(changes, executionContext);
 

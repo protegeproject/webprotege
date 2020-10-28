@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -45,7 +46,7 @@ public class ModifiedProjectOntologiesCalculator {
         Set<OntologyDiff> diffs = new HashSet<>();
         for(Ontology projectOntology : projectOntologies) {
             for(Ontology editedOntology : editedOntologies) {
-                if(isDifferentVersionOfOntology(projectOntology.getOntologyId(), editedOntology.getOntologyId())) {
+                if(isDifferentVersionOfOntology(projectOntology.getOntologyDocumentId(), editedOntology.getOntologyDocumentId())) {
                     OntologyDiff ontologyDiff = diffCalculator.computeDiff(projectOntology, editedOntology);
                     if (!ontologyDiff.isEmpty()) {
                         diffs.add(ontologyDiff);
@@ -57,15 +58,7 @@ public class ModifiedProjectOntologiesCalculator {
     }
 
 
-    private boolean isDifferentVersionOfOntology(OWLOntologyID ontologyId, OWLOntologyID otherOntologyId) {
-        if(ontologyId.isAnonymous()) {
-            return false;
-        }
-        if(otherOntologyId.isAnonymous()) {
-            return false;
-        }
-        Optional<IRI> ontologyIRI = ontologyId.getOntologyIRI();
-        Optional<IRI> otherOntologyIRI = otherOntologyId.getOntologyIRI();
-        return ontologyIRI.equals(otherOntologyIRI);
+    private boolean isDifferentVersionOfOntology(OntologyDocumentId ontologyId, OntologyDocumentId otherOntologyId) {
+        return !ontologyId.equals(otherOntologyId);
     }
 }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,11 +46,11 @@ public class ProjectAnnotationAssertionAxiomsBySubjectIndexImpl_TestCase {
     private AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Before
     public void setUp() throws Exception {
-        when(ontologiesIndex.getOntologyIds())
+        when(ontologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontologyId));
 
         when(annotationAssertionsIndex.getAxiomsForSubject(any(), any()))

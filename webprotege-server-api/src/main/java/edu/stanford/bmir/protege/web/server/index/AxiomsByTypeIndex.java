@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 /**
@@ -15,5 +16,6 @@ import java.util.stream.Stream;
 @ProjectSingleton
 public interface AxiomsByTypeIndex extends Index {
 
-    <T extends OWLAxiom> Stream<T> getAxiomsByType(AxiomType<T> axiomType, OWLOntologyID ontologyId);
+    <T extends OWLAxiom> Stream<T> getAxiomsByType(@Nonnull AxiomType<T> axiomType,
+                                                   @Nonnull OntologyDocumentId ontologyDocumentId);
 }

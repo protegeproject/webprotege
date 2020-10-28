@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class AddOntologyAnnotationChange_TestCase<R> {
     private AddOntologyAnnotationChange change;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAnnotation ontologyAnnotation;
@@ -128,13 +129,6 @@ public class AddOntologyAnnotationChange_TestCase<R> {
     }
 
     @Test
-    public void shouldCreateOwlOntologyChangeRecord() {
-        var changeRecord = change.toOwlOntologyChangeRecord();
-        assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new AddOntologyAnnotationData(ontologyAnnotation)));
-    }
-
-    @Test
     public void shouldGetAnnotationOrThrow() {
         assertThat(change.getAnnotationOrThrow(), is(ontologyAnnotation));
     }
@@ -154,7 +148,7 @@ public class AddOntologyAnnotationChange_TestCase<R> {
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = mock(OWLOntologyID.class);
+        var otherOntologyId = mock(OntologyDocumentId.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
         assertThat(replaced.getOntologyDocumentId(), is(otherOntologyId));
     }

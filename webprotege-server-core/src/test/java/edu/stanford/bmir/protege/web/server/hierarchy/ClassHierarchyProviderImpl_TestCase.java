@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class ClassHierarchyProviderImpl_TestCase {
     private EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     private OWLClass clsA, clsA2, clsB, clsC, clsD, clsE;
 
@@ -67,8 +68,8 @@ public class ClassHierarchyProviderImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntologyIds())
-                .thenAnswer(invocation -> Stream.of(ontologyId));
+        when(projectOntologiesIndex.getOntologyDocumentIds())
+                .thenAnswer(invocation -> Stream.of(ontologyDocumentId));
 
         clsA = dataFactory.getOWLClass(clsAIri);
         clsA2 = dataFactory.getOWLClass(clsA2Iri);
@@ -87,12 +88,12 @@ public class ClassHierarchyProviderImpl_TestCase {
 
         when(subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
-        when(subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(clsA, ontologyId))
+        when(subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(clsA, ontologyDocumentId))
                 .thenAnswer(invocation -> ImmutableList.of(clsASubClassOfClsB).stream());
-        when(subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(clsB, ontologyId))
+        when(subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(clsB, ontologyDocumentId))
                 .thenAnswer(invocation -> ImmutableList.of(clsBSubClassOfClsC).stream());
 
-        when(equivalentClassesAxiomIndex.getEquivalentClassesAxioms(clsA2, ontologyId))
+        when(equivalentClassesAxiomIndex.getEquivalentClassesAxioms(clsA2, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(clsA2EquivalentToClsDandClsE));
 
         when(projectSignatureByTypeIndex.getSignature(EntityType.CLASS))
@@ -100,15 +101,15 @@ public class ClassHierarchyProviderImpl_TestCase {
 
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(any(), any()))
                 .thenReturn(Stream.empty());
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsA, ontologyId))
+        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsA, ontologyDocumentId))
                 .thenReturn(Stream.of(clsASubClassOfClsB));
 
 
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsB, ontologyId))
+        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsB, ontologyDocumentId))
                 .thenReturn(Stream.of(clsASubClassOfClsB, clsBSubClassOfClsC));
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsC, ontologyId))
+        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsC, ontologyDocumentId))
                 .thenReturn(Stream.of(clsBSubClassOfClsC));
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsD, ontologyId))
+        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsD, ontologyDocumentId))
                 .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
 
         classHierarchyProvider = new ClassHierarchyProviderImpl(projectId,

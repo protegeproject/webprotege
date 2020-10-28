@@ -44,7 +44,7 @@ public class ProjectClassAssertionAxiomsByIndividualIndexImpl implements Project
     @Override
     public Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLIndividual individual) {
         checkNotNull(individual);
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(individual, ontId));
     }
 }

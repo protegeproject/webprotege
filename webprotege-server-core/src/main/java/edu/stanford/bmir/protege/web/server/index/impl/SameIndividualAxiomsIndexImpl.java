@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.SameIndividualAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import javax.annotation.Nonnull;
@@ -34,10 +34,10 @@ public class SameIndividualAxiomsIndexImpl implements SameIndividualAxiomsIndex,
     @Nonnull
     @Override
     public Stream<OWLSameIndividualAxiom> getSameIndividualAxioms(@Nonnull OWLIndividual individual,
-                                                                  @Nonnull OWLOntologyID ontologyId) {
+                                                                  @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(individual);
-        checkNotNull(ontologyId);
-        return index.getAxioms(individual, ontologyId);
+        checkNotNull(ontologyDocumentId);
+        return index.getAxioms(individual, ontologyDocumentId);
     }
 
     @Override

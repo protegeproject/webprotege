@@ -35,8 +35,8 @@ import edu.stanford.bmir.protege.web.server.match.GetMatchingEntitiesActionHandl
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.merge_add.ExistingOntologyMergeAddActionHandler;
+import edu.stanford.bmir.protege.web.server.merge_add.GetUploadedAndCurrentOntologiesActionHandler;
 import edu.stanford.bmir.protege.web.server.merge_add.NewOntologyMergeAddActionHandler;
-import edu.stanford.bmir.protege.web.server.merge_add.GetAllOntologiesActionHandler;
 import edu.stanford.bmir.protege.web.server.obo.*;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.GetProjectInfoActionHandler;
@@ -124,7 +124,7 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler provideGetAllOntologiesActionHandler(GetAllOntologiesActionHandler handler) {
+    public ProjectActionHandler provideGetAllOntologiesActionHandler(GetUploadedAndCurrentOntologiesActionHandler handler) {
         return handler;
     }
 

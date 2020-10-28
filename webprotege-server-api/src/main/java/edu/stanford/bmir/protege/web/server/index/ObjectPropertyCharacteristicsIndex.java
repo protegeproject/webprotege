@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 
@@ -14,10 +14,7 @@ import javax.annotation.Nonnull;
  */
 public interface ObjectPropertyCharacteristicsIndex extends Index {
 
-    boolean hasCharacteristic(@Nonnull
-                              OWLObjectProperty property,
-                              @Nonnull
-                              ObjectPropertyCharacteristic objectPropertyCharacteristic,
-                              @Nonnull
-                              OWLOntologyID ontologyId);
+    boolean hasCharacteristic(@Nonnull OWLObjectProperty property,
+                              @Nonnull ObjectPropertyCharacteristic objectPropertyCharacteristic,
+                              @Nonnull OntologyDocumentId ontologyDocumentId);
 }

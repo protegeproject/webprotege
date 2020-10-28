@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
@@ -20,5 +21,5 @@ public interface ProjectOntologiesIndex extends Index {
      * @return A stream of ids that represent the ids of project ontologies
      */
     @Nonnull
-    Stream<OWLOntologyID> getOntologyIds();
+    Stream<OntologyDocumentId> getOntologyDocumentIds();
 }
