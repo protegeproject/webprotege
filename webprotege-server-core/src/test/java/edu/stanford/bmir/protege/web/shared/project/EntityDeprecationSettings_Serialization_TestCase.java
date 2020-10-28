@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import org.junit.Test;
+import org.semanticweb.owlapi.model.IRI;
 
 import java.io.IOException;
 
@@ -22,7 +23,8 @@ public class EntityDeprecationSettings_Serialization_TestCase {
 
     @Test
     public void shouldSerializeNonEmpty() throws IOException {
-        var settings = EntityDeprecationSettings.get(MockingUtils.mockOWLClass(),
+        var settings = EntityDeprecationSettings.get(IRI.create("http://example.org/seeAlso"),
+                                                     MockingUtils.mockOWLClass(),
                                                      MockingUtils.mockOWLObjectProperty(),
                                                      MockingUtils.mockOWLDataProperty(),
                                                      MockingUtils.mockOWLAnnotationProperty(),

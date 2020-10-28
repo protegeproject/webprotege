@@ -38,4 +38,8 @@ public interface EntityDeprecationSettingsView extends IsWidget {
     void setDeprecatedIndividualsParent(@Nonnull OWLClassData data);
 
     Optional<OWLClass> getDeprecatedIndividualsParent();
+
+    Optional<IRI> getReplacedByPropertyIri();
+
+    void setReplacedByProperty(@Nonnull OWLAnnotationPropertyData property);
 }

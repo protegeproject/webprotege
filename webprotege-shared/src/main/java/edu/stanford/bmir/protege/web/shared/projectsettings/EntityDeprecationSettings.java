@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +31,17 @@ public abstract class EntityDeprecationSettings {
 
     public static final String DEPRECATED_INDIVIDUALS_PARENT = "deprecatedIndividualsParent";
 
+    public static final String REPLACED_BY_PROPERTY_IRI = "replacedByPropertyIri";
+
+    @JsonProperty(REPLACED_BY_PROPERTY_IRI)
+    @Nullable
+    abstract IRI getReplacedByPropertyIriInternal();
+
+    @JsonIgnore
+    @Nonnull
+    public Optional<IRI> getReplacedByPropertyIri() {
+        return Optional.ofNullable(getReplacedByPropertyIriInternal());
+    }
 
 
     @JsonProperty(DEPRECATED_CLASSES_PARENT)
@@ -88,17 +96,19 @@ public abstract class EntityDeprecationSettings {
 
     @Nonnull
     public static EntityDeprecationSettings empty() {
-        return get(null, null, null, null, null);
+        return get(null, null, null, null, null, null);
     }
 
     @Nonnull
     @JsonCreator
-    public static EntityDeprecationSettings get(@JsonProperty(DEPRECATED_CLASSES_PARENT) @Nullable OWLClass deprecatedClassesParent,
-                                                   @JsonProperty(DEPRECATED_OBJECT_PROPERTIES_PARENT) OWLObjectProperty deprecatedObjectPropertiesParent,
-                                                   @JsonProperty(DEPRECATED_DATA_PROPERTIES_PARENT) @Nullable OWLDataProperty deprecatedDataPropertiesParent,
-                                                   @JsonProperty(DEPRECATED_ANNOTATION_PROPERTIES_PARENT) @Nullable OWLAnnotationProperty deprecatedAnnotationPropertiesParent,
-                                                   @JsonProperty(DEPRECATED_INDIVIDUALS_PARENT) @Nullable OWLClass deprecatedIndividualsParent) {
-        return new AutoValue_EntityDeprecationSettings(deprecatedClassesParent,
+    public static EntityDeprecationSettings get(@JsonProperty(REPLACED_BY_PROPERTY_IRI) @Nullable IRI replacedByPropertyIri,
+                                                @JsonProperty(DEPRECATED_CLASSES_PARENT) @Nullable OWLClass deprecatedClassesParent,
+                                                @JsonProperty(DEPRECATED_OBJECT_PROPERTIES_PARENT) OWLObjectProperty deprecatedObjectPropertiesParent,
+                                                @JsonProperty(DEPRECATED_DATA_PROPERTIES_PARENT) @Nullable OWLDataProperty deprecatedDataPropertiesParent,
+                                                @JsonProperty(DEPRECATED_ANNOTATION_PROPERTIES_PARENT) @Nullable OWLAnnotationProperty deprecatedAnnotationPropertiesParent,
+                                                @JsonProperty(DEPRECATED_INDIVIDUALS_PARENT) @Nullable OWLClass deprecatedIndividualsParent) {
+        return new AutoValue_EntityDeprecationSettings(replacedByPropertyIri,
+                                                       deprecatedClassesParent,
                                                        deprecatedObjectPropertiesParent,
                                                        deprecatedDataPropertiesParent,
                                                        deprecatedAnnotationPropertiesParent,

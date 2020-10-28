@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
@@ -47,6 +48,11 @@ public class EntityDeprecationSettingsPresenter {
         try {
             view.clear();
             dispatch.beginBatch();
+            settings.getReplacedByPropertyIri()
+                    .ifPresent(iri -> {
+                        dispatch.execute(new GetEntityRenderingAction(projectId, DataFactory.getOWLAnnotationProperty(iri)),
+                                                                      result -> view.setReplacedByProperty((OWLAnnotationPropertyData) result.getEntityData()));
+                    });
             settings.getDeprecatedClassesParent()
                     .ifPresent(classesParent -> {
                         dispatch.execute(new GetEntityRenderingAction(projectId, classesParent),
@@ -81,6 +87,7 @@ public class EntityDeprecationSettingsPresenter {
 
     public EntityDeprecationSettings getValue() {
         return EntityDeprecationSettings.get(
+                view.getReplacedByPropertyIri().orElse(null),
                 view.getDeprecatedClassesParent().orElse(null),
                 view.getDeprecatedObjectPropertiesParent().orElse(null),
                 view.getDeprecatedDataPropertiesParent().orElse(null),

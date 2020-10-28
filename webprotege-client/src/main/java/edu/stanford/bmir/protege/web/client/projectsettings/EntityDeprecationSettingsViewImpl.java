@@ -41,8 +41,12 @@ public class EntityDeprecationSettingsViewImpl extends Composite implements Enti
     @UiField(provided = true)
     PrimitiveDataEditor individualsParentEditor;
 
+    @UiField(provided = true)
+    PrimitiveDataEditor replacedByPropertyEditor;
+
     @Inject
     public EntityDeprecationSettingsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+        replacedByPropertyEditor = primitiveDataEditorProvider.get();
         classesParentEditor = primitiveDataEditorProvider.get();
         objectPropertiesParentEditor = primitiveDataEditorProvider.get();
         dataPropertiesParentEditor = primitiveDataEditorProvider.get();
@@ -53,11 +57,26 @@ public class EntityDeprecationSettingsViewImpl extends Composite implements Enti
 
     @Override
     public void clear() {
+        replacedByPropertyEditor.clearValue();
         classesParentEditor.clearValue();
         objectPropertiesParentEditor.clearValue();
         dataPropertiesParentEditor.clearValue();
         annotationPropertiesParentEditor.clearValue();
         individualsParentEditor.clearValue();
+    }
+
+    @Override
+    public Optional<IRI> getReplacedByPropertyIri() {
+        return replacedByPropertyEditor.getValue()
+                                       .filter(value -> value instanceof OWLAnnotationPropertyData)
+                                       .map(value -> (OWLAnnotationPropertyData) value)
+                .map(OWLAnnotationPropertyData::getEntity)
+                .map(OWLEntity::getIRI);
+    }
+
+    @Override
+    public void setReplacedByProperty(@Nonnull OWLAnnotationPropertyData property) {
+        replacedByPropertyEditor.setValue(property);
     }
 
     @Override

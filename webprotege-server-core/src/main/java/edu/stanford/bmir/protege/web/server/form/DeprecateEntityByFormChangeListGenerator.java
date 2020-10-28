@@ -119,6 +119,9 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         // Replace usages of the deprecated entity with other replacement entity
         // This effectively removes the deprecated entity from the ontology
         var replaceChanges = getReplaceEntityChanges();
+
+        // TODO: Replaced by annotation
+
         allChangesBuilder.addAll(replaceChanges);
 
         var formDescriptors = entityFormManager.getFormDescriptors(entityToBeDeprecated,
@@ -146,6 +149,8 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId,
                                                 dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(
                                                         entityToBeDeprecated.getIRI())));
+
+        // TODO: Remove the parent
 
         // Reparent the deprecated entity if a parent is specified by the settings
         getPlacementAxiom()
