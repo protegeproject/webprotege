@@ -69,7 +69,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                 now,
                 settings.getProjectOwner(),
                 now,
-                settings.getProjectOwner());
+                settings.getProjectOwner(),
+                EntityDeprecationSettings.empty());
         repository.save(record);
     }
 
@@ -105,7 +106,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
             ProjectDetails updatedRecord = rec.withDisplayName(projectSettings.getProjectDisplayName())
                                               .withDescription(projectSettings.getProjectDescription())
                                               .withDefaultLanguage(projectSettings.getDefaultLanguage())
-                                              .withDefaultDisplayNameSettings(projectSettings.getDefaultDisplayNameSettings());
+                                              .withDefaultDisplayNameSettings(projectSettings.getDefaultDisplayNameSettings())
+                    .withEntityDeprecationSettings(projectSettings.getEntityDeprecationSettings());
             repository.save(updatedRecord);
 
         });
@@ -142,7 +144,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                    projectDetails.getDefaultDisplayNameSettings(),
                                    SlackIntegrationSettings.get(slackPayloadUrl),
                                    WebhookSettings.get(webhookSettings),
-                                   EntityDeprecationSettings.empty());
+                                   projectDetails.getEntityDeprecationSettings());
     }
 
 }

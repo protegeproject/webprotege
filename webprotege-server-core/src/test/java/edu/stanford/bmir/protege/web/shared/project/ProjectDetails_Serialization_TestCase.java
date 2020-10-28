@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -43,7 +44,8 @@ public class ProjectDetails_Serialization_TestCase {
                                             2L,
                                             UserId.getUserId("The creator"),
                                             3L,
-                                            UserId.getUserId("The modifier"));
+                                            UserId.getUserId("The modifier"),
+                                            EntityDeprecationSettings.empty());
         ObjectMapperProvider objectMapperProvider = new ObjectMapperProvider();
         objectMapper = objectMapperProvider.get();
     }

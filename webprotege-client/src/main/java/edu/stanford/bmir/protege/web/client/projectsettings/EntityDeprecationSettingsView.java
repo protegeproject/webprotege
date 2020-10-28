@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.projectsettings;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.semanticweb.owlapi.model.*;
 
@@ -26,7 +27,7 @@ public interface EntityDeprecationSettingsView extends IsWidget {
 
     Optional<OWLObjectProperty> getDeprecatedObjectPropertiesParent();
 
-    void setDeprecatedDataPropertiesParent(@Nonnull OWLDataFactory data);
+    void setDeprecatedDataPropertiesParent(@Nonnull OWLDataPropertyData data);
 
     Optional<OWLDataProperty> getDeprecatedDataPropertiesParent();
 
@@ -34,7 +35,7 @@ public interface EntityDeprecationSettingsView extends IsWidget {
 
     Optional<OWLAnnotationProperty> getDeprecatedAnnotationPropertiesParent();
 
-    void setDeprecatedIndividualsParent(@Nonnull OWLClassData data)
+    void setDeprecatedIndividualsParent(@Nonnull OWLClassData data);
 
     Optional<OWLClass> getDeprecatedIndividualsParent();
 }

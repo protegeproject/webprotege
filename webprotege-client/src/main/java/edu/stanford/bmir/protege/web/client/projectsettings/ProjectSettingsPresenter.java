@@ -146,13 +146,18 @@ public class ProjectSettingsPresenter {
         // TODO: Check that the user can do this
         AcceptsOneWidget newEntitySettingsContainer = settingsPresenter.addSection(messages.newEntitySettings());
         entityCrudKitSettingsPresenter.start(newEntitySettingsContainer);
+
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
         settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
-        settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
-        settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
+
 
         AcceptsOneWidget entityDeprecationSettingsContainer = settingsPresenter.addSection(messages.entityDeprecationSettings_title());
         entityDeprecationSettingsPresenter.start(entityDeprecationSettingsContainer);
+
+
+
+        settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
+        settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
 
         defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
         reloadSettings();
