@@ -17,11 +17,13 @@ import javax.annotation.Nonnull;
 public abstract class GetEntityDeprecationFormsResult implements Result {
 
     @Nonnull
-    public static GetEntityDeprecationFormsResult get(@Nonnull ImmutableList<FormDescriptorDto> formDtos) {
-        return new AutoValue_GetEntityDeprecationFormsResult(formDtos);
+    public static GetEntityDeprecationFormsResult get(@Nonnull ImmutableList<FormDescriptorDto> formDtos,
+                                                      long referencesCount) {
+        return new AutoValue_GetEntityDeprecationFormsResult(formDtos, referencesCount);
     }
 
     @Nonnull
     public abstract ImmutableList<FormDescriptorDto> getFormDescriptors();
 
+    public abstract long getReferencesCount();
 }

@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -35,6 +32,12 @@ public class DeprecateEntityViewImpl extends Composite implements DeprecateEntit
     @UiField(provided = true)
     PrimitiveDataEditor replacementEntityEditor;
 
+    @UiField
+    Label referencesCountField;
+
+    @UiField
+    HTMLPanel replaceWithSubView;
+
     @Inject
     public DeprecateEntityViewImpl(PrimitiveDataEditor replacementEntityEditor) {
         this.replacementEntityEditor = checkNotNull(replacementEntityEditor);
@@ -54,6 +57,18 @@ public class DeprecateEntityViewImpl extends Composite implements DeprecateEntit
                 .filter(v -> v instanceof OWLEntityData)
                 .map(v -> (OWLEntityData) v)
                 .map(OWLEntityData::getEntity);
+    }
+
+    @Override
+    public void setReferencesCount(long referencesCount) {
+        if(referencesCount == 0) {
+            replaceWithSubView.setVisible(false);
+            referencesCountField.setText("This entity has no other usages");
+        }
+        else {
+            replaceWithSubView.setVisible(true);
+            referencesCountField.setText("Warning: This entity is used in " + referencesCount + " places");
+        }
     }
 
     @Nonnull

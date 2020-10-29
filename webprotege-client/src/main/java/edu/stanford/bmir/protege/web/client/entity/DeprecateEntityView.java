@@ -24,4 +24,6 @@ public interface DeprecateEntityView extends IsWidget, HasRequestFocus {
 
     @Nonnull
     Optional<OWLEntity> getReplacementEntity();
+
+    void setReferencesCount(long referencesCount);
 }

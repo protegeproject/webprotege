@@ -81,6 +81,7 @@ public class DeprecateEntityPresenter {
     }
 
     private void displayForm(GetEntityDeprecationFormsResult result) {
+        view.setReferencesCount(result.getReferencesCount());
         ImmutableList<FormDescriptorDto> formDescriptors = result.getFormDescriptors();
         if(formDescriptors.isEmpty()) {
             return;

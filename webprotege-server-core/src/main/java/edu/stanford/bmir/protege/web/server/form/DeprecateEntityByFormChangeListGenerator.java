@@ -6,10 +6,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.entity.EntityRenamer;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.util.EntityDeleter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
@@ -23,14 +25,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
-import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorExAdapter;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -53,6 +50,8 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
     private final Optional<OWLEntity> replacementEntity;
 
     private EntityDeprecationSettings entityDeprecationSettings;
+
+    private EntityDeleter entityDeleter;
 
     @Nonnull
     private final EntityFormChangeListGeneratorFactory formChangeListGeneratorFactory;
@@ -81,12 +80,31 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final SubClassOfAxiomsBySubClassIndex subClassOfAxiomsBySubClassIndex;
+
+    @Nonnull
+    private final SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyAxiomsBySubPropertyIndex;
+
+    @Nonnull
+    private final SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex;
+
+    @Nonnull
+    private final SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyAxiomsBySubPropertyIndex;
+
+    @Nonnull
+    private final ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex;
+
 
     @AutoFactory
     public DeprecateEntityByFormChangeListGenerator(@Nonnull OWLEntity entityToBeDeprecated,
                                                     @Nonnull Optional<FormData> deprecationFormData,
                                                     @Nonnull Optional<OWLEntity> replacementEntity,
                                                     @Nonnull EntityDeprecationSettings entityDeprecationSettings,
+                                                    @Provided @Nonnull EntityDeleter entityDeleter,
                                                     @Provided @Nonnull EntityFormChangeListGeneratorFactory formChangeListGeneratorFactory,
                                                     @Provided @Nonnull EntityFormManager entityFormManager,
                                                     @Provided @Nonnull MessageFormatter messageFormatter,
@@ -94,11 +112,18 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                                     @Provided @Nonnull ProjectComponent projectComponent,
                                                     @Provided @Nonnull EntityRenamer entityRenamer,
                                                     @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                                    @Provided @Nonnull OWLDataFactory dataFactory) {
+                                                    @Provided @Nonnull OWLDataFactory dataFactory,
+                                                    @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                                    @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsBySubClassIndex,
+                                                    @Provided @Nonnull SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyAxiomsBySubPropertyIndex,
+                                                    @Provided @Nonnull SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex,
+                                                    @Provided @Nonnull SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyAxiomsBySubPropertyIndex,
+                                                    @Provided @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex) {
         this.entityToBeDeprecated = checkNotNull(entityToBeDeprecated);
         this.deprecationFormData = checkNotNull(deprecationFormData);
         this.replacementEntity = checkNotNull(replacementEntity);
         this.entityDeprecationSettings = checkNotNull(entityDeprecationSettings);
+        this.entityDeleter = entityDeleter;
         this.formChangeListGeneratorFactory = formChangeListGeneratorFactory;
         this.entityFormManager = entityFormManager;
         this.messageFormatter = messageFormatter;
@@ -107,6 +132,12 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         this.entityRenamer = entityRenamer;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.dataFactory = dataFactory;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.subClassOfAxiomsBySubClassIndex = subClassOfAxiomsBySubClassIndex;
+        this.subObjectPropertyAxiomsBySubPropertyIndex = subObjectPropertyAxiomsBySubPropertyIndex;
+        this.subDataPropertyAxiomsBySubPropertyIndex = subDataPropertyAxiomsBySubPropertyIndex;
+        this.subAnnotationPropertyAxiomsBySubPropertyIndex = subAnnotationPropertyAxiomsBySubPropertyIndex;
+        this.classAssertionAxiomsByIndividualIndex = classAssertionAxiomsByIndividualIndex;
     }
 
     @Override
@@ -115,46 +146,58 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
         // Note that the order of these changes is important
 
-        var allChangesBuilder = OntologyChangeList.<OWLEntity>builder();
+        var changeListBuilder = ImmutableList.<OntologyChange>builder();
 
-        // Replace usages of the deprecated entity with other replacement entity
-        // This effectively removes the deprecated entity from the ontology
-        var replaceChanges = getReplaceEntityChanges();
+        addChangesToReplaceOrDeleteEntity(context, changeListBuilder);
 
-        allChangesBuilder.addAll(replaceChanges);
+        // Add the stuff we want to preserve to the deprecated entity.  This will cancel out
+        // any previous deletions
+        addChangesToPreserveFieldsOnEntity(context, changeListBuilder);
 
-        var formDescriptors = entityFormManager.getFormDescriptors(entityToBeDeprecated,
-                                                                   projectId,
-                                                                   FormPurpose.ENTITY_EDITING);
+        addChangesToRemoveParents(changeListBuilder);
 
-        // Clean up the replacement entity by removing anything from the deprecated entity
-        // that was copied over by the above find-and-replace
-        var changesToCleanUpReplacementEntity = cleanUpReplacementEntity(context);
-        allChangesBuilder.addAll(changesToCleanUpReplacementEntity);
+        addChangesToReparentEntity(changeListBuilder);
 
-        // Add the stuff we want to preserve to the deprecated entity
-        var changesToPreserveFormData = getChangesToPreserveFields(context, formDescriptors);
-        allChangesBuilder.addAll(changesToPreserveFormData);
+        addChangesToMarkEntityAsDeprecated(changeListBuilder);
 
-        // Add the stuff from the filled out entity deprecation form to the deprecated entity
-        var changesToAddEntityDeprecationFormData = getChangesToAddDeprecationFormData(context).getChanges();
-        allChangesBuilder.addAll(changesToAddEntityDeprecationFormData);
+        addChangesToAddDeprecationFormData(context, changeListBuilder);
 
+        return OntologyChangeList.<OWLEntity>builder()
+                                 .addAll(changeListBuilder.build())
+                                 .build(entityToBeDeprecated);
+    }
+
+    private void addChangesToReplaceOrDeleteEntity(ChangeGenerationContext context,
+                                                   ImmutableList.Builder<OntologyChange> changeListBuilder) {
+        if (replacementEntity.isPresent()) {
+            // Replace usages of the deprecated entity with other replacement entity
+            // This effectively removes the deprecated entity from the ontology
+            addChangesToReplaceEntity(context, changeListBuilder);
+            addChangesToAddReplacedWithAnnotation(changeListBuilder);
+        }
+        else {
+            // Temporarily delete the entity so that it gets properly cleaned up.  Preserved things
+            // will be restored
+            entityDeleter.getChangesToDeleteEntities(Collections.singleton(entityToBeDeprecated));
+        }
+    }
+
+    private void addChangesToReparentEntity(ImmutableList.Builder<OntologyChange> changeListBuilder) {
+        // If the deprecated parent is specified then reparent
         var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
-        // Mark the deprecated entity as deprecated.  Make sure it's also declared, otherwise
-        // it will just be a deprecated IRI
-        allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId,
+        getPlacementAxiom().ifPresent(ax -> changeListBuilder.add(AddAxiomChange.of(defaultOntologyId, ax)));
+    }
+
+    private void addChangesToMarkEntityAsDeprecated(ImmutableList.Builder<OntologyChange> changeListBuilder) {
+        OWLOntologyID defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        // Mark the deprecated entity as deprecated with an annotation
+        changeListBuilder.add(AddAxiomChange.of(defaultOntologyId,
                                                 dataFactory.getOWLDeclarationAxiom(entityToBeDeprecated)));
-        allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId,
+        // Make sure it's also declared, otherwise
+        // it will just be a deprecated IRI and the type information will be lost
+        changeListBuilder.add(AddAxiomChange.of(defaultOntologyId,
                                                 dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(
                                                         entityToBeDeprecated.getIRI())));
-
-        // TODO: Remove the parent
-
-        // Reparent the deprecated entity if a parent is specified by the settings
-        getPlacementAxiom().ifPresent(ax -> allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId, ax)));
-
-        return allChangesBuilder.build(entityToBeDeprecated);
     }
 
     private Optional<OWLAxiom> getPlacementAxiom() {
@@ -206,32 +249,36 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         });
     }
 
-    private List<OntologyChange> getChangesToPreserveFields(ChangeGenerationContext context,
-                                                            ImmutableList<FormDescriptor> formDescriptors) {
+    private void addChangesToPreserveFieldsOnEntity(ChangeGenerationContext context,
+                                                    ImmutableList.Builder<OntologyChange> changeListBuilder) {
+
+        var formDescriptors = entityFormManager.getFormDescriptors(entityToBeDeprecated,
+                                                                   projectId,
+                                                                   FormPurpose.ENTITY_EDITING);
+
         var preservedFormDescriptors = formDescriptors.stream()
                                                       .map(formDescriptor -> formDescriptor.withFields(field -> field.getDeprecationStrategy()
                                                                                                                      .equals(FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT)))
                                                       .collect(toImmutableList());
-        // By this time, if the deprecated entity was replaced then we need to act on the
-        // replacement entity, otherwise we act on the deprecated entity
         var formDataToPreserve = getFormData(preservedFormDescriptors, entityToBeDeprecated);
-        return formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated, formDataToPreserve)
-                                             .generateChanges(context)
-                                             .getChanges();
+        var changes = formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated, formDataToPreserve)
+                                                    .generateChanges(context)
+                                                    .getChanges();
+        changeListBuilder.addAll(changes);
     }
 
-    private List<OntologyChange> cleanUpReplacementEntity(ChangeGenerationContext context) {
+    private void addChangesToCleanUpReplacementEntity(ChangeGenerationContext context,
+                                                      @Nonnull ImmutableList.Builder<OntologyChange> changesListBuilder) {
 
         if (replacementEntity.isEmpty()) {
-            return Collections.emptyList();
+            return;
         }
 
-        var changes = new ArrayList<OntologyChange>();
         // Remove all of the stuff on the deprecated entity
-
         var formDescriptorsForDeprecatedEntity = entityFormManager.getFormDescriptors(entityToBeDeprecated,
                                                                                       projectId,
                                                                                       FormPurpose.ENTITY_EDITING);
+
         // First remove all fields that are on the deprecated entity from the replacement entity that are there
         // as a result of the rename
         var formDataOnDeprecatedEntity = getFormData(formDescriptorsForDeprecatedEntity, entityToBeDeprecated);
@@ -246,7 +293,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                                                                               formData -> formData));
 
         // Generate the changes to remove the deprecated form data from the replacement entity
-        changes.addAll(formChangeListGeneratorFactory.createForRemove(replacementEntity.get(),
+        changesListBuilder.addAll(formChangeListGeneratorFactory.createForRemove(replacementEntity.get(),
                                                                       formDataOnReplacementToRemove)
                                                      .generateChanges(context)
                                                      .getChanges());
@@ -258,26 +305,28 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                                                                         projectId,
                                                                                         FormPurpose.ENTITY_EDITING);
         var formDataForReplacement = getFormData(formDescriptorsFormReplacementEntity, replacementEntity.get());
-        changes.addAll(formChangeListGeneratorFactory.createForAdd(replacementEntity.get(), formDataForReplacement)
+        changesListBuilder.addAll(formChangeListGeneratorFactory.createForAdd(replacementEntity.get(), formDataForReplacement)
                                                      .generateChanges(context)
                                                      .getChanges());
 
-        changes.addAll(addReplacedWithChanges());
-        return changes;
+
     }
 
-    private OntologyChangeList<OWLEntity> getChangesToAddDeprecationFormData(ChangeGenerationContext context) {
+    private void addChangesToAddDeprecationFormData(@Nonnull ChangeGenerationContext context,
+                                                    @Nonnull ImmutableList.Builder<OntologyChange> changeBuilder) {
         if (deprecationFormData.isEmpty()) {
-            return OntologyChangeList.<OWLEntity>builder().build(entityToBeDeprecated);
+            return;
         }
-        return formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated,
-                                                           ImmutableMap.of(deprecationFormData.get().getFormId(),
-                                                                           deprecationFormData.get()))
-                                             .generateChanges(context);
+        formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated,
+                                                    ImmutableMap.of(deprecationFormData.get().getFormId(),
+                                                                    deprecationFormData.get()))
+                                      .generateChanges(context)
+                                      .getChanges()
+                                      .forEach(changeBuilder::add);
     }
 
-    private List<OntologyChange> addReplacedWithChanges() {
-        return replacementEntity.flatMap(replacement -> {
+    private void addChangesToAddReplacedWithAnnotation(ImmutableList.Builder<OntologyChange> changeListBuilder) {
+        replacementEntity.flatMap(replacement -> {
             return entityDeprecationSettings.getReplacedByPropertyIri().map(iri -> {
                 var prop = DataFactory.getOWLAnnotationProperty(iri);
                 var value = replacement.getIRI();
@@ -287,18 +336,19 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                                                               value);
                 return AddAxiomChange.of(defaultOntologyIdManager.getDefaultOntologyId(), annotationAx);
             });
-        }).stream().collect(toImmutableList());
+        }).ifPresent(changeListBuilder::add);
 
 
     }
 
-    private List<OntologyChange> getReplaceEntityChanges() {
+    private void addChangesToReplaceEntity(@Nonnull ChangeGenerationContext context,
+                                           @Nonnull ImmutableList.Builder<OntologyChange> changeListBuilder) {
         if (replacementEntity.isEmpty()) {
-            return Collections.emptyList();
+            return;
         }
         var replacement = replacementEntity.get();
         var changes = entityRenamer.generateChanges(ImmutableMap.of(entityToBeDeprecated, replacement.getIRI()));
-        return changes.stream().filter(chg -> chg.accept(new OntologyChangeVisitorEx<>() {
+        changes.stream().filter(chg -> chg.accept(new OntologyChangeVisitorEx<>() {
             @Override
             public Boolean getDefaultReturnValue() {
                 return true;
@@ -315,7 +365,72 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                     }
                 });
             }
-        })).collect(Collectors.toList());
+        })).forEach(changeListBuilder::add);
+        // Clean up the replacement entity by removing anything from the deprecated entity
+        // that was copied over by the above find-and-replace
+        addChangesToCleanUpReplacementEntity(context, changeListBuilder);
+    }
+
+    private void addChangesToRemoveParents(ImmutableList.Builder<OntologyChange> changeBuilder) {
+        entityToBeDeprecated.accept(new OWLEntityVisitor() {
+            @Override
+            public void visit(@Nonnull OWLClass cls) {
+                projectOntologiesIndex.getOntologyIds()
+                                      .flatMap(ontId -> subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(
+                                              cls,
+                                              ontId)
+                                                                                       .filter(ax -> ax.getSuperClass()
+                                                                                                       .isNamed())
+                                                                                       .map(ax -> RemoveAxiomChange.of(
+                                                                                               ontId,
+                                                                                               ax)))
+                                      .forEach(changeBuilder::add);
+            }
+
+            @Override
+            public void visit(@Nonnull OWLObjectProperty property) {
+                projectOntologiesIndex.getOntologyIds()
+                                      .flatMap(ontId -> subObjectPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
+                                              property,
+                                              ontId).map(ax -> RemoveAxiomChange.of(ontId, ax)))
+                                      .forEach(changeBuilder::add);
+            }
+
+            @Override
+            public void visit(@Nonnull OWLDataProperty property) {
+                projectOntologiesIndex.getOntologyIds()
+                                      .flatMap(ontId -> subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
+                                              property,
+                                              ontId).map(ax -> RemoveAxiomChange.of(ontId, ax)))
+                                      .forEach(changeBuilder::add);
+            }
+
+            @Override
+            public void visit(@Nonnull OWLNamedIndividual individual) {
+                projectOntologiesIndex.getOntologyIds()
+                                      .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
+                                              individual,
+                                              ontId)
+                                                                                             .filter(ax -> ax.getClassExpression()
+                                                                                                             .isNamed())
+                                                                                             .map(ax -> RemoveAxiomChange
+                                                                                                     .of(ontId, ax)))
+                                      .forEach(changeBuilder::add);
+            }
+
+            @Override
+            public void visit(@Nonnull OWLDatatype datatype) {
+            }
+
+            @Override
+            public void visit(@Nonnull OWLAnnotationProperty property) {
+                projectOntologiesIndex.getOntologyIds()
+                                      .flatMap(ontId -> subAnnotationPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
+                                              property,
+                                              ontId).map(ax -> RemoveAxiomChange.of(ontId, ax)))
+                                      .forEach(changeBuilder::add);
+            }
+        });
     }
 
 

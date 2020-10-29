@@ -3,9 +3,15 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
+
         <g:HTMLPanel addStyleNames="{wp.style.form}">
-            <g:Label text="Replace with" addStyleNames="{wp.style.formLabel}"/>
-            <primitive:PrimitiveDataEditor ui:field="replacementEntityEditor"/>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.warningLabel}">
+                <g:Label ui:field="referencesCountField"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="replaceWithSubView" addStyleNames="{wp.style.formGroup}">
+                <g:Label text="Replace with" addStyleNames="{wp.style.formLabel}"/>
+                <primitive:PrimitiveDataEditor ui:field="replacementEntityEditor"/>
+            </g:HTMLPanel>
         </g:HTMLPanel>
         <g:HTMLPanel>
             <g:SimplePanel ui:field="entityFormContainer"/>
