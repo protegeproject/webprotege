@@ -21,16 +21,9 @@ public class CheckMongoDBConnectionTask implements ConfigurationTask {
     @Nonnull
     private final MongoClient mongoClient;
 
-    private final String dbHost;
-
-    private final int dbPort;
-
     @Inject
-    public CheckMongoDBConnectionTask(@Nonnull MongoClient mongoClient,
-                                      @DbHost String dbHost, @DbPort int dbPort) {
+    public CheckMongoDBConnectionTask(@Nonnull MongoClient mongoClient) {
         this.mongoClient = checkNotNull(mongoClient);
-        this.dbHost = checkNotNull(dbHost);
-        this.dbPort = dbPort;
     }
 
     @Override
@@ -43,12 +36,7 @@ public class CheckMongoDBConnectionTask implements ConfigurationTask {
     }
 
     private String getUnknownHostErrorMessage() {
-        return String.format(
-                "Could not connect to database on %s at port %d.  " +
-                        "Please make sure the mongod daemon is running at this address.",
-                dbHost,
-                dbPort
-        );
+        return "Could not connect to MongoDB";
     }
 
 }

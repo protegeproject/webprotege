@@ -23,7 +23,10 @@ public class MongoTestUtils {
     private static final String TEST_DB_NAME = "webprotege-test";
 
     public static MongoClient createMongoClient() {
-        return new MongoClientProvider("localhost", 27017, Optional.empty(), new ApplicationDisposablesManager(new DisposableObjectManager())).get();
+        return new MongoClientProvider(Optional.of("localhost"),
+                                       Optional.of(27017),
+                                       Optional.empty(),
+                                       Optional.empty(), new ApplicationDisposablesManager(new DisposableObjectManager())).get();
     }
 
     public static Morphia createMorphia() {

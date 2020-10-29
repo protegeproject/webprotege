@@ -38,6 +38,9 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
     MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017)),
 
+    @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
+    MONGO_DB_URI("mongodb.uri", PropertyValue.absentByDefault()),
+
     @WebProtegePropertiesDocumentation(description = "The username that WebProtégé should use to connect to to MongoDB")
     MONGO_DB_AUTH_USERNAME("mongodb.auth.username", PropertyValue.ofString("")),
 

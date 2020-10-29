@@ -4,13 +4,14 @@ import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-public class DbHostProvider implements Provider<String> {
+public class DbHostProvider implements Provider<Optional<String>> {
 
     private WebProtegeProperties webProtegeProperties;
 
@@ -20,7 +21,7 @@ public class DbHostProvider implements Provider<String> {
     }
 
     @Override
-    public String get() {
-        return webProtegeProperties.getDBHost().get();
+    public Optional<String> get() {
+        return webProtegeProperties.getDBHost();
     }
 }
