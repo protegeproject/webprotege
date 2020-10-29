@@ -56,7 +56,7 @@ public class OboUtil {
     public String getStringAnnotationValue(@Nonnull IRI annotationSubject,
                                            @Nonnull IRI annotationPropertyIRI,
                                            @Nonnull String defaultValue) {
-        var labelAnnotation = projectOntologiesIndex.getOntologyIds()
+        var labelAnnotation = projectOntologiesIndex.getOntologyDocumentIds()
                                                     .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(annotationSubject, ontId))
                                                     .filter(ax -> ax.getProperty().getIRI().equals(annotationPropertyIRI))
                                                     .findFirst();
@@ -70,7 +70,7 @@ public class OboUtil {
         List<OntologyChange> changes = new ArrayList<>();
         OWLAnnotationProperty property = dataFactory.getOWLAnnotationProperty(annotationPropertyIRI);
         OWLLiteral value = dataFactory.getOWLLiteral(replaceWith);
-        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontId -> {
             annotationAssertionsIndex.getAxiomsForSubject(annotationSubject, ontId).forEach(ax -> {
                 changes.add(RemoveAxiomChange.of(ontId, ax));
                 if (!replaceWith.isEmpty()) {
@@ -80,7 +80,7 @@ public class OboUtil {
         });
         if (!replaceWith.isEmpty() && changes.isEmpty()) {
             // No previous value, so set new one
-            var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+            var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
             changes.add(AddAxiomChange.of(defaultOntologyId, dataFactory.getOWLAnnotationAssertionAxiom(property, annotationSubject, value)));
         }
         return changes;

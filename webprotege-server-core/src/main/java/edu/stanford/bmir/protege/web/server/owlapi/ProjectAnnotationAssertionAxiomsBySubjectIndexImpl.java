@@ -38,7 +38,7 @@ public class ProjectAnnotationAssertionAxiomsBySubjectIndexImpl implements Proje
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject) {
         checkNotNull(subject);
-        return ontologiesIndex.getOntologyIds()
+        return ontologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject, ontId));
     }
 }

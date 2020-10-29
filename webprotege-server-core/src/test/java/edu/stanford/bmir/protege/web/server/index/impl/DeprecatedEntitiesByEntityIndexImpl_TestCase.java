@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.DeprecatedEntitiesByEntityIndexImpl;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
     private AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLEntity entity;
@@ -53,7 +53,7 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
     public void setUp() {
         impl = new DeprecatedEntitiesByEntityIndexImpl(projectOntologiesIndex, annotationAssertionsIndex);
 
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontologyId));
 
         when(annotationAssertionsIndex.getAxiomsForSubject(any(), any()))

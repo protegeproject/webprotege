@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
-import org.hamcrest.MatcherAssert;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class RemoveImportChange_TestCase<R> {
     private RemoveImportChange change;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLImportsDeclaration importsDeclaration;
@@ -52,7 +52,7 @@ public class RemoveImportChange_TestCase<R> {
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
     }
 
     @Test
@@ -117,13 +117,6 @@ public class RemoveImportChange_TestCase<R> {
         assertThat(change.isAddOntologyAnnotation(), is(false));
     }
 
-    @Test
-    public void shouldCreateOwlOntologyChangeRecord() {
-        var changeRecord = change.toOwlOntologyChangeRecord();
-        assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new RemoveImportData(importsDeclaration)));
-    }
-
     @Test(expected = NoSuchElementException.class)
     public void shouldGetAnnotationOrThrow() {
         change.getAnnotationOrThrow();
@@ -137,15 +130,15 @@ public class RemoveImportChange_TestCase<R> {
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
         assertThat(revertingChange, is(Matchers.instanceOf(AddImportChange.class)));
-        assertThat(revertingChange.getOntologyId(), is(ontologyId));
+        assertThat(revertingChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(revertingChange.getImportsDeclaration(), is(importsDeclaration));
     }
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = Mockito.mock(OWLOntologyID.class);
+        var otherOntologyId = Mockito.mock(OntologyDocumentId.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
-        assertThat(replaced.getOntologyId(), is(otherOntologyId));
+        assertThat(replaced.getOntologyDocumentId(), is(otherOntologyId));
     }
 
     @Test

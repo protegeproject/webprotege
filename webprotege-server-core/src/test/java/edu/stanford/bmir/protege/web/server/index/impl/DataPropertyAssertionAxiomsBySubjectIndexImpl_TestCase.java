@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-
-import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +31,7 @@ public class DataPropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
     private DataPropertyAssertionAxiomsBySubjectIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLIndividual subject;
@@ -45,24 +44,24 @@ public class DataPropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
         when(axiom.getSubject())
                 .thenReturn(subject);
         impl = new DataPropertyAssertionAxiomsBySubjectIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetDataPropertyDomainAxiomForProperty() {
-        var axioms = impl.getDataPropertyAssertions(subject, ontologyID).collect(toSet());
+        var axioms = impl.getDataPropertyAssertions(subject, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getDataPropertyAssertions(subject, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getDataPropertyAssertions(subject, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownSubject() {
-        var axioms = impl.getDataPropertyAssertions(mock(OWLIndividual.class), ontologyID).collect(toSet());
+        var axioms = impl.getDataPropertyAssertions(mock(OWLIndividual.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -75,7 +74,7 @@ public class DataPropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullProperty() {
-        impl.getDataPropertyAssertions(null, ontologyID);
+        impl.getDataPropertyAssertions(null, ontologyDocumentId);
     }
 
 }

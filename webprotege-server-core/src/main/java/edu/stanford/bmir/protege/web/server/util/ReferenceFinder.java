@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -46,7 +47,7 @@ public class ReferenceFinder {
      * axioms where the IRI is the IRI of one or more of the specified entities.
      */
     public ReferenceSet getReferenceSet(@Nonnull Collection<OWLEntity> entities,
-                                        @Nonnull OWLOntologyID ontologyId) {
+                                        @Nonnull OntologyDocumentId ontologyId) {
 
         checkNotNull(entities);
         checkNotNull(ontologyId);
@@ -93,13 +94,13 @@ public class ReferenceFinder {
 
     public static class ReferenceSet {
 
-        private final OWLOntologyID ontologyId;
+        private final OntologyDocumentId ontologyId;
 
         private final ImmutableCollection<OWLAxiom> referencingAxioms;
 
         private final ImmutableCollection<OWLAnnotation> referencingOntologyAnnotations;
 
-        public ReferenceSet(OWLOntologyID ontologyId,
+        public ReferenceSet(OntologyDocumentId ontologyId,
                             ImmutableCollection<OWLAxiom> referencingAxioms,
                             ImmutableCollection<OWLAnnotation> referencingOntologyAnnotations) {
             this.ontologyId = checkNotNull(ontologyId);
@@ -107,7 +108,7 @@ public class ReferenceFinder {
             this.referencingOntologyAnnotations = checkNotNull(referencingOntologyAnnotations);
         }
 
-        public OWLOntologyID getOntologyId() {
+        public OntologyDocumentId getOntologyId() {
             return ontologyId;
         }
 

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.index.DisjointClassesAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,13 +35,13 @@ public class ClassDisjointWithSectionRenderer extends AbstractOWLAxiomItemSectio
     }
 
     @Override
-    protected Set<OWLDisjointClassesAxiom> getAxiomsInOntology(OWLClass subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getDisjointClassesAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLDisjointClassesAxiom> getAxiomsInOntology(OWLClass subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getDisjointClassesAxioms(subject, ontologyDocumentId).collect(toSet());
     }
     @Override
     public List<OWLClassExpression> getRenderablesForItem(OWLClass subject,
                                                           OWLDisjointClassesAxiom item,
-                                                          OWLOntologyID ontologyId) {
+                                                          OntologyDocumentId ontologyDocumentId) {
         return new ArrayList<>(item.getClassExpressionsMinus(subject));
     }
 

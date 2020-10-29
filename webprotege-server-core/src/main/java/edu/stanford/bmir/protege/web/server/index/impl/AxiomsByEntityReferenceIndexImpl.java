@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectAxiomsSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLEntityCollectionContainerCollector;
 
@@ -95,7 +96,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         OWLAxiom axiom = processSignature(change);
         // Process the signature
         signatureBuffer.forEach(entity -> {
-            indexingVisitor.setOntologyId(change.getOntologyId());
+            indexingVisitor.setOntologyId(change.getOntologyDocumentId());
             indexingVisitor.setAxiom(axiom);
             entity.accept(indexingVisitor);
         });
@@ -105,7 +106,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         var axiom = processSignature(change);
         // Process the signature
         signatureBuffer.forEach(entity -> {
-            deindexingVisitor.setOntologyId(change.getOntologyId());
+            deindexingVisitor.setOntologyId(change.getOntologyDocumentId());
             deindexingVisitor.setAxiom(axiom);
             entity.accept(deindexingVisitor);
         });
@@ -121,19 +122,19 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
     @Override
     public boolean containsEntityInOntologyAxiomsSignature(@Nonnull OWLEntity entity,
-                                                           @Nonnull OWLOntologyID ontologyId) {
+                                                           @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(entity);
-        checkNotNull(ontologyId);
+        checkNotNull(ontologyDocumentId);
         try {
             readLock.lock();
-            referenceCheckVisitor.setOntologyId(ontologyId);
+            referenceCheckVisitor.setOntologyId(ontologyDocumentId);
             return entity.accept(referenceCheckVisitor);
         } finally {
             readLock.unlock();
         }
     }
 
-    public Stream<OWLEntity> getEntitiesInSignatureWithIri(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
+    public Stream<OWLEntity> getEntitiesInSignatureWithIri(@Nonnull IRI iri, @Nonnull OntologyDocumentId ontologyId) {
         checkNotNull(iri);
         checkNotNull(ontologyId);
         try {
@@ -182,8 +183,8 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     @Nonnull
     @Override
     public <E extends OWLEntity> Stream<E> getOntologyAxiomsSignature(@Nonnull EntityType<E> type,
-                                                                      @Nonnull OWLOntologyID ontologyId) {
-        return getSignatureByType(type, forOntologyId(ontologyId), getEntityProvider(type));
+                                                                      @Nonnull OntologyDocumentId ontologyDocumentId) {
+        return getSignatureByType(type, forOntologyId(ontologyDocumentId), getEntityProvider(type));
     }
 
     private <E extends OWLEntity> Function<IRI, OWLEntity> getEntityProvider(EntityType<E> type) {
@@ -210,7 +211,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         }
     }
 
-    private Predicate<Key> forOntologyId(@Nonnull OWLOntologyID ontologyId) {
+    private Predicate<Key> forOntologyId(@Nonnull OntologyDocumentId ontologyId) {
         return key -> key.getOntologyId()
                          .equals(ontologyId);
     }
@@ -256,12 +257,12 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
     @Override
     public Stream<OWLAxiom> getReferencingAxioms(@Nonnull OWLEntity entity,
-                                                 @Nonnull OWLOntologyID ontologyId) {
+                                                 @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(entity);
-        checkNotNull(ontologyId);
+        checkNotNull(ontologyDocumentId);
         readLock.lock();
         try {
-            referenceVisitor.setOntologyId(ontologyId);
+            referenceVisitor.setOntologyId(ontologyDocumentId);
             var axioms = entity.accept(referenceVisitor);
             return ImmutableList.copyOf(axioms)
                                 .stream();
@@ -284,7 +285,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     protected interface Key {
 
         @Nonnull
-        OWLOntologyID getOntologyId();
+        OntologyDocumentId getOntologyId();
 
         @Nonnull
         IRI getIri();
@@ -293,12 +294,12 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     @AutoValue
     public static abstract class ClassKey implements Key {
 
-        public static ClassKey get(@Nonnull OWLOntologyID ontologyId,
+        public static ClassKey get(@Nonnull OntologyDocumentId ontologyId,
                                    @Nonnull OWLClass cls) {
             return get(ontologyId, cls.getIRI());
         }
 
-        public static ClassKey get(@Nonnull OWLOntologyID ontologyId,
+        public static ClassKey get(@Nonnull OntologyDocumentId ontologyId,
                                    @Nonnull IRI clsIri) {
             return new AutoValue_AxiomsByEntityReferenceIndexImpl_ClassKey(ontologyId, clsIri);
         }
@@ -307,11 +308,11 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     @AutoValue
     public static abstract class ObjectPropertyKey implements Key {
 
-        public static ObjectPropertyKey get(OWLOntologyID ontologyId, OWLObjectProperty property) {
+        public static ObjectPropertyKey get(OntologyDocumentId ontologyId, OWLObjectProperty property) {
             return get(ontologyId, property.getIRI());
         }
 
-        public static ObjectPropertyKey get(OWLOntologyID ontologyId, IRI propertyIri) {
+        public static ObjectPropertyKey get(OntologyDocumentId ontologyId, IRI propertyIri) {
             return new AutoValue_AxiomsByEntityReferenceIndexImpl_ObjectPropertyKey(ontologyId, propertyIri);
         }
     }
@@ -319,11 +320,11 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     @AutoValue
     public static abstract class DataPropertyKey implements Key {
 
-        public static DataPropertyKey get(OWLOntologyID ontologyId, OWLDataProperty property) {
+        public static DataPropertyKey get(OntologyDocumentId ontologyId, OWLDataProperty property) {
             return get(ontologyId, property.getIRI());
         }
 
-        public static DataPropertyKey get(OWLOntologyID ontologyId, IRI propertyIri) {
+        public static DataPropertyKey get(OntologyDocumentId ontologyId, IRI propertyIri) {
             return new AutoValue_AxiomsByEntityReferenceIndexImpl_DataPropertyKey(ontologyId, propertyIri);
         }
     }
@@ -331,11 +332,11 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     @AutoValue
     public static abstract class AnnotationPropertyKey implements Key {
 
-        public static AnnotationPropertyKey get(OWLOntologyID ontologyId, OWLAnnotationProperty property) {
+        public static AnnotationPropertyKey get(OntologyDocumentId ontologyId, OWLAnnotationProperty property) {
             return get(ontologyId, property.getIRI());
         }
 
-        public static AnnotationPropertyKey get(OWLOntologyID ontologyId, IRI propertyIri) {
+        public static AnnotationPropertyKey get(OntologyDocumentId ontologyId, IRI propertyIri) {
             return new AutoValue_AxiomsByEntityReferenceIndexImpl_AnnotationPropertyKey(ontologyId, propertyIri);
         }
     }
@@ -343,33 +344,33 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     @AutoValue
     public static abstract class NamedIndividualKey implements Key {
 
-        public static NamedIndividualKey get(OWLOntologyID ontologyId, OWLNamedIndividual individual) {
+        public static NamedIndividualKey get(OntologyDocumentId ontologyId, OWLNamedIndividual individual) {
             return get(ontologyId, individual.getIRI());
         }
 
-        public static NamedIndividualKey get(OWLOntologyID ontologyId, IRI individualIri) {
+        public static NamedIndividualKey get(OntologyDocumentId ontologyId, IRI individualIri) {
             return new AutoValue_AxiomsByEntityReferenceIndexImpl_NamedIndividualKey(ontologyId, individualIri);
         }
     }
 
     @AutoValue
     public static abstract class DatatypeKey implements Key {
-        public static DatatypeKey get(OWLOntologyID ontologyId, OWLDatatype datatype) {
+        public static DatatypeKey get(OntologyDocumentId ontologyId, OWLDatatype datatype) {
             return get(ontologyId, datatype.getIRI());
         }
 
-        public static DatatypeKey get(OWLOntologyID ontologyId, IRI individualIri) {
+        public static DatatypeKey get(OntologyDocumentId ontologyId, IRI individualIri) {
             return new AutoValue_AxiomsByEntityReferenceIndexImpl_DatatypeKey(ontologyId, individualIri);
         }
     }
 
     private class IndexingVisitor implements OWLEntityVisitor {
 
-        private OWLOntologyID ontologyId;
+        private OntologyDocumentId ontologyId;
 
         private OWLAxiom axiom;
 
-        public void setOntologyId(OWLOntologyID ontologyId) {
+        public void setOntologyId(OntologyDocumentId ontologyId) {
             this.ontologyId = checkNotNull(ontologyId);
         }
 
@@ -410,11 +411,11 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
     private class DeindexingVisitor implements OWLEntityVisitor {
 
-        private OWLOntologyID ontologyId;
+        private OntologyDocumentId ontologyId;
 
         private OWLAxiom axiom;
 
-        public void setOntologyId(OWLOntologyID ontologyId) {
+        public void setOntologyId(OntologyDocumentId ontologyId) {
             this.ontologyId = checkNotNull(ontologyId);
         }
 
@@ -456,9 +457,9 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
     private class AxiomsByReferenceVisitor implements OWLEntityVisitorEx<Collection<OWLAxiom>> {
 
-        private OWLOntologyID ontologyId = new OWLOntologyID();
+        private OntologyDocumentId ontologyId = OntologyDocumentId.generate();
 
-        public void setOntologyId(@Nonnull OWLOntologyID ontologyId) {
+        public void setOntologyId(@Nonnull OntologyDocumentId ontologyId) {
             this.ontologyId = checkNotNull(ontologyId);
         }
 
@@ -501,9 +502,9 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
     private class ReferenceCheckVisitor implements OWLEntityVisitorEx<Boolean> {
 
-        private OWLOntologyID ontologyId = new OWLOntologyID();
+        private OntologyDocumentId ontologyId;
 
-        public void setOntologyId(@Nonnull OWLOntologyID ontologyId) {
+        public void setOntologyId(@Nonnull OntologyDocumentId ontologyId) {
             this.ontologyId = checkNotNull(ontologyId);
         }
 

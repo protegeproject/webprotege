@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.SameIndividualAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import javax.annotation.Nonnull;
@@ -35,14 +35,14 @@ public class NamedIndividualSameAsSectionRenderer extends AbstractOWLAxiomItemSe
     }
 
     @Override
-    protected Set<OWLSameIndividualAxiom> getAxiomsInOntology(OWLNamedIndividual subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getSameIndividualAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLSameIndividualAxiom> getAxiomsInOntology(OWLNamedIndividual subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getSameIndividualAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLIndividual> getRenderablesForItem(OWLNamedIndividual subject,
                                                      OWLSameIndividualAxiom item,
-                                                     OWLOntologyID ontologyId) {
+                                                     OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getIndividuals());
     }
 }

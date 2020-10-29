@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.SubClassOfAxiomsBySubClassIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -61,7 +62,7 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
     @Override
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         var changeList = new OntologyChangeList.Builder<Boolean>();
-        projectOntologies.getOntologyIds().forEach(ontId -> {
+        projectOntologies.getOntologyDocumentIds().forEach(ontId -> {
             childClasses.forEach(childClass -> {
                 subClassAxiomIndex
                         .getSubClassOfAxiomsForSubClass(childClass, ontId)
@@ -75,12 +76,12 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
 
     private void processAxiom(OWLSubClassOfAxiom ax,
                               OWLClass childCls,
-                              OWLOntologyID ontId,
+                              OntologyDocumentId documentId,
                               OntologyChangeList.Builder<Boolean> changeList) {
-        var removeAxiom = RemoveAxiomChange.of(ontId, ax);
+        var removeAxiom = RemoveAxiomChange.of(documentId, ax);
         changeList.add(removeAxiom);
         var replacementAx = dataFactory.getOWLSubClassOfAxiom(childCls, targetParent, ax.getAnnotations());
-        var addAxiom = AddAxiomChange.of(ontId, replacementAx);
+        var addAxiom = AddAxiomChange.of(documentId, replacementAx);
         changeList.add(addAxiom);
     }
 

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     private RemoveOntologyAnnotationChange change;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAnnotation ontologyAnnotation;
@@ -58,7 +59,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        MatcherAssert.assertThat(change.getOntologyId(), Matchers.is(ontologyId));
+        MatcherAssert.assertThat(change.getOntologyDocumentId(), Matchers.is(ontologyId));
     }
 
     @Test
@@ -124,13 +125,6 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
         MatcherAssert.assertThat(change.isAddOntologyAnnotation(), Matchers.is(false));
     }
 
-    @Test
-    public void shouldCreateOwlOntologyChangeRecord() {
-        var changeRecord = change.toOwlOntologyChangeRecord();
-        MatcherAssert.assertThat(changeRecord.getOntologyID(), Matchers.is(ontologyId));
-        MatcherAssert.assertThat(changeRecord.getData(), Matchers.is(new RemoveOntologyAnnotationData(ontologyAnnotation)));
-    }
-
     public void shouldGetAnnotationOrThrow() {
         MatcherAssert.assertThat(change.getAnnotation(), Matchers.is(ontologyAnnotation));
     }
@@ -144,15 +138,15 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
         MatcherAssert.assertThat(revertingChange, Matchers.is(Matchers.instanceOf(AddOntologyAnnotationChange.class)));
-        MatcherAssert.assertThat(revertingChange.getOntologyId(), Matchers.is(ontologyId));
+        MatcherAssert.assertThat(revertingChange.getOntologyDocumentId(), Matchers.is(ontologyId));
         MatcherAssert.assertThat(revertingChange.getAnnotation(), Matchers.is(ontologyAnnotation));
     }
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = Mockito.mock(OWLOntologyID.class);
+        var otherOntologyId = Mockito.mock(OntologyDocumentId.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
-        MatcherAssert.assertThat(replaced.getOntologyId(), Matchers.is(otherOntologyId));
+        MatcherAssert.assertThat(replaced.getOntologyDocumentId(), Matchers.is(otherOntologyId));
     }
 
     @Test

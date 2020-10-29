@@ -5,9 +5,9 @@ import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
 import edu.stanford.bmir.protege.web.server.index.SubObjectPropertyAxiomsBySubPropertyIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
@@ -43,10 +43,10 @@ public class SubObjectPropertyAxiomsBySubPropertyIndexImpl implements SubObjectP
     @Nonnull
     @Override
     public Stream<OWLSubObjectPropertyOfAxiom> getSubPropertyOfAxioms(@Nonnull OWLObjectProperty property,
-                                                                      @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                                      @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(property);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_OBJECT_PROPERTY, ontologyId)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_OBJECT_PROPERTY, ontologyDocumentId)
                          .filter(ax -> ax.getSubProperty().equals(property));
     }
 }

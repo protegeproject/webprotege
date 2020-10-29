@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import java.util.*;
@@ -21,11 +21,11 @@ public abstract class AbstractOWLAxiomItemSectionRenderer<E extends OWLObject, I
     }
 
     @Override
-    public final List<I> getItemsInOntology(E subject, OWLOntologyID ontologyId, ShortFormProvider shortFormProvider, Comparator<OWLObject> comparator) {
-        return sort(getAxiomsInOntology(subject, ontologyId), shortFormProvider);
+    public final List<I> getItemsInOntology(E subject, OntologyDocumentId ontologyDocumentId, ShortFormProvider shortFormProvider, Comparator<OWLObject> comparator) {
+        return sort(getAxiomsInOntology(subject, ontologyDocumentId), shortFormProvider);
     }
 
-    protected abstract Set<I> getAxiomsInOntology(E subject, OWLOntologyID ontologyId);
+    protected abstract Set<I> getAxiomsInOntology(E subject, OntologyDocumentId ontologyDocumentId);
 
     @Override
     public List<OWLAnnotation> getAnnotations(I item) {

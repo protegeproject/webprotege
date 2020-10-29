@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.BranchId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -80,7 +81,7 @@ public class FrameChangeGeneratorFactory {
     }
 
     @Nonnull
-    public FrameChangeGenerator create(FrameUpdate frameUpdate) {
+    public FrameChangeGenerator create(@Nonnull FrameUpdate frameUpdate) {
         return new FrameChangeGenerator(checkNotNull(frameUpdate),
                                         projectOntologiesIndex,
                                         reverseEngineeredChangeDescriptionGeneratorFactory,

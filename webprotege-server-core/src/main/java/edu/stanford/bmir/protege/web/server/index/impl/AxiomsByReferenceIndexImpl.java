@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -43,16 +44,16 @@ public class AxiomsByReferenceIndexImpl implements AxiomsByReferenceIndex, Depen
     @Nonnull
     @Override
     public Stream<OWLAxiom> getReferencingAxioms(@Nonnull Collection<OWLEntity> entities,
-                                                 @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                 @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(entities);
-        return entities.stream().flatMap(entity -> getReferencingAxioms(entity, ontologyId));
+        return entities.stream().flatMap(entity -> getReferencingAxioms(entity, ontologyDocumentId));
     }
 
 
     @Nonnull
     private Stream<OWLAxiom> getReferencingAxioms(OWLEntity entity,
-                                                  OWLOntologyID ontologyId) {
+                                                  OntologyDocumentId ontologyId) {
         // Combine both entity in signature and IRI mentions in annotation axioms
         var entityReferencingAxioms = axiomsByEntityReferenceIndex.getReferencingAxioms(entity, ontologyId);
         var iriReferencingAxioms = axiomsByIriReferenceIndex.getReferencingAxioms(entity.getIRI(), ontologyId);

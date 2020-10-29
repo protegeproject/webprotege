@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +15,7 @@ import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyDomainAxiomImpl;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,13 +33,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
     private AnnotationAxiomsByIriReferenceIndexImpl impl;
 
     @Mock
-    private ProjectOntologiesIndex projectOntologiesIndex;
-
-    @Mock
-    private AxiomsByTypeIndex axiomsByTypeIndex;
-
-    @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private IRI domainIri, otherDomainIri;
@@ -62,7 +55,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
         annotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, domainIri, axiomAnnotations());
         otherAnnotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, otherDomainIri, axiomAnnotations());
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, annotationPropertyDomainAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {
@@ -73,34 +66,34 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
 
     @Test
     public void shouldGetAnnotationPropertyDomainAxiomByDomainIri() {
-        var axioms = impl.getReferencingAxioms(domainIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(domainIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyDomainAxiom));
     }
 
     @Test
     public void shouldGetAnnotationPropertyDomainAxiomByAxiomAnnotationValue() {
-        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyDomainAxiom));
     }
 
 
     @Test
     public void shouldHandleAddAnnotationPropertyDomainAxiom() {
-        var changeRecord = AddAxiomChange.of(ontologyId, otherAnnotationPropertyDomainAxiom);
+        var changeRecord = AddAxiomChange.of(ontologyDocumentId, otherAnnotationPropertyDomainAxiom);
 
         impl.applyChanges(ImmutableList.of(changeRecord));
 
-        var axioms = impl.getReferencingAxioms(otherDomainIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(otherDomainIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItems(otherAnnotationPropertyDomainAxiom));
     }
 
     @Test
     public void shouldHandleRemoveAnnotationPropertyDomainAxiom() {
-        var changeRecord = RemoveAxiomChange.of(ontologyId, annotationPropertyDomainAxiom);
+        var changeRecord = RemoveAxiomChange.of(ontologyDocumentId, annotationPropertyDomainAxiom);
 
         impl.applyChanges(ImmutableList.of(changeRecord));
 
-        var axioms = impl.getReferencingAxioms(domainIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(domainIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 }

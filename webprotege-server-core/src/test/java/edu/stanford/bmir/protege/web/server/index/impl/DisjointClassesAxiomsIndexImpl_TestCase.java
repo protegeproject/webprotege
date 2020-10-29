@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
-import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +33,7 @@ public class DisjointClassesAxiomsIndexImpl_TestCase {
     private DisjointClassesAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLClass cls;
@@ -46,24 +46,24 @@ public class DisjointClassesAxiomsIndexImpl_TestCase {
         when(axiom.getClassExpressions())
                 .thenReturn(Collections.singleton(cls));
         impl = new DisjointClassesAxiomsIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetDisjointClassesAxiomForClass() {
-        var axioms = impl.getDisjointClassesAxioms(cls, ontologyID).collect(toSet());
+        var axioms = impl.getDisjointClassesAxioms(cls, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getDisjointClassesAxioms(cls, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getDisjointClassesAxioms(cls, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getDisjointClassesAxioms(mock(OWLClass.class), ontologyID).collect(toSet());
+        var axioms = impl.getDisjointClassesAxioms(mock(OWLClass.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -76,7 +76,7 @@ public class DisjointClassesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullClass() {
-        impl.getDisjointClassesAxioms(null, ontologyID);
+        impl.getDisjointClassesAxioms(null, ontologyDocumentId);
     }
 
 }

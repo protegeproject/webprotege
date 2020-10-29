@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,10 +36,10 @@ public class ClassAssertionAxiomsByClassIndexImpl implements ClassAssertionAxiom
     @Nonnull
     @Override
     public Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLClass cls,
-                                                                  @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                                  @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(cls);
-        return index.getAxioms(cls, ontologyId);
+        return index.getAxioms(cls, ontologyDocumentId);
     }
 
     @Override

@@ -51,10 +51,10 @@ public class OntologyDiffCalculator_TestCase {
         calculator = new OntologyDiffCalculator(annotationDiffCalculator,
                                                 axiomDiffCalculator);
 
-        when(fromOnt.getOntologyId())
+        when(fromOnt.getOntologyID())
                 .thenReturn(fromOntId);
 
-        when(toOnt.getOntologyId())
+        when(toOnt.getOntologyID())
                 .thenReturn(toOntId);
 
         when(annotationDiffCalculator.computeDiff(fromOnt, toOnt))

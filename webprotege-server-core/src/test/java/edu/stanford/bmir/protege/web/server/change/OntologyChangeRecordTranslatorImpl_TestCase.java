@@ -8,12 +8,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.Optional;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
@@ -48,7 +45,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateAddAxiom() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new AddAxiomData(axiom)));
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
         assertThat(change.getAxiomOrThrow(), is(axiom));
         assertThat(change, is(instanceOf(AddAxiomChange.class)));
     }
@@ -56,7 +53,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateRemoveAxiom() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new RemoveAxiomData(axiom)));
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
         assertThat(change.getAxiomOrThrow(), is(axiom));
         assertThat(change, is(instanceOf(RemoveAxiomChange.class)));
     }
@@ -64,7 +61,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateAddOntologyAnnotation() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new AddOntologyAnnotationData(annotation)));
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
         assertThat(change, is(instanceOf(AddOntologyAnnotationChange.class)));
         assertThat(((AddOntologyAnnotationChange) change).getAnnotation(), is(annotation));
     }
@@ -72,7 +69,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateRemoveOntologyAnnotation() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new RemoveOntologyAnnotationData(annotation)));
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
         assertThat(change, is(instanceOf(RemoveOntologyAnnotationChange.class)));
         assertThat(((RemoveOntologyAnnotationChange) change).getAnnotation(), is(annotation));
     }
@@ -80,7 +77,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateAddImport() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new AddImportData(importsDeclaration)));
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
         assertThat(change, is(instanceOf(AddImportChange.class)));
         assertThat(((AddImportChange) change).getImportsDeclaration(), is(importsDeclaration));
     }
@@ -88,7 +85,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateRemoveImport() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new RemoveImportData(importsDeclaration)));
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
         assertThat(change, is(instanceOf(RemoveImportChange.class)));
         assertThat(((RemoveImportChange) change).getImportsDeclaration(), is(importsDeclaration));
     }

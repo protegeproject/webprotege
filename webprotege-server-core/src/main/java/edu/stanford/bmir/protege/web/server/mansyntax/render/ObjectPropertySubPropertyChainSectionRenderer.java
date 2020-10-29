@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 
@@ -32,8 +33,8 @@ public class ObjectPropertySubPropertyChainSectionRenderer extends AbstractOWLAx
 
     @Override
     public Set<OWLSubPropertyChainOfAxiom> getAxiomsInOntology(OWLObjectProperty subject,
-                                                               OWLOntologyID ontologyId) {
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_PROPERTY_CHAIN_OF, ontologyId)
+                                                               OntologyDocumentId ontologyDocumentId) {
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_PROPERTY_CHAIN_OF, ontologyDocumentId)
                          .filter(ax -> ax.getSuperProperty().equals(subject))
                          .collect(toSet());
     }
@@ -41,7 +42,7 @@ public class ObjectPropertySubPropertyChainSectionRenderer extends AbstractOWLAx
     @Override
     public List<OWLObjectPropertyExpression> getRenderablesForItem(OWLObjectProperty subject,
                                                                    OWLSubPropertyChainOfAxiom item,
-                                                                   OWLOntologyID ontologyId) {
+                                                                   OntologyDocumentId ontologyDocumentId) {
         return item.getPropertyChain();
     }
 

@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class AnnotationAssertionAxiomsBySubjectIndexImpl implements AnnotationAs
 
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAxiomsForSubject(@Nonnull OWLAnnotationSubject subject,
-                                                                   @Nonnull OWLOntologyID ontologyId) {
+                                                                   @Nonnull OntologyDocumentId ontologyId) {
         checkNotNull(subject);
         checkNotNull(ontologyId);
         return index.getAxioms(subject, ontologyId);

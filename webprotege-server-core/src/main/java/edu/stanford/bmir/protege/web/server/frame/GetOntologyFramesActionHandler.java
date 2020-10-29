@@ -6,11 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +35,7 @@ public class GetOntologyFramesActionHandler extends AbstractProjectActionHandler
     private final OntologyAnnotationsIndex ontologyAnnotationsIndex;
 
     @Nonnull
-    private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+    private final OntologyDocumentIdDisplayNameProvider displayNameProvider;
 
     @Nonnull
     private final ContextRenderer renderer;
@@ -44,12 +44,12 @@ public class GetOntologyFramesActionHandler extends AbstractProjectActionHandler
     public GetOntologyFramesActionHandler(@Nonnull AccessManager accessManager,
                                           @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                           @Nonnull OntologyAnnotationsIndex ontologyAnnotationsIndex,
-                                          @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
+                                          @Nonnull OntologyDocumentIdDisplayNameProvider displayNameProvider,
                                           @Nonnull ContextRenderer renderer) {
         super(accessManager);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.ontologyAnnotationsIndex = checkNotNull(ontologyAnnotationsIndex);
-        this.ontologyIRIShortFormProvider = checkNotNull(ontologyIRIShortFormProvider);
+        this.displayNameProvider = displayNameProvider;
         this.renderer = checkNotNull(renderer);
     }
 
@@ -62,19 +62,19 @@ public class GetOntologyFramesActionHandler extends AbstractProjectActionHandler
     @Nonnull
     @Override
     public GetOntologyFramesResult execute(@Nonnull GetOntologyFramesAction action, @Nonnull ExecutionContext executionContext) {
-        var frames = projectOntologiesIndex.getOntologyIds()
+        var frames = projectOntologiesIndex.getOntologyDocumentIds()
                 .map(this::toOntologyFrame)
                 .collect(toImmutableList());
         return new GetOntologyFramesResult(frames);
     }
 
-    private OntologyFrame toOntologyFrame(OWLOntologyID ontId) {
-        var ontologyAnnotations = ontologyAnnotationsIndex.getOntologyAnnotations(ontId)
+    private OntologyFrame toOntologyFrame(OntologyDocumentId documentId) {
+        var ontologyAnnotations = ontologyAnnotationsIndex.getOntologyAnnotations(documentId)
                 .map(this::toPropertyValue)
                 .collect(Collectors.toList());
         var propertyValueList = new PropertyValueList(ontologyAnnotations);
-        var shortForm = ontologyIRIShortFormProvider.getShortForm(ontId);
-        return new OntologyFrame(ontId, propertyValueList, shortForm);
+        var shortForm = displayNameProvider.getDisplayName(documentId);
+        return new OntologyFrame(documentId, propertyValueList, shortForm);
     }
 
     private PropertyAnnotationValue toPropertyValue(OWLAnnotation annotation) {

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadReposit
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 
@@ -136,12 +137,12 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
             // Add an annotation assertion to deprecate the source entity
             var sourceEntityIRI = sourceEntity.getIRI();
             var deprecatedAx = dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(sourceEntityIRI);
-            var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+            var ontologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
             var addDeprecatedAxiom = AddAxiomChange.of(ontologyId, deprecatedAx);
             builder.add(addDeprecatedAxiom);
 
             // Preserve labels and other annotations on the source entity
-            projectOntologies.getOntologyIds().forEach(ontId -> {
+            projectOntologies.getOntologyDocumentIds().forEach(ontId -> {
                 annotationAssertions.getAxiomsForSubject(sourceEntityIRI, ontId)
                                     .map(ax -> AddAxiomChange.of(ontId, ax))
                                     .forEach(builder::add);
@@ -160,7 +161,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         // Replace rdfs:label with skos:altLabel.
         // Replace skos:prefLabel with skos:altLabel.
         // In both cases, language tags are preserved.
-        projectOntologies.getOntologyIds().forEach(ontId -> {
+        projectOntologies.getOntologyDocumentIds().forEach(ontId -> {
             sourceEntities.forEach(sourceEntity -> {
                 var sourceEntityIRI = sourceEntity.getIRI();
                 // Get the annotation assertions that were originally on the source entity
@@ -183,7 +184,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
      * @param builder    The builder for adding changes to.
      */
     private void replaceWithSkosAltLabel(@Nonnull OWLAnnotationAssertionAxiom ax,
-                                         @Nonnull OWLOntologyID ontId,
+                                         @Nonnull OntologyDocumentId ontId,
                                          @Nonnull OntologyChangeList.Builder<OWLEntity> builder) {
         // Remove the original one (that will be on the target entity by now)
         var origAx = dataFactory.getOWLAnnotationAssertionAxiom(

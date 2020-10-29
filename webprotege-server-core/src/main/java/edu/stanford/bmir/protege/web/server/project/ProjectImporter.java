@@ -98,13 +98,13 @@ public class ProjectImporter {
             var axioms = ont.getAxioms();
             logger.info("{} Processing ontology source ({} axioms)", projectId, axioms.size());
             for (var axiom : ont.getAxioms()) {
-                changeRecordList.add(AddAxiomChange.of(ont.getOntologyId(), axiom));
+                changeRecordList.add(AddAxiomChange.of(ont.getOntologyDocumentId(), axiom));
             }
             for (var annotation : ont.getAnnotations()) {
-                changeRecordList.add(AddOntologyAnnotationChange.of(ont.getOntologyId(), annotation));
+                changeRecordList.add(AddOntologyAnnotationChange.of(ont.getOntologyDocumentId(), annotation));
             }
             for (var importsDeclaration : ont.getImportsDeclarations()) {
-                changeRecordList.add(AddImportChange.of(ont.getOntologyId(), importsDeclaration));
+                changeRecordList.add(AddImportChange.of(ont.getOntologyDocumentId(), importsDeclaration));
             }
         }
         return changeRecordList.build();

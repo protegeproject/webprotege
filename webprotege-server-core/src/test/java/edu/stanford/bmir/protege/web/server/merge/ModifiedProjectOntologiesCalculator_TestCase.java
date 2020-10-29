@@ -52,9 +52,9 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     @Test
     public void shouldNotPerformDiffForDifferentOntologyIRIs() {
         OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.a")), Optional.absent());
-        when(projectOntology.getOntologyId()).thenReturn(projectOntologyId);
+        when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
         OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.b")), Optional.absent());
-        when(externalOntology.getOntologyId()).thenReturn(externalOntologyId);
+        when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
         assertThat(calculator.getModifiedOntologyDiffs(), is(empty()));
     }
 
@@ -62,8 +62,8 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     public void shouldPerformDiffForSameOntologyIRIs() {
         IRI commonIRI = IRI.create("http://ontology.iri");
         OWLOntologyID commonOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.absent());
-        when(projectOntology.getOntologyId()).thenReturn(commonOntologyId);
-        when(externalOntology.getOntologyId()).thenReturn(commonOntologyId);
+        when(projectOntology.getOntologyID()).thenReturn(commonOntologyId);
+        when(externalOntology.getOntologyID()).thenReturn(commonOntologyId);
 
         assertThat(calculator.getModifiedOntologyDiffs(), contains(ontologyDiff));
     }
@@ -72,17 +72,17 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     public void shouldIgnoreVersionIRI() {
         IRI commonIRI = IRI.create("http://ontology.iri");
         OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.of(IRI.create("http://version.iri.a")));
-        when(projectOntology.getOntologyId()).thenReturn(projectOntologyId);
+        when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
         OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.of(IRI.create("http://version.iri.b")));
-        when(externalOntology.getOntologyId()).thenReturn(externalOntologyId);
+        when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
 
         assertThat(calculator.getModifiedOntologyDiffs(), contains(ontologyDiff));
     }
 
     @Test
     public void shouldIgnoreAnonymousOntologies() {
-        when(projectOntology.getOntologyId()).thenReturn(new OWLOntologyID());
-        when(externalOntology.getOntologyId()).thenReturn(new OWLOntologyID());
+        when(projectOntology.getOntologyID()).thenReturn(new OWLOntologyID());
+        when(externalOntology.getOntologyID()).thenReturn(new OWLOntologyID());
         assertThat(calculator.getModifiedOntologyDiffs(), is(empty()));
     }
 }

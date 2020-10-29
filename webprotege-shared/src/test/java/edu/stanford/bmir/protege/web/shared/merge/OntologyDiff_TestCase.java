@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.merge;
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,9 +29,9 @@ public class OntologyDiff_TestCase {
 
     private OntologyDiff otherOntologyDiff;
 
-    private OWLOntologyID fromOntologyId = new OWLOntologyID();
+    private OntologyDocumentId fromOntologyId = OntologyDocumentId.generate();
 
-    private OWLOntologyID toOntologyId = new OWLOntologyID();
+    private OntologyDocumentId toOntologyId = OntologyDocumentId.generate();
 
     @Mock
     private Diff<OWLAnnotation> annotationDiff;

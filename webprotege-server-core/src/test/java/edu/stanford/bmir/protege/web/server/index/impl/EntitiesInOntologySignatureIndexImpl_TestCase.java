@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
     private EntitiesInOntologySignatureIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLEntity entity;
@@ -41,25 +42,25 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new EntitiesInOntologySignatureIndexImpl(ontologyAxiomsSignatureIndex, ontologyAnnotationsSignatureIndex);
-        when(ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity, ontologyId))
+        when(ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity, ontologyDocumentId))
                 .thenReturn(true);
     }
 
     @Test
     public void shouldContainEntityInSignature() {
-        var contains = impl.containsEntityInSignature(entity, ontologyId);
+        var contains = impl.containsEntityInSignature(entity, ontologyDocumentId);
         assertThat(contains, is(true));
     }
 
     @Test
     public void shouldNotContainUnknownEntityInSignature() {
-        var contains = impl.containsEntityInSignature(mock(OWLEntity.class), ontologyId);
+        var contains = impl.containsEntityInSignature(mock(OWLEntity.class), ontologyDocumentId);
         assertThat(contains, is(false));
     }
 
     @Test
     public void shouldNotContainEntityInUnknownOntologySignature() {
-        var contains = impl.containsEntityInSignature(entity, mock(OWLOntologyID.class));
+        var contains = impl.containsEntityInSignature(entity, mock(OntologyDocumentId.class));
         assertThat(contains, is(false));
     }
 
@@ -72,6 +73,6 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfEntityIsNull() {
-        impl.containsEntityInSignature(null, ontologyId);
+        impl.containsEntityInSignature(null, ontologyDocumentId);
     }
 }

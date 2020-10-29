@@ -7,10 +7,9 @@ import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
-import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.Matchers.any;
@@ -68,13 +66,13 @@ public class ActiveLanguagesManagerImpl_TestCase {
     private OWLAnnotationProperty rdfsLabel;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     private OWLAnnotationAssertionAxiom annotationAssertion1, annotationAssertion2, annotationAssertion3;
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(inv -> Stream.of(ontologyId));
 
         when(axiomsByEntityReference.getReferencingAxioms(any(), any()))

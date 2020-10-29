@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-
-import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,7 +30,7 @@ public class ClassAssertionAxiomsByIndividualIndexImpl_TestCase {
     private ClassAssertionAxiomsByIndividualIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLIndividual individual;
@@ -44,24 +43,24 @@ public class ClassAssertionAxiomsByIndividualIndexImpl_TestCase {
         when(axiom.getIndividual())
                 .thenReturn(individual);
         impl = new ClassAssertionAxiomsByIndividualIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetClassAssertionAxiomForIndividual() {
-        var axioms = impl.getClassAssertionAxioms(individual, ontologyID).collect(toSet());
+        var axioms = impl.getClassAssertionAxioms(individual, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getClassAssertionAxioms(individual, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getClassAssertionAxioms(individual, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownIndividual() {
-        var axioms = impl.getClassAssertionAxioms(mock(OWLIndividual.class), ontologyID).collect(toSet());
+        var axioms = impl.getClassAssertionAxioms(mock(OWLIndividual.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -74,6 +73,6 @@ public class ClassAssertionAxiomsByIndividualIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullIndividual() {
-        impl.getClassAssertionAxioms(null, ontologyID);
+        impl.getClassAssertionAxioms(null, ontologyDocumentId);
     }
 }

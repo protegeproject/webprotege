@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
     private DataPropertyRangeAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLDataProperty property;
@@ -45,7 +46,7 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
                 .thenReturn(property);
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.of());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_RANGE, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_RANGE, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new DataPropertyRangeAxiomsIndexImpl(axiomsByTypeIndex);
     }
@@ -57,19 +58,19 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
 
     @Test
     public void shouldGetDataPropertyRangeAxiomForProperty() {
-        var axioms = impl.getDataPropertyRangeAxioms(property, ontologyId).collect(toSet());
+        var axioms = impl.getDataPropertyRangeAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getDataPropertyRangeAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getDataPropertyRangeAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getDataPropertyRangeAxioms(mock(OWLDataProperty.class), ontologyId).collect(toSet());
+        var axioms = impl.getDataPropertyRangeAxioms(mock(OWLDataProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -82,6 +83,6 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullProperty() {
-        impl.getDataPropertyRangeAxioms(null, ontologyId);
+        impl.getDataPropertyRangeAxioms(null, ontologyDocumentId);
     }
 }

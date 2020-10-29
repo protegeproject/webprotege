@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -45,15 +45,16 @@ public class OntologySignatureByTypeIndexImpl implements OntologySignatureByType
     @Nonnull
     @Override
     public <E extends OWLEntity> Stream<E> getSignature(@Nonnull EntityType<E> type,
-                                                        @Nonnull OWLOntologyID ontologyId) {
+                                                        @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(type);
-        checkNotNull(ontologyId);
+        checkNotNull(ontologyDocumentId);
         if(type.equals(EntityType.ANNOTATION_PROPERTY)) {
-            return Stream.<E>concat(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyId),
-                                    (Stream<E>) ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId));
+            return Stream.<E>concat(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyDocumentId),
+                                    (Stream<E>) ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(
+                                            ontologyDocumentId));
         }
         else {
-            return ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyId);
+            return ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyDocumentId);
         }
     }
 }

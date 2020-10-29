@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.SubAnnotationPropertyAxiomsBySubPropertyIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
@@ -30,8 +30,8 @@ public class AnnotationPropertySubPropertyOfSectionRenderer extends AbstractOWLA
 
     @Override
     protected Set<OWLSubAnnotationPropertyOfAxiom> getAxiomsInOntology(OWLAnnotationProperty subject,
-                                                                       OWLOntologyID ontologyId) {
-        return axiomsIndex.getSubPropertyOfAxioms(subject, ontologyId).collect(toSet());
+                                                                       OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getSubPropertyOfAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class AnnotationPropertySubPropertyOfSectionRenderer extends AbstractOWLA
     @Override
     public List<OWLAnnotationProperty> getRenderablesForItem(OWLAnnotationProperty subject,
                                                              OWLSubAnnotationPropertyOfAxiom item,
-                                                             OWLOntologyID ontologyId) {
+                                                             OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getSuperProperty());
     }
 }

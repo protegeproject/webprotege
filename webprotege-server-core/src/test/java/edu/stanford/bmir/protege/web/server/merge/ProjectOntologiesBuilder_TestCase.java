@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.merge;
 
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyIdIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.stream.Stream;
 
@@ -39,7 +40,7 @@ public class ProjectOntologiesBuilder_TestCase {
     private OntologyAxiomsIndex ontologyAxiomsIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAnnotation annotation;
@@ -47,13 +48,15 @@ public class ProjectOntologiesBuilder_TestCase {
     @Mock
     private OWLAxiom axiom;
 
+    private OntologyIdIndex ontologyIdIndex;
+
 
     @Before
     public void setUp() {
         builder = new ProjectOntologiesBuilder(projectOntologiesIndex,
                                                ontologyAnnotationsIndex,
-                                               ontologyAxiomsIndex);
-        when(projectOntologiesIndex.getOntologyIds())
+                                               ontologyAxiomsIndex, ontologyIdIndex);
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontologyId));
 
         when(ontologyAnnotationsIndex.getOntologyAnnotations(ontologyId))
@@ -74,7 +77,7 @@ public class ProjectOntologiesBuilder_TestCase {
     public void shouldBuildOntologyWithOntologyId() {
         var ontologies = builder.buildProjectOntologies();
         var ontology = ontologies.stream().findFirst().get();
-        assertThat(ontology.getOntologyId(), is(ontologyId));
+        assertThat(ontology.getOntologyID(), is(ontologyId));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

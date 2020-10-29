@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.apache.commons.lang.NotImplementedException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -75,47 +76,49 @@ public class RevisionManagerImpl implements RevisionManager {
     @Nonnull
     @Override
     public OWLOntologyManager getOntologyManagerForRevision(@Nonnull RevisionNumber revision) {
-        try {
-            OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
-            final OWLOntologyID singletonOntologyId = new OWLOntologyID();
-            for(Revision rev : revisionStore.getRevisions()) {
-                if(rev.getRevisionNumber()
-                      .compareTo(revision) <= 0) {
-                    for(OntologyChange record : rev.getChanges()) {
-                        // Anonymous ontologies are not handled nicely at all.
-                        var normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
-                        var ontologyId = normalisedChangeRecord.getOntologyId();
-                        if(!manager.contains(ontologyId)) {
-                            manager.createOntology(ontologyId);
-                        }
-                        var change = normalisedChangeRecord
-                                .toOwlOntologyChangeRecord()
-                                .createOntologyChange(manager);
-                        manager.applyChange(change);
-                    }
-                }
-            }
-            if(manager.getOntologies()
-                      .isEmpty()) {
-                // No revisions exported.  Just create an empty ontology
-                manager.createOntology();
-            }
-            return manager;
-        } catch(OWLOntologyCreationException e) {
-            throw new RuntimeException("Problem creating ontology: " + e);
-        }
+//        try {
+//            OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
+//            final OWLOntologyID singletonOntologyId = new OWLOntologyID();
+//            for(Revision rev : revisionStore.getRevisions()) {
+//                if(rev.getRevisionNumber()
+//                      .compareTo(revision) <= 0) {
+//                    for(OntologyChange record : rev.getChanges()) {
+//                        // Anonymous ontologies are not handled nicely at all.
+//                        var normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
+//                        var ontologyId = normalisedChangeRecord.getOntologyDocumentId();
+//                        if(!manager.contains(ontologyId)) {
+//                            manager.createOntology(ontologyId);
+//                        }
+//                        var change = normalisedChangeRecord
+//                                .toOwlOntologyChangeRecord()
+//                                .createOntologyChange(manager);
+//                        manager.applyChange(change);
+//                    }
+//                }
+//            }
+//            if(manager.getOntologies()
+//                      .isEmpty()) {
+//                // No revisions exported.  Just create an empty ontology
+//                manager.createOntology();
+//            }
+//            return manager;
+//        } catch(OWLOntologyCreationException e) {
+//            throw new RuntimeException("Problem creating ontology: " + e);
+//        }
+        throw new NotImplementedException();
     }
 
     private OntologyChange normaliseChangeRecord(@Nonnull OntologyChange change,
                                                  @Nonnull OWLOntologyID singletonAnonymousId) {
-        var ontologyID = change.getOntologyId();
-        if(ontologyID.isAnonymous()) {
-            return change.replaceOntologyId(singletonAnonymousId);
-        }
-        else {
-            // As is
-            return change;
-        }
+//        var ontologyID = change.getOntologyDocumentId();
+//        if(ontologyID.isAnonymous()) {
+//            return change.replaceOntologyId(singletonAnonymousId);
+//        }
+//        else {
+//            // As is
+//            return change;
+//        }
+        throw new NotImplementedException();
     }
 
     @Nonnull

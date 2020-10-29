@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -102,9 +103,9 @@ public class UploadedProjectModule {
         return new ProjectOntologiesIndex() {
             @Nonnull
             @Override
-            public Stream<OWLOntologyID> getOntologyIds() {
+            public Stream<OntologyDocumentId> getOntologyDocumentIds() {
                 return uploadedOntologies.stream()
-                                         .map(Ontology::getOntologyId);
+                                         .map(Ontology::getOntologyDocumentId);
             }
         };
     }
@@ -114,10 +115,10 @@ public class UploadedProjectModule {
     AxiomsByTypeIndex providesAxiomsByTypeIndex(ImmutableSet<Ontology> uploadedOntologies) {
         return new AxiomsByTypeIndex() {
             @Override
-            public <T extends OWLAxiom> Stream<T> getAxiomsByType(AxiomType<T> axiomType, OWLOntologyID ontologyId) {
+            public <T extends OWLAxiom> Stream<T> getAxiomsByType(@Nonnull AxiomType<T> axiomType, @Nonnull OntologyDocumentId ontologyDocumentId) {
                 return uploadedOntologies.stream()
-                                         .filter(ont -> ont.getOntologyId()
-                                                           .equals(ontologyId))
+                                         .filter(ont -> ont.getOntologyDocumentId()
+                                                           .equals(ontologyDocumentId))
                                          .flatMap(ont -> ont.getAxioms()
                                                             .stream())
                                          .filter(ax -> ax.getAxiomType()
@@ -156,10 +157,10 @@ public class UploadedProjectModule {
     @Provides
     @ProjectSingleton
     AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex() {
-        return (entity, ontologyId) -> ontologies.stream()
-                                         .filter(ontology -> ontology.getOntologyId().equals(ontologyId))
-                                         .flatMap(ontology ->  ontology.getAxioms().stream())
-                                         .filter(ax -> ax.containsEntityInSignature(entity));
+        return (entity, ontologyDocumentId) -> ontologies.stream()
+                                                         .filter(ontology -> ontology.getOntologyDocumentId().equals(ontologyDocumentId))
+                                                         .flatMap(ontology ->  ontology.getAxioms().stream())
+                                                         .filter(ax -> ax.containsEntityInSignature(entity));
     }
 
     @Provides
@@ -304,7 +305,7 @@ public class UploadedProjectModule {
             @Nonnull
             @Override
             public Stream<OWLAnnotationAssertionAxiom> getAxiomsByValue(@Nonnull OWLAnnotationValue value,
-                                                                        @Nonnull OWLOntologyID ontologyId) {
+                                                                        @Nonnull OntologyDocumentId ontologyId) {
                 // Okay to return an empty stream here.  Only needed for stubbing purposes
                 return Stream.empty();
             }

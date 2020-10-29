@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationAssertionAxiomImpl;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -32,7 +32,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
     private AnnotationAxiomsByIriReferenceIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     private OWLAnnotationAssertionAxiom annotationAssertionAxiom, otherAnnotationAssertionAxiom;
 
@@ -66,7 +66,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
                                                                             axiomAnnotations());
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationAssertionAxiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, annotationAssertionAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {
@@ -77,44 +77,44 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
 
     @Test
     public void shouldGetAnnotationPropertyAssertionAxiomBySubject() {
-        var axioms = impl.getReferencingAxioms(subjectIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(subjectIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationAssertionAxiom));
     }
 
     @Test
     public void shouldGetAnnotationPropertyAssertionAxiomByValue() {
-        var axioms = impl.getReferencingAxioms(valueIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(valueIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationAssertionAxiom));
     }
 
     @Test
     public void shouldGetAnnotationPropertyAssertionAxiomByAxiomAnnotationValue() {
-        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationAssertionAxiom));
     }
 
 
     @Test
     public void shouldHandleAddAnnotationAssertionAxiom() {
-        var addAxiom = AddAxiomChange.of(ontologyId, otherAnnotationAssertionAxiom);
+        var addAxiom = AddAxiomChange.of(ontologyDocumentId, otherAnnotationAssertionAxiom);
         impl.applyChanges(ImmutableList.of(addAxiom));
 
-        var axiomsBySubjectIri = impl.getReferencingAxioms(otherSubjectIri, ontologyId).collect(toSet());
+        var axiomsBySubjectIri = impl.getReferencingAxioms(otherSubjectIri, ontologyDocumentId).collect(toSet());
         assertThat(axiomsBySubjectIri, hasItems(otherAnnotationAssertionAxiom));
 
-        var axiomsByValueIri = impl.getReferencingAxioms(otherValueIri, ontologyId).collect(toSet());
+        var axiomsByValueIri = impl.getReferencingAxioms(otherValueIri, ontologyDocumentId).collect(toSet());
         assertThat(axiomsByValueIri, hasItems(otherAnnotationAssertionAxiom));
     }
 
     @Test
     public void shouldHandleRemoveAnnotationAssertionAxiom() {
-        var removeAxiom = RemoveAxiomChange.of(ontologyId, annotationAssertionAxiom);
+        var removeAxiom = RemoveAxiomChange.of(ontologyDocumentId, annotationAssertionAxiom);
         impl.applyChanges(ImmutableList.of(removeAxiom));
 
-        var axiomsBySubjectIri = impl.getReferencingAxioms(subjectIri, ontologyId).collect(toSet());
+        var axiomsBySubjectIri = impl.getReferencingAxioms(subjectIri, ontologyDocumentId).collect(toSet());
         assertThat(axiomsBySubjectIri.isEmpty(), is(true));
 
-        var axiomsByValueIri = impl.getReferencingAxioms(valueIri, ontologyId).collect(toSet());
+        var axiomsByValueIri = impl.getReferencingAxioms(valueIri, ontologyDocumentId).collect(toSet());
         assertThat(axiomsByValueIri.isEmpty(), Matchers.is(true));
     }
 }

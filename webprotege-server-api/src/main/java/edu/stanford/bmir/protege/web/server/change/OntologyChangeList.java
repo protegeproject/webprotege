@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasResult;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -80,11 +81,11 @@ public class OntologyChangeList<R> implements HasResult<R> {
             return listBuilder.build().isEmpty();
         }
 
-        public void addAxiom(@Nonnull OWLOntologyID ontologyId, @Nonnull OWLAxiom axiom) {
+        public void addAxiom(@Nonnull OntologyDocumentId ontologyId, @Nonnull OWLAxiom axiom) {
             add(AddAxiomChange.of(checkNotNull(ontologyId), checkNotNull(axiom)));
         }
 
-        public void removeAxiom(@Nonnull OWLOntologyID ontologyId, @Nonnull OWLAxiom axiom) {
+        public void removeAxiom(@Nonnull OntologyDocumentId ontologyId, @Nonnull OWLAxiom axiom) {
             add(RemoveAxiomChange.of(checkNotNull(ontologyId), checkNotNull(axiom)));
         }
 

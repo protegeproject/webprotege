@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
+import edu.stanford.bmir.protege.web.server.owlapi.OwlApiOntologyDocumentTempOWLOntologyIDTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +60,7 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
         var changes = generator.generateChanges(from, to);
         assertThat(changes, hasSize(1));
         var change = changes.get(0);
-        assertThat(change.getOntologyId(), is(equalTo(ontologyId)));
+        assertThat(change.getOntologyDocumentId(), is(equalTo(ontologyId)));
         assertThat(change.getAxiomOrThrow(), is(equalTo(ax)));
         assertThat(change.isAddAxiom(), is(true));
     }
@@ -72,7 +73,7 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
         var changes = generator.generateChanges(from, to);
         assertThat(changes, hasSize(1));
         var change = changes.get(0);
-        assertThat(change.getOntologyId(), is(equalTo(ontologyId)));
+        assertThat(change.getOntologyDocumentId(), is(equalTo(ontologyId)));
         assertThat(change.getAxiomOrThrow(), is(equalTo(ax)));
         assertThat(change.isRemoveAxiom(), is(true));
     }
@@ -85,5 +86,7 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
         var changes = generator.generateChanges(from, to);
         assertThat(changes, is(empty()));
     }
+
+
 
 }

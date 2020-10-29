@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.project.Ontology;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +32,7 @@ public class OntologyAxiomsIndexImpl_TestCase {
     private OntologyAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAxiom axiom;
@@ -45,7 +47,7 @@ public class OntologyAxiomsIndexImpl_TestCase {
 
         when(axiomsByTypeIndexImpl.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
-        when(axiomsByTypeIndexImpl.getAxiomsByType(AxiomType.CLASS_ASSERTION, ontologyId))
+        when(axiomsByTypeIndexImpl.getAxiomsByType(AxiomType.CLASS_ASSERTION, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
     }
 
@@ -56,13 +58,13 @@ public class OntologyAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetAxioms() {
-        var axioms = impl.getAxioms(ontologyId).collect(toSet());
+        var axioms = impl.getAxioms(ontologyDocumentId).collect(toSet());
         assertThat(axioms, contains(axiom));
     }
 
     @Test
     public void shouldGetEmptyStreamForUnknownOntologyId() {
-        var axioms = impl.getAxioms(mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getAxioms(mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -74,30 +76,30 @@ public class OntologyAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldContainAxiom() {
-        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyDocumentId))
                 .thenReturn(true);
-        assertThat(impl.containsAxiom(axiom, ontologyId), is(true));
+        assertThat(impl.containsAxiom(axiom, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldContainAxiomWithoutAnnotationsIgnoreAnnotations() {
-        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyDocumentId))
                 .thenReturn(true);
-        assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyId), is(true));
+        assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldContainAxiomIgnoreAnnotations() {
-        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyDocumentId))
                 .thenReturn(false);
-        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyDocumentId))
                 .thenReturn(true);
-        assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyId), is(true));
+        assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldNotContainAxiomInUnknownOntology() {
-        assertThat(impl.containsAxiom(axiom, mock(OWLOntologyID.class)), is(false));
+        assertThat(impl.containsAxiom(axiom, mock(OntologyDocumentId.class)), is(false));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -109,7 +111,7 @@ public class OntologyAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfAxiomIsNullInContainsAxiom() {
-        impl.containsAxiom(null, ontologyId);
+        impl.containsAxiom(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -121,6 +123,6 @@ public class OntologyAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfAxiomIsNullInContainsAxiomIgnoreAnnotations() {
-        impl.containsAxiomIgnoreAnnotations(null, ontologyId);
+        impl.containsAxiomIgnoreAnnotations(null, ontologyDocumentId);
     }
 }

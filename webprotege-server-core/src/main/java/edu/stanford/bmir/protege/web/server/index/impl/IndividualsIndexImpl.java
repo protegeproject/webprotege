@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualRendering;
 import edu.stanford.bmir.protege.web.server.index.IndividualsQueryResult;
@@ -152,7 +151,7 @@ public class IndividualsIndexImpl implements IndividualsIndex, DependentIndex {
             // Search through class assertion axioms in order to find a matching preferred type
             OWLClass thePreferredType = preferredType.get();
             if(!thePreferredType.isOWLThing()) {
-                var types = projectOntologiesIndex.getOntologyIds()
+                var types = projectOntologiesIndex.getOntologyDocumentIds()
                                                   .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(
                                                           individual,
                                                           ontId))
@@ -183,7 +182,7 @@ public class IndividualsIndexImpl implements IndividualsIndex, DependentIndex {
         if(actualType == null) {
             // No preferred type or preferred type not found
             // Try for a specific type
-            actualType = projectOntologiesIndex.getOntologyIds()
+            actualType = projectOntologiesIndex.getOntologyDocumentIds()
                                                .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(
                                                        individual,
                                                        ontId))
@@ -232,7 +231,7 @@ public class IndividualsIndexImpl implements IndividualsIndex, DependentIndex {
     @Nonnull
     @Override
     public Stream<OWLClass> getTypes(@Nonnull OWLNamedIndividual individual) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                               .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(individual, ontId))
                               .map(OWLClassAssertionAxiom::getClassExpression)
                               .filter(OWLClassExpression::isNamed)

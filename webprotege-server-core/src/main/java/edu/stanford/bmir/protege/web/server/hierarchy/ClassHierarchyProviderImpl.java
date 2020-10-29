@@ -111,7 +111,7 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
 
     private Stream<OWLClass> getParentsStream(OWLClass object) {
         var subClassOfAxiomsParents =
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(object,
                                                                                                              ontId))
                                       .map(OWLSubClassOfAxiom::getSuperClass)
@@ -121,7 +121,7 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
 
 
         var equivalentClassesAxiomsParents =
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(
                                               object,
                                               ontId))
@@ -269,7 +269,7 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
         ChildClassExtractor childClassExtractor = new ChildClassExtractor();
         childClassExtractor.setCurrentParentClass(parent);
         projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> axiomsByEntityReferenceIndex.getReferencingAxioms(parent, ontId))
                 .filter(OWLAxiom::isLogicalAxiom)
                 .forEach(ax -> ax.accept(childClassExtractor));

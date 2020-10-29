@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -23,9 +23,9 @@ public interface AxiomsByReferenceIndex extends Index {
      * axioms that have any of the entities in their signature.  This also includes annotation axioms that
      * reference one or more IRIs equal to IRIs of the entities in the specified set.
      * @param entities The entities.
-     * @param ontologyId The ontology Id
+     * @param ontologyDocumentId The ontology Id
      */
     @Nonnull
     Stream<OWLAxiom> getReferencingAxioms(@Nonnull Collection<OWLEntity> entities,
-                                          @Nonnull OWLOntologyID ontologyId);
+                                          @Nonnull OntologyDocumentId ontologyDocumentId);
 }

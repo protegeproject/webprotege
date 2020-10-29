@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ public class DataPropertyCharacteristicsIndexImpl_TestCase {
     private DataPropertyCharacteristicsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLDataProperty property;
@@ -54,30 +55,30 @@ public class DataPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForFunctional() {
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
-        assertThat(impl.isFunctional(property, ontologyId), is(true));
+        assertThat(impl.isFunctional(property, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldReturnFalseForFunctional() {
-        assertThat(impl.isFunctional(property, ontologyId), is(false));
+        assertThat(impl.isFunctional(property, ontologyDocumentId), is(false));
     }
 
     @Test
     public void shouldReturnFalseForUnknownOntologyId() {
-        assertThat(impl.isFunctional(property, mock(OWLOntologyID.class)), is(false));
+        assertThat(impl.isFunctional(property, mock(OntologyDocumentId.class)), is(false));
     }
 
     @Test
     public void shouldReturnFalseForUnknownProperty() {
-        assertThat(impl.isFunctional(mock(OWLDataProperty.class), ontologyId), is(false));
+        assertThat(impl.isFunctional(mock(OWLDataProperty.class), ontologyDocumentId), is(false));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfPropertyIsNull() {
-        impl.isFunctional(null, ontologyId);
+        impl.isFunctional(null, ontologyDocumentId);
     }
 
 

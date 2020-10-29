@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 
@@ -14,5 +14,5 @@ import javax.annotation.Nonnull;
 public interface DataPropertyCharacteristicsIndex extends Index {
 
     boolean isFunctional(@Nonnull OWLDataProperty dataProperty,
-                         @Nonnull OWLOntologyID ontologyId);
+                         @Nonnull OntologyDocumentId ontologyDocumentId);
 }

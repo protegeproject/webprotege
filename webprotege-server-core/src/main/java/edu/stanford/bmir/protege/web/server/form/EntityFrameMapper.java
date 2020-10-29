@@ -75,7 +75,7 @@ public class EntityFrameMapper {
             if(frame instanceof PlainClassFrame) {
                 var classFrame = (PlainClassFrame) frame;
                 var subjectCls = classFrame.getSubject();
-                return projectOntologiesIndex.getOntologyIds()
+                return projectOntologiesIndex.getOntologyDocumentIds()
                                              .flatMap(ontId -> index.getClassAssertionAxioms(subjectCls, ontId))
                                              .map(OWLClassAssertionAxiom::getIndividual)
                                              .filter(OWLIndividual::isNamed)

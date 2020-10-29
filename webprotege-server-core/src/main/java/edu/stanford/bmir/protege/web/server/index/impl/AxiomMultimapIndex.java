@@ -5,8 +5,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -98,7 +98,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         if(isNaryKeyValue()) {
             var values = getNaryKeyValueExtractor(ax);
             values.forEach(val -> {
-                var key = Key.get(change.getOntologyId(), val);
+                var key = Key.get(change.getOntologyDocumentId(), val);
                 handleOntologyChange(change, key, ax);
             });
         }
@@ -107,7 +107,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
             if(keyValue == null) {
                 return;
             }
-            var key = Key.get(change.getOntologyId(),
+            var key = Key.get(change.getOntologyDocumentId(),
                               keyValue);
             handleOntologyChange(change, key, ax);
         }
@@ -144,7 +144,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         return unaryKeyValueExtractor.extractValue(ax);
     }
 
-    public synchronized Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {
+    public synchronized Stream<A> getAxioms(@Nonnull V value, @Nonnull OntologyDocumentId ontologyId) {
         var key = Key.get(ontologyId, value);
         if(!changeQueue.isEmpty()) {
             applyQueuedChanges();

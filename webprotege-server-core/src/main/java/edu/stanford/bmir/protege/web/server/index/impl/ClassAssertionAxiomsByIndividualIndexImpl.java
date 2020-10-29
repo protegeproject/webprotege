@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,10 +35,10 @@ public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertion
 
     @Override
     public Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLIndividual individual,
-                                                                  @Nonnull OWLOntologyID ontologyID) {
+                                                                  @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(individual);
-        checkNotNull(ontologyID);
-        return index.getAxioms(individual, ontologyID);
+        checkNotNull(ontologyDocumentId);
+        return index.getAxioms(individual, ontologyDocumentId);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class OwlOntologyChangeTranslatorVisitor_TestCase {
         var change = addAxiom.accept(visitor);
         assertThat(change, is(instanceOf(AddAxiomChange.class)));
         var addAxiomChange = (AddAxiomChange) change;
-        assertThat(addAxiomChange.getOntologyId(), is(ontologyId));
+        assertThat(addAxiomChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(addAxiomChange.getAxiom(), is(axiom));
     }
 
@@ -62,7 +62,7 @@ public class OwlOntologyChangeTranslatorVisitor_TestCase {
         var change = removeAxiom.accept(visitor);
         assertThat(change, is(instanceOf(RemoveAxiomChange.class)));
         var removeAxiomChange = (RemoveAxiomChange) change;
-        assertThat(removeAxiomChange.getOntologyId(), is(ontologyId));
+        assertThat(removeAxiomChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(removeAxiomChange.getAxiom(), is(axiom));
     }
 
@@ -72,7 +72,7 @@ public class OwlOntologyChangeTranslatorVisitor_TestCase {
         var change = addOntologyAnnotation.accept(visitor);
         assertThat(change, is(instanceOf(AddOntologyAnnotationChange.class)));
         var addOntologyAnnotationChange = (AddOntologyAnnotationChange) change;
-        assertThat(addOntologyAnnotationChange.getOntologyId(), is(ontologyId));
+        assertThat(addOntologyAnnotationChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(addOntologyAnnotationChange.getAnnotation(), is(ontologyAnnotation));
     }
 
@@ -82,7 +82,7 @@ public class OwlOntologyChangeTranslatorVisitor_TestCase {
         var change = removeOntologyAnnotation.accept(visitor);
         assertThat(change, is(instanceOf(RemoveOntologyAnnotationChange.class)));
         var removeOntologyAnnotationChange = (RemoveOntologyAnnotationChange) change;
-        assertThat(removeOntologyAnnotationChange.getOntologyId(), is(ontologyId));
+        assertThat(removeOntologyAnnotationChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(removeOntologyAnnotationChange.getAnnotation(), is(ontologyAnnotation));
     }
 
@@ -92,7 +92,7 @@ public class OwlOntologyChangeTranslatorVisitor_TestCase {
         var change = addImports.accept(visitor);
         assertThat(change, is(instanceOf(AddImportChange.class)));
         var addImportsChange = (AddImportChange) change;
-        assertThat(addImportsChange.getOntologyId(), is(ontologyId));
+        assertThat(addImportsChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(addImportsChange.getImportsDeclaration(), is(importsDecl));
     }
 
@@ -102,7 +102,7 @@ public class OwlOntologyChangeTranslatorVisitor_TestCase {
         var change = removeImports.accept(visitor);
         assertThat(change, is(instanceOf(RemoveImportChange.class)));
         var removeImportsChange = (RemoveImportChange) change;
-        assertThat(removeImportsChange.getOntologyId(), is(ontologyId));
+        assertThat(removeImportsChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(removeImportsChange.getImportsDeclaration(), is(importsDecl));
     }
 

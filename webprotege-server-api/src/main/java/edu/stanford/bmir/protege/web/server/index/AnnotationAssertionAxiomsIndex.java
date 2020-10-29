@@ -13,6 +13,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jun 2018
  */
+@Deprecated
 @ProjectSingleton
 public interface AnnotationAssertionAxiomsIndex extends Index {
 

@@ -68,7 +68,7 @@ public class OBONamespaceCache {
 
     public void rebuildNamespaceCache() {
         var namespacesBuilder = ImmutableSet.<OBONamespace>builder();
-        ontologyAnnotationsIndex.getOntologyAnnotations(defaultOntologyIdManager.getDefaultOntologyId())
+        ontologyAnnotationsIndex.getOntologyAnnotations(defaultOntologyIdManager.getDefaultOntologyDocumentId())
                                 .filter(this::isNamespaceAnnotation)
                                 .filter(annotation -> annotation.getValue().isLiteral())
                                 .map(annotation -> (OWLLiteral) annotation.getValue())
@@ -77,7 +77,7 @@ public class OBONamespaceCache {
                                 .forEach(namespacesBuilder::add);
 
         var oboNamespaceProperty = dataFactory.getOWLAnnotationProperty(OBO_NAMESPACE_IRI);
-        projectOntologiesIndex.getOntologyIds().forEach(ontologyId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontologyId -> {
             axiomsByEntityReferenceIndex.getReferencingAxioms(oboNamespaceProperty, ontologyId)
                     .filter(OWLAnnotationAssertionAxiom.class::isInstance)
                     .map(OWLAnnotationAssertionAxiom.class::cast)

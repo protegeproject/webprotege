@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
-import dagger.Module;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.is;
 public class ProjectOntologiesIndexImpl_TestCase {
 
     @Mock
-    private OWLOntologyID rootOntologyId;
+    private OntologyDocumentId rootOntologyId;
 
     private ProjectOntologiesIndexImpl impl;
 
@@ -42,7 +42,7 @@ public class ProjectOntologiesIndexImpl_TestCase {
 
     @Test
     public void shouldReturnStreamOfReferencedOntologyId() {
-        var ontologyIdStream = impl.getOntologyIds();
+        var ontologyIdStream = impl.getOntologyDocumentIds();
         var ontologyIds = ontologyIdStream.collect(Collectors.toSet());
         assertThat(ontologyIds, contains(rootOntologyId));
     }
@@ -50,6 +50,6 @@ public class ProjectOntologiesIndexImpl_TestCase {
     @Test
     public void shouldOnlyContainReferencedOntologies() {
         impl.applyChanges(ImmutableList.of(RemoveAxiomChange.of(rootOntologyId, axiom)));
-        assertThat(impl.getOntologyIds().count(), is(0L));
+        assertThat(impl.getOntologyDocumentIds().count(), is(0L));
     }
 }

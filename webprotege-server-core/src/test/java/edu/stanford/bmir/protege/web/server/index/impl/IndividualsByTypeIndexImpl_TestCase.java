@@ -1,13 +1,13 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureByTypeIndex;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +62,7 @@ public class IndividualsByTypeIndexImpl_TestCase {
     private OWLClass owlThing = new OWLClassImpl(OWLRDFVocabulary.OWL_THING.getIRI());
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     private OWLNamedIndividual
             indA = new OWLNamedIndividualImpl(mock(IRI.class)),
@@ -91,7 +91,7 @@ public class IndividualsByTypeIndexImpl_TestCase {
 
         when(dataFactory.getOWLThing()).thenReturn(owlThing);
 
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(invocation -> Stream.of(ontologyId));
 
         when(projectSignatureIndex.getSignature(EntityType.NAMED_INDIVIDUAL))

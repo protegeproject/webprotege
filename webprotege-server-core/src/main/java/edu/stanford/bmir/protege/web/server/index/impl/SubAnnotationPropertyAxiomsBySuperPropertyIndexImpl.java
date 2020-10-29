@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.SubAnnotationPropertyAxiomsBySuperPropertyIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
@@ -34,10 +34,10 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubA
     @Nonnull
     @Override
     public Stream<OWLSubAnnotationPropertyOfAxiom> getAxiomsForSuperProperty(@Nonnull OWLAnnotationProperty property,
-                                                                             @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                                             @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(property);
-        return index.getAxioms(property, ontologyId);
+        return index.getAxioms(property, ontologyDocumentId);
     }
 
     @Override

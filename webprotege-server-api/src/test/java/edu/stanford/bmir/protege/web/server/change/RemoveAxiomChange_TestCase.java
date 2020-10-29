@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
-import org.hamcrest.MatcherAssert;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class RemoveAxiomChange_TestCase<R> {
     private RemoveAxiomChange change;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAnnotationAssertionAxiom axiom;
@@ -66,7 +66,7 @@ public class RemoveAxiomChange_TestCase<R> {
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
     }
 
     @Test
@@ -136,13 +136,6 @@ public class RemoveAxiomChange_TestCase<R> {
         assertThat(change.isAddOntologyAnnotation(), is(false));
     }
 
-    @Test
-    public void shouldCreateOwlOntologyChangeRecord() {
-        var changeRecord = change.toOwlOntologyChangeRecord();
-        assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new RemoveAxiomData(axiom)));
-    }
-
     @Test(expected = NoSuchElementException.class)
     public void shouldGetAnnotationOrThrow() {
         change.getAnnotationOrThrow();
@@ -157,15 +150,15 @@ public class RemoveAxiomChange_TestCase<R> {
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
         assertThat(revertingChange, is(Matchers.instanceOf(AddAxiomChange.class)));
-        assertThat(revertingChange.getOntologyId(), is(ontologyId));
+        assertThat(revertingChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(revertingChange.getAxiom(), is(axiom));
     }
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = mock(OWLOntologyID.class);
+        var otherOntologyId = mock(OntologyDocumentId.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
-        assertThat(replaced.getOntologyId(), is(otherOntologyId));
+        assertThat(replaced.getOntologyDocumentId(), is(otherOntologyId));
     }
 
     @Test

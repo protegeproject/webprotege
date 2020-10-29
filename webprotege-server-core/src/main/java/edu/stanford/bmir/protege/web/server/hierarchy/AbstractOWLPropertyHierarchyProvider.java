@@ -6,9 +6,9 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +144,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
         logger.info("{} Rebuilding {} hierarchy", projectId, getHierarchyName());
         Stopwatch stopwatch = Stopwatch.createStarted();
         subPropertiesOfRoot.clear();
-        projectOntologiesIndex.getOntologyIds().forEach(ontologyId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontologyId -> {
             for (P prop : getReferencedProperties(ontologyId)) {
                 if (isSubPropertyOfRoot(prop)) {
                     subPropertiesOfRoot.add(prop);
@@ -163,10 +163,10 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
      * within the property hierarchy.  For example, for an object property hierarchy
      * this would constitute the set of referenced object properties in the specified
      * ontology.
-     * @param ont The ontology
+     * @param ontologyDocumentId The ontology
      */
-    protected Set<? extends P> getReferencedProperties(OWLOntologyID ont) {
-        return ontologySignatureByTypeIndex.getSignature(entityType, ont).collect(toSet());
+    protected Set<? extends P> getReferencedProperties(OntologyDocumentId ontologyDocumentId) {
+        return ontologySignatureByTypeIndex.getSignature(entityType, ontologyDocumentId).collect(toSet());
     }
 
 

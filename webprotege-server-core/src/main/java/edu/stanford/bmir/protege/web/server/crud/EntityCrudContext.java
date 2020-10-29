@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -35,14 +36,14 @@ public class EntityCrudContext {
     private DictionaryLanguage dictionaryLanguage;
 
     @Nonnull
-    private OWLOntologyID targetOntologyId;
+    private OntologyDocumentId targetOntologyId;
 
     @AutoFactory
     public EntityCrudContext(@Provided @Nonnull ProjectId projectId,
                              @Nonnull UserId userId,
                              @Nonnull PrefixedNameExpander prefixedNameExpander,
                              @Provided @Nonnull ProjectDetailsRepository projectDetailsRepository,
-                             @Nonnull OWLOntologyID targetOntologyId) {
+                             @Nonnull OntologyDocumentId targetOntologyId) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.prefixedNameExpander = checkNotNull(prefixedNameExpander);
@@ -61,7 +62,7 @@ public class EntityCrudContext {
     }
 
     @Nonnull
-    public OWLOntologyID getTargetOntologyId() {
+    public OntologyDocumentId getTargetOntologyDocumentId() {
         return targetOntologyId;
     }
 

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ public class DifferentIndividualsAxiomsIndexImpl_TestCase {
     private DifferentIndividualsAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyID;
 
     @Mock
     private OWLIndividual individual;
@@ -57,7 +58,7 @@ public class DifferentIndividualsAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getDifferentIndividualsAxioms(individual, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getDifferentIndividualsAxioms(individual, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 

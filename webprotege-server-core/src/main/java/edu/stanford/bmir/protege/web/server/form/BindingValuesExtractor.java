@@ -114,7 +114,7 @@ public class BindingValuesExtractor {
         if (binding instanceof OwlPropertyBinding) {
             var property = ((OwlPropertyBinding) binding).getProperty();
             if (property.isOWLAnnotationProperty()) {
-                return projectOntologiesIndex.getOntologyIds()
+                return projectOntologiesIndex.getOntologyDocumentIds()
                                              .flatMap(ontId -> annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(
                                                      subject.getIRI(),
                                                      ontId))
@@ -137,7 +137,7 @@ public class BindingValuesExtractor {
 
         }
         else if (binding instanceof OwlInstanceBinding) {
-            return projectOntologiesIndex.getOntologyIds()
+            return projectOntologiesIndex.getOntologyDocumentIds()
                                          .flatMap(ontId -> classAssertionAxiomsByClassIndex.getClassAssertionAxioms(
                                                  subject,
                                                  ontId))
@@ -162,7 +162,7 @@ public class BindingValuesExtractor {
         if (binding instanceof OwlPropertyBinding) {
             var property = ((OwlPropertyBinding) binding).getProperty();
             if (property.isOWLAnnotationProperty()) {
-                return projectOntologiesIndex.getOntologyIds()
+                return projectOntologiesIndex.getOntologyDocumentIds()
                                              .flatMap(ontId -> annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(
                                                      individual.getIRI(),
                                                      ontId))
@@ -191,7 +191,7 @@ public class BindingValuesExtractor {
             }
         }
         else if (binding instanceof OwlClassBinding) {
-            return projectOntologiesIndex.getOntologyIds()
+            return projectOntologiesIndex.getOntologyDocumentIds()
                                          .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
                                                  individual,
                                                  ontId))
@@ -210,7 +210,7 @@ public class BindingValuesExtractor {
 
     private Stream<OWLLiteral> getIndividualDataPropertyAssertionBasedValues(@Nonnull OWLNamedIndividual individual,
                                                                              OWLProperty property) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> dataPropertyAssertionAxiomsBySubjectIndex.getDataPropertyAssertions(
                                              individual,
                                              ontId))
@@ -221,7 +221,7 @@ public class BindingValuesExtractor {
 
     private Stream<OWLNamedIndividual> getIndividualObjectPropertyAssertionBasedValues(@Nonnull OWLNamedIndividual individual,
                                                                                        OWLProperty property) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> objectPropertyAssertionAxiomsBySubjectIndex.getObjectPropertyAssertions(
                                              individual,
                                              ontId))
@@ -233,7 +233,7 @@ public class BindingValuesExtractor {
 
     private Stream<OWLPrimitive> getIndividualSubClassOfBasedValues(@Nonnull OWLNamedIndividual individual,
                                                                  OWLProperty property) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
                                              individual,
                                              ontId))

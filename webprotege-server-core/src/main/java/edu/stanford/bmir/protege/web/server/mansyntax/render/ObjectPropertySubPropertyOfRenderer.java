@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.SubObjectPropertyAxiomsBySubPropertyIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
@@ -35,14 +35,14 @@ public class ObjectPropertySubPropertyOfRenderer extends AbstractOWLAxiomItemSec
     }
 
     @Override
-    protected Set<OWLSubObjectPropertyOfAxiom> getAxiomsInOntology(OWLObjectProperty subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getSubPropertyOfAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLSubObjectPropertyOfAxiom> getAxiomsInOntology(OWLObjectProperty subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getSubPropertyOfAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLObjectPropertyExpression> getRenderablesForItem(OWLObjectProperty subject,
                                                                    OWLSubObjectPropertyOfAxiom item,
-                                                                   OWLOntologyID ontologyId) {
+                                                                   OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getSuperProperty());
     }
 

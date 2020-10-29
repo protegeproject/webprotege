@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySub
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -68,27 +69,27 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     @Override
     public OntologyChangeList<Set<OWLEntity>> generateChanges(ChangeGenerationContext context) {
         var builder = OntologyChangeList.<Set<OWLEntity>>builder();
-        projectOntologiesIndex.getOntologyIds()
+        projectOntologiesIndex.getOntologyDocumentIds()
                               .forEach(ontId -> generateSetAnnotationValueChangesForOntology(builder, ontId));
         return builder.build(entities);
     }
 
     private void generateSetAnnotationValueChangesForOntology(OntologyChangeList.Builder<Set<OWLEntity>> builder,
-                                                              OWLOntologyID ontId) {
+                                                              OntologyDocumentId documentId) {
         entities.stream()
-                .filter(entity -> entitiesInSignature.containsEntityInSignature(entity, ontId))
+                .filter(entity -> entitiesInSignature.containsEntityInSignature(entity, documentId))
                 .map(OWLEntity::getIRI)
-                .flatMap(subject -> annotationAssertionBySubject.getAxiomsForSubject(subject, ontId))
+                .flatMap(subject -> annotationAssertionBySubject.getAxiomsForSubject(subject, documentId))
                 .filter(ax -> ax.getProperty()
                                 .equals(property))
-                .forEach(ax -> generateSetAnnotationValueChangesForAxiom(builder, ontId, ax));
+                .forEach(ax -> generateSetAnnotationValueChangesForAxiom(builder, documentId, ax));
     }
 
     private void generateSetAnnotationValueChangesForAxiom(OntologyChangeList.Builder<Set<OWLEntity>> builder,
-                                                           OWLOntologyID ontId,
+                                                           OntologyDocumentId documentId,
                                                            OWLAnnotationAssertionAxiom ax) {
         // Replacement annotations that set the value go into the ontology where the value was originally located
-        var removeAxiom = RemoveAxiomChange.of(ontId, ax);
+        var removeAxiom = RemoveAxiomChange.of(documentId, ax);
         builder.add(removeAxiom);
         // Copy over axiom annotations
         var subject = ax.getSubject();
@@ -97,7 +98,7 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
                                                                        subject,
                                                                        value,
                                                                        preservedAxiomAnnotations);
-        var replacementAxiom = AddAxiomChange.of(ontId, replacementAx);
+        var replacementAxiom = AddAxiomChange.of(documentId, replacementAx);
         builder.add(replacementAxiom);
     }
 

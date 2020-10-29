@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.index;
 
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -17,11 +17,11 @@ import java.util.stream.Stream;
 public interface OntologyAxiomsIndex extends Index {
 
     boolean containsAxiom(@Nonnull OWLAxiom axiom,
-                          @Nonnull OWLOntologyID ontologyId);
+                          @Nonnull OntologyDocumentId ontologyDocumentId);
 
     boolean containsAxiomIgnoreAnnotations(@Nonnull OWLAxiom axiom,
-                                           @Nonnull OWLOntologyID ontologyId);
+                                           @Nonnull OntologyDocumentId ontologyDocumentId);
 
     @Nonnull
-    Stream<OWLAxiom> getAxioms(@Nonnull OWLOntologyID ontologyId);
+    Stream<OWLAxiom> getAxioms(@Nonnull OntologyDocumentId ontologyDocumentId);
 }

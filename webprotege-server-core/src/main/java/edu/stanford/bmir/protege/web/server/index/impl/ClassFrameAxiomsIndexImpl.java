@@ -57,18 +57,18 @@ public class ClassFrameAxiomsIndexImpl implements ClassFrameAxiomsIndex {
 
     private Stream<OWLSubClassOfAxiom> getFrameSubClassOfAxioms(OWLClass subject) {
         return ontologiesIndex
-            .getOntologyIds()
+            .getOntologyDocumentIds()
             .flatMap(ontId -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(subject, ontId));
     }
 
     private Stream<OWLEquivalentClassesAxiom> getFrameEquivalentClassesAxioms(OWLClass subject) {
-        return ontologiesIndex.getOntologyIds()
+        return ontologiesIndex.getOntologyDocumentIds()
             .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(subject,
                 ontId));
     }
 
     private Stream<OWLAnnotationAssertionAxiom> getFrameAnnotationAssertionsAxiom(OWLClass subject) {
-        return ontologiesIndex.getOntologyIds()
+        return ontologiesIndex.getOntologyDocumentIds()
             .flatMap(ontId -> annotationAssertionAxiomsIndex.getAxiomsForSubject(subject.getIRI(),
                 ontId));
     }

@@ -58,7 +58,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
 
     @Override
     public OntologyChangeList<Integer> generateChanges(ChangeGenerationContext context) {
-        var rootOntology = defaultOntologyIdManager.getDefaultOntologyId();
+        var rootOntology = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         OntologyChangeList.Builder<Integer> changesBuilder = new OntologyChangeList.Builder<>();
         for (CSVRow row : csvGrid.getRows()) {
             for (CSVColumnDescriptor columnDescriptor : descriptor.getColumnDescriptors()) {

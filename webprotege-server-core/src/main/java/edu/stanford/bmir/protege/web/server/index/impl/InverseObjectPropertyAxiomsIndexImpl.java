@@ -4,10 +4,10 @@ import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
 import edu.stanford.bmir.protege.web.server.index.InverseObjectPropertyAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,10 +41,10 @@ public class InverseObjectPropertyAxiomsIndexImpl implements InverseObjectProper
     @Nonnull
     @Override
     public Stream<OWLInverseObjectPropertiesAxiom> getInverseObjectPropertyAxioms(@Nonnull OWLObjectProperty property,
-                                                                                  @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                                                  @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(property);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.INVERSE_OBJECT_PROPERTIES, ontologyId)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.INVERSE_OBJECT_PROPERTIES, ontologyDocumentId)
                 .filter(ax -> ax.getFirstProperty().equals(property) || ax.getSecondProperty().equals(property));
     }
 }

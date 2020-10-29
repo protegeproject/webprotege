@@ -4,10 +4,10 @@ import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.EquivalentDataPropertiesAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,10 +41,10 @@ public class EquivalentDataPropertiesAxiomsIndexImpl implements EquivalentDataPr
     @Nonnull
     @Override
     public Stream<OWLEquivalentDataPropertiesAxiom> getEquivalentDataPropertiesAxioms(@Nonnull OWLDataProperty property,
-                                                                                      @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(ontologyId);
+                                                                                      @Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         checkNotNull(property);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_DATA_PROPERTIES, ontologyId)
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_DATA_PROPERTIES, ontologyDocumentId)
                 .filter(ax -> ax.getProperties().contains(property));
     }
 }

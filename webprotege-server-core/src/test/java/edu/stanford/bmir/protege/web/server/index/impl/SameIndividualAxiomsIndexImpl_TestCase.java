@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import java.util.Collections;
-import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +33,7 @@ public class SameIndividualAxiomsIndexImpl_TestCase {
     private SameIndividualAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLIndividual individual;
@@ -46,24 +46,24 @@ public class SameIndividualAxiomsIndexImpl_TestCase {
         when(axiom.getIndividuals())
                 .thenReturn(Collections.singleton(individual));
         impl = new SameIndividualAxiomsIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetSameIndividualAxiomForIndividual() {
-        var axioms = impl.getSameIndividualAxioms(individual, ontologyID).collect(toSet());
+        var axioms = impl.getSameIndividualAxioms(individual, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getSameIndividualAxioms(individual, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getSameIndividualAxioms(individual, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownIndividual() {
-        var axioms = impl.getSameIndividualAxioms(mock(OWLIndividual.class), ontologyID).collect(toSet());
+        var axioms = impl.getSameIndividualAxioms(mock(OWLIndividual.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -76,6 +76,6 @@ public class SameIndividualAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullIndividual() {
-        impl.getSameIndividualAxioms(null, ontologyID);
+        impl.getSameIndividualAxioms(null, ontologyDocumentId);
     }
 }

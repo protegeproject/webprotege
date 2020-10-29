@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class InverseObjectPropertyAxiomsIndexImpl_TestCase {
     private InverseObjectPropertyAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLObjectProperty property;
@@ -47,7 +48,7 @@ public class InverseObjectPropertyAxiomsIndexImpl_TestCase {
                 .thenReturn(property);
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.of());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.INVERSE_OBJECT_PROPERTIES, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.INVERSE_OBJECT_PROPERTIES, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new InverseObjectPropertyAxiomsIndexImpl(axiomsByTypeIndex);
     }
@@ -59,19 +60,19 @@ public class InverseObjectPropertyAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetInverseObjectPropertiesAxiomForProperty() {
-        var axioms = impl.getInverseObjectPropertyAxioms(property, ontologyId).collect(toSet());
+        var axioms = impl.getInverseObjectPropertyAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getInverseObjectPropertyAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getInverseObjectPropertyAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getInverseObjectPropertyAxioms(mock(OWLObjectProperty.class), ontologyId).collect(toSet());
+        var axioms = impl.getInverseObjectPropertyAxioms(mock(OWLObjectProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -84,7 +85,7 @@ public class InverseObjectPropertyAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullProperty() {
-        impl.getInverseObjectPropertyAxioms(null, ontologyId);
+        impl.getInverseObjectPropertyAxioms(null, ontologyDocumentId);
     }
 
 

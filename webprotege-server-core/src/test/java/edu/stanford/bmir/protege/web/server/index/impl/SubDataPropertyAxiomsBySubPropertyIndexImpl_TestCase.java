@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class SubDataPropertyAxiomsBySubPropertyIndexImpl_TestCase {
     private SubDataPropertyAxiomsBySubPropertyIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLDataProperty property;
@@ -46,26 +47,26 @@ public class SubDataPropertyAxiomsBySubPropertyIndexImpl_TestCase {
                 .thenReturn(property);
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_DATA_PROPERTY, ontologyID))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_DATA_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new SubDataPropertyAxiomsBySubPropertyIndexImpl(axiomsByTypeIndex);
     }
 
     @Test
     public void shouldGetSubDataPropertyOfAxiomForProperty() {
-        var axioms = impl.getSubPropertyOfAxioms(property, ontologyID).collect(toSet());
+        var axioms = impl.getSubPropertyOfAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getSubPropertyOfAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getSubPropertyOfAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownProperty() {
-        var axioms = impl.getSubPropertyOfAxioms(mock(OWLDataProperty.class), ontologyID).collect(toSet());
+        var axioms = impl.getSubPropertyOfAxioms(mock(OWLDataProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -78,6 +79,6 @@ public class SubDataPropertyAxiomsBySubPropertyIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullProperty() {
-        impl.getSubPropertyOfAxioms(null, ontologyID);
+        impl.getSubPropertyOfAxioms(null, ontologyDocumentId);
     }
 }

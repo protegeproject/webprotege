@@ -45,7 +45,7 @@ public class EntityRenamer {
     public List<OntologyChange> generateChanges(@Nonnull Map<OWLEntity, IRI> iriReplacementMap) {
         OWLObjectDuplicator duplicator = new OWLObjectDuplicator(iriReplacementMap, dataFactory);
         var changes = new ArrayList<OntologyChange>();
-        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+        projectOntologiesIndex.getOntologyDocumentIds().forEach(ontId -> {
             axiomsByReferenceIndex.getReferencingAxioms(iriReplacementMap.keySet(), ontId)
                                   .forEach(ax -> {
                                       var removeAxiom = RemoveAxiomChange.of(ontId, ax);

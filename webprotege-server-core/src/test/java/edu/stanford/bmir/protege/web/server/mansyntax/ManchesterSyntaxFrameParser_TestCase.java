@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +50,7 @@ public class ManchesterSyntaxFrameParser_TestCase {
     private DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Mock
-    private OWLOntologyID theOntologyId;
+    private OntologyDocumentId theOntologyId;
 
     private OWLClass clsA = dataFactory.getOWLClass(mock(IRI.class));
 
@@ -58,7 +59,7 @@ public class ManchesterSyntaxFrameParser_TestCase {
     private final OWLSubClassOfAxiom expectedAxiom = dataFactory.getOWLSubClassOfAxiom(clsA, clsB);
 
     @Mock
-    private OWLOntologyID defaultOntologyId;
+    private OntologyDocumentId defaultOntologyId;
 
     @Mock
     private ProjectOntologiesIndex projectOntologiesIndex;
@@ -70,7 +71,7 @@ public class ManchesterSyntaxFrameParser_TestCase {
         when(ontologyChecker.getOntology("theontology"))
                 .thenReturn(ShellOwlOntology.get(theOntologyId));
 
-        when(defaultOntologyIdManager.getDefaultOntologyId())
+        when(defaultOntologyIdManager.getDefaultOntologyDocumentId())
                 .thenReturn(defaultOntologyId);
 
         when(dictionaryManager.getEntities("A"))

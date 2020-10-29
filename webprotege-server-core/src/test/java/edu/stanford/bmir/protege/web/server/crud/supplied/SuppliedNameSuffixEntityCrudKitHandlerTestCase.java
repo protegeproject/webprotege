@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.i18n.client.Messages;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
@@ -12,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +74,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     private DictionaryLanguage dictionaryLanguage;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private EntityIriPrefixResolver entityIriPrefixResolver;
@@ -83,7 +83,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     public void setUp() throws Exception {
         OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
         when(suffixSettings.getWhiteSpaceTreatment()).thenReturn(whiteSpaceTreatment);
-        when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
+        when(crudContext.getTargetOntologyDocumentId()).thenReturn(ontologyId);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("");

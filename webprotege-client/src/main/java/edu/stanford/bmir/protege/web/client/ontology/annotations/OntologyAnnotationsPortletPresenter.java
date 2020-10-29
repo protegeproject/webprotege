@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -38,8 +39,6 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
-    private Optional<OWLOntologyID> currentOntologyId = Optional.empty();
-
     @Inject
     public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
         super(selectionModel, projectId, displayNameRenderer);
@@ -54,30 +53,14 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         portletUi.setWidget(new ScrollPanel(annotationsView.asWidget()));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                OntologyFrameChangedEvent.TYPE, event -> updateView());
-        eventBus.addProjectEventHandler(getProjectId(),
                 PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
                 event -> updateState());
         permissionChecker.hasPermission(BuiltInAction.VIEW_PROJECT, permission -> {
             portletUi.setForbiddenVisible(!permission);
             if (permission) {
                 updateState();
-                updateView();
             }
         });
-    }
-
-    private void updateView() {
-        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId(), Optional.empty()),
-                result -> {
-                    LinkedHashSet<PropertyAnnotationValue> object = new LinkedHashSet<>(result.getAnnotations());
-                    if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
-                        lastSet = Optional.of(new ArrayList<>(object));
-                        annotationsView.setValue(object);
-                    }
-                    currentOntologyId = Optional.of(result.getOntologyId());
-                    GWT.log("[OntologyAnnotationsPortletPresenter] Current ontology: " + currentOntologyId);
-                });
     }
 
 
@@ -95,13 +78,6 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         if (!annotationsView.isWellFormed()) {
             GWT.log("[OntologyAnnotationsPortletPresenter] Ontology annotations are not dirty");
             return;
-        }
-        Optional<Set<PropertyAnnotationValue>> annotations = annotationsView.getValue();
-        if (annotations.isPresent() && lastSet.isPresent() && currentOntologyId.isPresent()) {
-            dispatchServiceManager.execute(
-                    new SetOntologyAnnotationsAction(getProjectId(), currentOntologyId.get(), new HashSet<>(lastSet.get()), annotations.get()),
-                    result -> {
-                    });
         }
     }
 }

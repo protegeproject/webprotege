@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,10 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
     private static Logger logger = LoggerFactory.getLogger(ProjectOntologiesIndexImpl.class);
 
     @Nonnull
-    private final Multiset<OWLOntologyID> ontologyIds = HashMultiset.create();
+    private final Multiset<OntologyDocumentId> ontologyIds = HashMultiset.create();
 
     @Nonnull
-    private ImmutableList<OWLOntologyID> cache = ImmutableList.of();
+    private ImmutableList<OntologyDocumentId> cache = ImmutableList.of();
 
     private boolean initialized = false;
 
@@ -39,7 +40,7 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
 
     @Nonnull
     @Override
-    public synchronized Stream<OWLOntologyID> getOntologyIds() {
+    public synchronized Stream<OntologyDocumentId> getOntologyDocumentIds() {
         if(!initialized) {
             throw new RuntimeException("Index not initialized");
         }
@@ -59,10 +60,10 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
     public synchronized void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         for(var ontologyChange : changes) {
             if(ontologyChange.isAddAxiom() || ontologyChange.isAddOntologyAnnotation()) {
-                ontologyIds.add(ontologyChange.getOntologyId());
+                ontologyIds.add(ontologyChange.getOntologyDocumentId());
             }
             else if(ontologyChange.isRemoveAxiom() || ontologyChange.isRemoveOntologyAnnotation()) {
-                ontologyIds.remove(ontologyChange.getOntologyId());
+                ontologyIds.remove(ontologyChange.getOntologyDocumentId());
             }
         }
         cache = ImmutableList.copyOf(ontologyIds.elementSet());

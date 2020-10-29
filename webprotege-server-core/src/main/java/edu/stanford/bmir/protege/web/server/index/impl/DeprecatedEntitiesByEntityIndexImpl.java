@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.*;
-import edu.stanford.bmir.protege.web.server.shortform.LuceneIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -45,7 +43,7 @@ public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesBy
     @Override
     public boolean isDeprecated(@Nonnull OWLEntity entity) {
         return projectOntologiesIndex
-                .getOntologyIds()
+                .getOntologyDocumentIds()
                 .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(entity.getIRI(), ontId))
                 .anyMatch(OWLAnnotationAssertionAxiom::isDeprecatedIRIAssertion);
     }

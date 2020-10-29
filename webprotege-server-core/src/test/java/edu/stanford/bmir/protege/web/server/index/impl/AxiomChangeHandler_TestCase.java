@@ -3,14 +3,13 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.impl.AxiomChangeHandler;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -39,7 +38,7 @@ public class AxiomChangeHandler_TestCase {
     private Consumer<AxiomChange> axiomChangeConsumer;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAxiom axiom;
@@ -50,8 +49,8 @@ public class AxiomChangeHandler_TestCase {
 
     @Before
     public void setUp() {
-        addAxiomChange = AddAxiomChange.of(ontologyId, axiom);
-        removeAxiomChange = RemoveAxiomChange.of(ontologyId, axiom);
+        addAxiomChange = AddAxiomChange.of(ontologyDocumentId, axiom);
+        removeAxiomChange = RemoveAxiomChange.of(ontologyDocumentId, axiom);
         handler = new AxiomChangeHandler();
         handler.setAddAxiomChangeConsumer(addAxiomChangeConsumer);
         handler.setRemoveAxiomChangeConsumer(removeAxiomChangeConsumer);

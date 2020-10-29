@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyRangeAxiomImpl;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -31,7 +31,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
     private AnnotationAxiomsByIriReferenceIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private IRI rangeIri, otherRangeIri;
@@ -54,7 +54,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
         otherAnnotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, otherRangeIri, axiomAnnotations());
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationPropertyRangeAxiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, annotationPropertyRangeAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {
@@ -65,31 +65,31 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
 
     @Test
     public void shouldGetAnnotationPropertyRangeAxiomByRangeIri() {
-        var axioms = impl.getReferencingAxioms(rangeIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(rangeIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyRangeAxiom));
     }
 
     @Test
     public void shouldGetAnnotationPropertyRangeAxiomByAxiomAnnotationValue() {
-        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyRangeAxiom));
     }
 
     @Test
     public void shouldHandleAddAnnotationPropertyRangeAxiom() {
-        var addAxiom = AddAxiomChange.of(ontologyId, otherAnnotationPropertyRangeAxiom);
+        var addAxiom = AddAxiomChange.of(ontologyDocumentId, otherAnnotationPropertyRangeAxiom);
         impl.applyChanges(ImmutableList.of(addAxiom));
 
-        var axioms = impl.getReferencingAxioms(otherRangeIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(otherRangeIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItems(otherAnnotationPropertyRangeAxiom));
     }
 
     @Test
     public void shouldHandleRemoveAnnotationPropertyRangeAxiom() {
-        var removeAxiom = RemoveAxiomChange.of(ontologyId, annotationPropertyRangeAxiom);
+        var removeAxiom = RemoveAxiomChange.of(ontologyDocumentId, annotationPropertyRangeAxiom);
         impl.applyChanges(ImmutableList.of(removeAxiom));
 
-        var axioms = impl.getReferencingAxioms(rangeIri, ontologyId).collect(toSet());
+        var axioms = impl.getReferencingAxioms(rangeIri, ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 }

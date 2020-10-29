@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.stream.Stream;
 
@@ -31,7 +31,7 @@ public class ShellOntologyChecker_TestCase {
     private static final String DEFAULT_ONTOLOGY_SHORT_FORM = "DefaultOntologyShortForm";
 
     @Mock
-    protected WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+    protected OntologyDocumentIdDisplayNameProvider displayNameProvider;
 
     @Mock
     private ProjectOntologiesIndex projectOntologiesIndex;
@@ -40,25 +40,25 @@ public class ShellOntologyChecker_TestCase {
     private DefaultOntologyIdManager defaultOntologyManager;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
-    private OWLOntologyID defaultOntologyId;
+    private OntologyDocumentId defaultOntologyId;
 
     private ShellOntologyChecker checker;
 
     @Before
     public void setUp() {
         checker = new ShellOntologyChecker(projectOntologiesIndex,
-                                           ontologyIRIShortFormProvider,
+                                           displayNameProvider,
                                            defaultOntologyManager);
-        when(defaultOntologyManager.getDefaultOntologyId())
+        when(defaultOntologyManager.getDefaultOntologyDocumentId())
                 .thenReturn(defaultOntologyId);
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(invocation -> Stream.of(ontologyId, defaultOntologyId));
-        when(ontologyIRIShortFormProvider.getShortForm(ontologyId))
+        when(displayNameProvider.getDisplayName(ontologyId))
                 .thenReturn(ONTOLOGY_SHORT_FORM);
-        when(ontologyIRIShortFormProvider.getShortForm(defaultOntologyId))
+        when(displayNameProvider.getDisplayName(defaultOntologyId))
                 .thenReturn(DEFAULT_ONTOLOGY_SHORT_FORM);
     }
 

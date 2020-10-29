@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
@@ -33,7 +33,7 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
     private EquivalentDataPropertiesAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLDataProperty property;
@@ -50,7 +50,7 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
                 .thenReturn(Collections.singleton(property));
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.of());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_DATA_PROPERTIES, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_DATA_PROPERTIES, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new EquivalentDataPropertiesAxiomsIndexImpl(axiomsByTypeIndex);
     }
@@ -62,19 +62,19 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetEquivalentDataPropertiesAxiomForDataProperty() {
-        var axioms = impl.getEquivalentDataPropertiesAxioms(property, ontologyId).collect(toSet());
+        var axioms = impl.getEquivalentDataPropertiesAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getEquivalentDataPropertiesAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getEquivalentDataPropertiesAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownDataProperty() {
-        var axioms = impl.getEquivalentDataPropertiesAxioms(mock(OWLDataProperty.class), ontologyId).collect(toSet());
+        var axioms = impl.getEquivalentDataPropertiesAxioms(mock(OWLDataProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -87,7 +87,7 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullDataProperty() {
-        impl.getEquivalentDataPropertiesAxioms(null, ontologyId);
+        impl.getEquivalentDataPropertiesAxioms(null, ontologyDocumentId);
     }
     
 }

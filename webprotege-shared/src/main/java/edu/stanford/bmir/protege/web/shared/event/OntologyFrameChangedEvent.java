@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -16,9 +17,9 @@ public class OntologyFrameChangedEvent extends ProjectEvent<OntologyFrameChanged
 
     public static final transient Event.Type<OntologyFrameChangedEventHandler> TYPE = new Event.Type<OntologyFrameChangedEventHandler>();
 
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyID;
 
-    public OntologyFrameChangedEvent(OWLOntologyID ontologyID, ProjectId projectId) {
+    public OntologyFrameChangedEvent(OntologyDocumentId ontologyID, ProjectId projectId) {
         super(projectId);
         this.ontologyID = ontologyID;
     }
@@ -28,7 +29,7 @@ public class OntologyFrameChangedEvent extends ProjectEvent<OntologyFrameChanged
     }
 
 
-    public OWLOntologyID getOntologyID() {
+    public OntologyDocumentId getOntologyID() {
         return ontologyID;
     }
 

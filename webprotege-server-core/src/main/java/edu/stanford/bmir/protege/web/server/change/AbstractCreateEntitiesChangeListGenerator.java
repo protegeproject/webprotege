@@ -12,7 +12,6 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 
 import javax.annotation.Nonnull;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static org.semanticweb.owlapi.model.EntityType.*;
@@ -112,11 +111,11 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                                    "",
                                    parents.stream().map(OWLEntity::getIRI).collect(toImmutableSet()));
                 freshEntity = DataFactory.getOWLEntity(entityType, freshEntityIri.getIri());
-                var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+                var ontologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
                 builder.add(AddAxiomChange.of(ontologyId, dataFactory.getOWLDeclarationAxiom(freshEntity)));
             }
             for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parents)) {
-                var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+                var ontologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
                 builder.add(AddAxiomChange.of(ontologyId, axiom));
             }
             freshEntities.add(freshEntity);

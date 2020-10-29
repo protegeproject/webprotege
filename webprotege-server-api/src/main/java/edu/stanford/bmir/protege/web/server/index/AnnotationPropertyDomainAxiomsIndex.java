@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -17,5 +17,5 @@ public interface AnnotationPropertyDomainAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLAnnotationPropertyDomainAxiom> getAnnotationPropertyDomainAxioms(@Nonnull OWLAnnotationProperty property,
-                                                                               @Nonnull OWLOntologyID ontologyId);
+                                                                               @Nonnull OntologyDocumentId ontologyDocumentId);
 }

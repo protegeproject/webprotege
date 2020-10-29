@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class DisjointDataPropertiesAxiomsIndexImpl_TestCase {
     private DisjointDataPropertiesAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLDataProperty property;
@@ -46,7 +47,7 @@ public class DisjointDataPropertiesAxiomsIndexImpl_TestCase {
                 .thenReturn(Collections.singleton(property));
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.of());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DISJOINT_DATA_PROPERTIES, ontologyId))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DISJOINT_DATA_PROPERTIES, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new DisjointDataPropertiesAxiomsIndexImpl(axiomsByTypeIndex);
     }
@@ -58,19 +59,19 @@ public class DisjointDataPropertiesAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetDisjointDataPropertiesAxiomForDataProperty() {
-        var axioms = impl.getDisjointDataPropertiesAxioms(property, ontologyId).collect(toSet());
+        var axioms = impl.getDisjointDataPropertiesAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getDisjointDataPropertiesAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getDisjointDataPropertiesAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownDataProperty() {
-        var axioms = impl.getDisjointDataPropertiesAxioms(mock(OWLDataProperty.class), ontologyId).collect(toSet());
+        var axioms = impl.getDisjointDataPropertiesAxioms(mock(OWLDataProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -83,7 +84,7 @@ public class DisjointDataPropertiesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullDataProperty() {
-        impl.getDisjointDataPropertiesAxioms(null, ontologyId);
+        impl.getDisjointDataPropertiesAxioms(null, ontologyDocumentId);
     }
 
 }

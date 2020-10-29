@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyRangeAxiomsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,14 +35,14 @@ public class DataPropertyRangeSectionRenderer extends AbstractOWLAxiomItemSectio
     }
 
     @Override
-    protected Set<OWLDataPropertyRangeAxiom> getAxiomsInOntology(OWLDataProperty subject, OWLOntologyID ontologyId) {
-        return axiomsIndex.getDataPropertyRangeAxioms(subject, ontologyId).collect(toSet());
+    protected Set<OWLDataPropertyRangeAxiom> getAxiomsInOntology(OWLDataProperty subject, OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getDataPropertyRangeAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
     @Override
     public List<OWLDataRange> getRenderablesForItem(OWLDataProperty subject,
                                                     OWLDataPropertyRangeAxiom item,
-                                                    OWLOntologyID ontologyId) {
+                                                    OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getRange());
     }
 }

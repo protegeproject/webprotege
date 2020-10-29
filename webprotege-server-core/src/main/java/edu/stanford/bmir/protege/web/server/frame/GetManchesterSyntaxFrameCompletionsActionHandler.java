@@ -12,9 +12,9 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.renderer.ManchesterSyntaxKeywords;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsResult;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
@@ -27,9 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
-import static edu.stanford.bmir.protege.web.server.shortform.SearchString.parseSearchString;
-import static edu.stanford.bmir.protege.web.server.shortform.ShortFormQuotingUtils.getQuotedShortForm;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 
@@ -51,7 +48,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+    private final OntologyDocumentIdDisplayNameProvider displayNameProvider;
 
     @Nonnull
     private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
@@ -60,12 +57,12 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     public GetManchesterSyntaxFrameCompletionsActionHandler(@Nonnull AccessManager accessManager,
                                                             @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                                             @Nonnull DictionaryManager dictionaryManager,
-                                                            @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
+                                                            @Nonnull OntologyDocumentIdDisplayNameProvider displayNameProvider,
                                                             @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
         super(accessManager);
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.dictionaryManager = dictionaryManager;
-        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
+        this.displayNameProvider = displayNameProvider;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
     }
 
@@ -161,8 +158,8 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                                                                             EditorPosition toPos,
                                                                             String lastWordPrefix) {
         if (e.isOntologyNameExpected()) {
-            return projectOntologiesIndex.getOntologyIds()
-                                  .map(ontologyIRIShortFormProvider::getShortForm)
+            return projectOntologiesIndex.getOntologyDocumentIds()
+                                  .map(displayNameProvider::getDisplayName)
                                   .filter(shortForm -> lastWordPrefix.isEmpty() || shortForm.toLowerCase().startsWith(lastWordPrefix))
                                   .map(shortForm -> new AutoCompletionChoice(shortForm, shortForm, "cm-ontology-list", fromPos, toPos))
                                   .collect(toList());

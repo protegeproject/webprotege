@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationPropertyRangeAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,15 +42,15 @@ public class AnnotationPropertyRangeSectionRenderer extends AbstractOWLAxiomItem
 
     @Override
     protected Set<OWLAnnotationPropertyRangeAxiom> getAxiomsInOntology(OWLAnnotationProperty subject,
-                                                                       OWLOntologyID ontologyId) {
-        return axiomsIndex.getAnnotationPropertyRangeAxioms(subject, ontologyId).collect(toSet());
+                                                                       OntologyDocumentId ontologyDocumentId) {
+        return axiomsIndex.getAnnotationPropertyRangeAxioms(subject, ontologyDocumentId).collect(toSet());
     }
 
 
     @Override
     public List<OWLObject> getRenderablesForItem(OWLAnnotationProperty subject,
                                                  OWLAnnotationPropertyRangeAxiom item,
-                                                 OWLOntologyID ontologyId) {
+                                                 OntologyDocumentId ontologyDocumentId) {
         return entitiesByIri.getEntitiesInSignature(item.getRange()).collect(toList());
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,7 @@ public class OntologySignatureIndexImpl_TestCase {
     private OntologySignatureIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceImpl;
@@ -52,17 +53,17 @@ public class OntologySignatureIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.CLASS, ontologyId))
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.CLASS, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(cls));
-        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.OBJECT_PROPERTY, ontologyId))
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.OBJECT_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(objectProperty));
-        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.DATA_PROPERTY, ontologyId))
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.DATA_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(dataProperty));
-        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.ANNOTATION_PROPERTY, ontologyId))
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.ANNOTATION_PROPERTY, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(annotationProperty));
-        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.NAMED_INDIVIDUAL, ontologyId))
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.NAMED_INDIVIDUAL, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(individual));
-        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.DATATYPE, ontologyId))
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.DATATYPE, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(datatype));
         impl = new OntologySignatureIndexImpl(axiomsByEntityReferenceImpl);
     }
@@ -74,13 +75,13 @@ public class OntologySignatureIndexImpl_TestCase {
 
     @Test
     public void shouldGetSignatureOfKnownOntology() {
-        var signature = impl.getEntitiesInSignature(ontologyId).collect(toSet());
+        var signature = impl.getEntitiesInSignature(ontologyDocumentId).collect(toSet());
         assertThat(signature, hasItems(cls, objectProperty, dataProperty, annotationProperty, individual, datatype));
     }
 
     @Test
     public void shouldGetEmptyStreamForUnknownOntology() {
-        var signature = impl.getEntitiesInSignature(mock(OWLOntologyID.class)).collect(toSet());
+        var signature = impl.getEntitiesInSignature(mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(signature.isEmpty(), is(true));
     }
 

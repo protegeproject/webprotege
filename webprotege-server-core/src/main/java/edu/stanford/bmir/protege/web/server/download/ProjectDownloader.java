@@ -131,6 +131,6 @@ public class ProjectDownloader {
     }
 
     private String getOntologyShortForm(OWLOntology ontology) {
-        return new OntologyIRIShortFormProvider().getShortForm(ontology);
+        return ontology.getOntologyID().toString();
     }
 }

@@ -3,10 +3,10 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
 import javax.annotation.Nonnull;
@@ -43,17 +43,17 @@ public class NamedIndividualFactsSectionRenderer extends AbstractOWLAxiomItemSec
 
     @Override
     public Set<OWLPropertyAssertionAxiom<?, ?>> getAxiomsInOntology(OWLNamedIndividual subject,
-                                                                    OWLOntologyID ontologyId) {
+                                                                    OntologyDocumentId ontologyDocumentId) {
         return Stream.concat(
-                objectPropertyAxiomsIndex.getObjectPropertyAssertions(subject, ontologyId),
-                dataPropertyAxiomsIndex.getDataPropertyAssertions(subject, ontologyId)
+                objectPropertyAxiomsIndex.getObjectPropertyAssertions(subject, ontologyDocumentId),
+                dataPropertyAxiomsIndex.getDataPropertyAssertions(subject, ontologyDocumentId)
         ).collect(toSet());
     }
 
     @Override
     public List<OWLObject> getRenderablesForItem(OWLNamedIndividual subject,
                                                  OWLPropertyAssertionAxiom<?, ?> item,
-                                                 OWLOntologyID ontologyId) {
+                                                 OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getProperty(), item.getObject());
     }
 

@@ -69,7 +69,7 @@ public class ObjectPropertyFrameTranslator {
         ImmutableSet.Builder<OWLClass> ranges = ImmutableSet.builder();
         ImmutableSet.Builder<ObjectPropertyCharacteristic> characteristics = ImmutableSet.builder();
 
-        ontologiesIndex.getOntologyIds()
+        ontologiesIndex.getOntologyDocumentIds()
                 .forEach(ontologyId -> {
                     annotationAssertionAxiomsBySubject.getAxiomsForSubject(subject.getIRI(), ontologyId)
                             .forEach(propertyValueAxioms::add);

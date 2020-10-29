@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.value.AutoValue;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -15,13 +16,13 @@ import javax.annotation.Nonnull;
 public abstract class OntologyAxiomPair {
 
 
-    public static OntologyAxiomPair get(@Nonnull OWLOntologyID ontology,
+    public static OntologyAxiomPair get(@Nonnull OntologyDocumentId ontology,
                                         @Nonnull OWLAxiom axiom) {
         return new AutoValue_OntologyAxiomPair(ontology, axiom);
     }
 
     @Nonnull
-    public abstract OWLOntologyID getOntology();
+    public abstract OntologyDocumentId getOntology();
 
     @Nonnull
     public abstract OWLAxiom getAxiom();

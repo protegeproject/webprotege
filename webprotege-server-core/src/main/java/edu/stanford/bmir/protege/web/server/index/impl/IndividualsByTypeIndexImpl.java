@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualRendering;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
@@ -95,7 +94,7 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex, Depen
         }
         Stream<OWLClass> types = Stream.concat(direct, ancestors);
         Stream<OWLNamedIndividual> individuals =
-                types.flatMap(t -> projectOntologiesIndex.getOntologyIds()
+                types.flatMap(t -> projectOntologiesIndex.getOntologyDocumentIds()
                                                          .flatMap(ontId -> classAssertionAxiomsByClass.getClassAssertionAxioms(
                                                                  t,
                                                                  ontId))
@@ -112,7 +111,7 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex, Depen
     }
 
     private boolean isDirectInstanceOfOWLThing(OWLNamedIndividual i) {
-        var types = projectOntologiesIndex.getOntologyIds()
+        var types = projectOntologiesIndex.getOntologyDocumentIds()
                                           .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(i, ontId))
                                           .map(OWLClassAssertionAxiom::getClassExpression)
                                           .collect(toSet());

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.merge;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -16,9 +17,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OntologyDiff implements IsSerializable {
 
-    private OWLOntologyID fromOntologyId;
+    private OntologyDocumentId fromOntologyId;
 
-    private OWLOntologyID toOntologyId;
+    private OntologyDocumentId toOntologyId;
 
     private Diff<OWLAnnotation> annotationDiff;
 
@@ -27,18 +28,18 @@ public class OntologyDiff implements IsSerializable {
     private OntologyDiff() {
     }
 
-    public OntologyDiff(OWLOntologyID fromOntologyId, OWLOntologyID toOntologyId, Diff<OWLAnnotation> annotationDiff, Diff<OWLAxiom> axiomDiff) {
+    public OntologyDiff(OntologyDocumentId fromOntologyId, OntologyDocumentId toOntologyId, Diff<OWLAnnotation> annotationDiff, Diff<OWLAxiom> axiomDiff) {
         this.fromOntologyId = checkNotNull(fromOntologyId);
         this.toOntologyId = checkNotNull(toOntologyId);
         this.annotationDiff = checkNotNull(annotationDiff);
         this.axiomDiff = checkNotNull(axiomDiff);
     }
 
-    public OWLOntologyID getFromOntologyId() {
+    public OntologyDocumentId getFromOntologyId() {
         return fromOntologyId;
     }
 
-    public OWLOntologyID getToOntologyId() {
+    public OntologyDocumentId getToOntologyId() {
         return toOntologyId;
     }
 

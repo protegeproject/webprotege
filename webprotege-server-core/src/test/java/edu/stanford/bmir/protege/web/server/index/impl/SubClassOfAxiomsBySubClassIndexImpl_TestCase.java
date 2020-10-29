@@ -2,14 +2,13 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
-
-import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,7 +30,7 @@ public class SubClassOfAxiomsBySubClassIndexImpl_TestCase {
     private SubClassOfAxiomsBySubClassIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     private OWLClass cls;
 
@@ -45,24 +44,24 @@ public class SubClassOfAxiomsBySubClassIndexImpl_TestCase {
         cls = Class(mock(IRI.class));
         axiom = SubClassOf(cls, superCls);
         impl = new SubClassOfAxiomsBySubClassIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetSubClassOfAxiomForSubClass() {
-        var axioms = impl.getSubClassOfAxiomsForSubClass(cls, ontologyID).collect(toSet());
+        var axioms = impl.getSubClassOfAxiomsForSubClass(cls, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getSubClassOfAxiomsForSubClass(cls, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getSubClassOfAxiomsForSubClass(cls, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getSubClassOfAxiomsForSubClass(mock(OWLClass.class), ontologyID).collect(toSet());
+        var axioms = impl.getSubClassOfAxiomsForSubClass(mock(OWLClass.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -75,6 +74,6 @@ public class SubClassOfAxiomsBySubClassIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullCls() {
-        impl.getSubClassOfAxiomsForSubClass(null, ontologyID);
+        impl.getSubClassOfAxiomsForSubClass(null, ontologyDocumentId);
     }
 }

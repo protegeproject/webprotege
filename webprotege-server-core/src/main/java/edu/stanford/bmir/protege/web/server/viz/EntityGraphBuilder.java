@@ -186,7 +186,7 @@ public class EntityGraphBuilder {
     private void createEdgesForClassAssertions(Set<Edge> edges,
                                                OWLNamedIndividual individual,
                                                OWLNamedIndividualData individualData) {
-        projectOntologiesIndex.getOntologyIds()
+        projectOntologiesIndex.getOntologyDocumentIds()
                               .flatMap(ontId -> classAssertionAxioms.getClassAssertionAxioms(individual, ontId))
                               .filter(ax -> isNotOwlThing(ax.getClassExpression()))
                               .forEach(ax -> {
@@ -277,7 +277,7 @@ public class EntityGraphBuilder {
     private void createEdgesForObjectPropertyAssertions(Set<Edge> edges,
                                                         OWLNamedIndividual individual,
                                                         OWLNamedIndividualData individualData) {
-        projectOntologiesIndex.getOntologyIds()
+        projectOntologiesIndex.getOntologyDocumentIds()
                               .flatMap(ontId -> objectPropertyAssertions.getObjectPropertyAssertions(individual, ontId))
                               .filter(ax -> isNamedIndividual(ax.getObject()))
                               .filter(ax -> isNamedProperty(ax.getProperty()))
@@ -333,14 +333,14 @@ public class EntityGraphBuilder {
     }
 
     private Stream<OWLSubClassOfAxiom> getEquivalentClassAxiomsAsSubClassOfAxioms(OWLClass cls) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> equivalentClassesAxioms.getEquivalentClassesAxioms(cls, ontId))
                                      .flatMap(ax -> ax.asOWLSubClassOfAxioms()
                                                       .stream());
     }
 
     private Stream<OWLSubClassOfAxiom> getSubClassAxioms(OWLClass cls) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .flatMap(ontId -> subClassOfAxioms.getSubClassOfAxiomsForSubClass(cls, ontId));
     }
 }

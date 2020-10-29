@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.revision.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
@@ -64,7 +65,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                                          ChangeApplicationResult<?> changes,
                                          final List<ProjectEvent<?>> projectEventList) {
         var changedEntities = new HashSet<OWLEntity>();
-        var changedOntologies = new HashSet<OWLOntologyID>();
+        var changedOntologies = new HashSet<OntologyDocumentId>();
         changes.getChangeList()
                .forEach(change -> change.accept(new OntologyChangeVisitor() {
                    @Override
@@ -108,7 +109,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                    }
 
                    private void handleOntologyFrameChange(OntologyChange change) {
-                       var ontologyId = change.getOntologyId();
+                       var ontologyId = change.getOntologyDocumentId();
                        if(!changedOntologies.add(ontologyId)) {
                            return;
                        }

@@ -58,7 +58,7 @@ public class RootIndexImpl implements RootIndex {
         @Override
         public Boolean visit(@Nonnull AddAxiomChange addAxiomChange) {
             var axiom = addAxiomChange.getAxiom();
-            var ontologyId = addAxiomChange.getOntologyId();
+            var ontologyId = addAxiomChange.getOntologyDocumentId();
             if(!ontologyAxiomsIndex.containsAxiom(axiom, ontologyId)) {
                 return Boolean.TRUE;
             }
@@ -70,7 +70,7 @@ public class RootIndexImpl implements RootIndex {
         @Override
         public Boolean visit(@Nonnull RemoveAxiomChange removeAxiomChange) {
             var axiom = removeAxiomChange.getAxiom();
-            var ontologyId = removeAxiomChange.getOntologyId();
+            var ontologyId = removeAxiomChange.getOntologyDocumentId();
             if(ontologyAxiomsIndex.containsAxiom(axiom, ontologyId)) {
                 return Boolean.TRUE;
             }
@@ -82,7 +82,7 @@ public class RootIndexImpl implements RootIndex {
         @Override
         public Boolean visit(@Nonnull AddOntologyAnnotationChange addOntologyAnnotationChange) {
             var annotation = addOntologyAnnotationChange.getAnnotation();
-            var ontologyId = addOntologyAnnotationChange.getOntologyId();
+            var ontologyId = addOntologyAnnotationChange.getOntologyDocumentId();
             if(!ontologyAnnotationsIndex.containsAnnotation(annotation, ontologyId)) {
                 return Boolean.TRUE;
             }
@@ -94,7 +94,7 @@ public class RootIndexImpl implements RootIndex {
         @Override
         public Boolean visit(@Nonnull RemoveOntologyAnnotationChange removeOntologyAnnotationChange) {
             var annotation = removeOntologyAnnotationChange.getAnnotation();
-            var ontologyId = removeOntologyAnnotationChange.getOntologyId();
+            var ontologyId = removeOntologyAnnotationChange.getOntologyDocumentId();
             if(ontologyAnnotationsIndex.containsAnnotation(annotation, ontologyId)) {
                 return Boolean.TRUE;
             }

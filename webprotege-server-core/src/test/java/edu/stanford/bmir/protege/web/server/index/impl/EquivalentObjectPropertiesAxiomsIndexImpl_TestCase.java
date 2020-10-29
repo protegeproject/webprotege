@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class EquivalentObjectPropertiesAxiomsIndexImpl_TestCase {
     private EquivalentObjectPropertiesAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLObjectProperty property;
@@ -44,7 +45,7 @@ public class EquivalentObjectPropertiesAxiomsIndexImpl_TestCase {
     public void setUp() {
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_OBJECT_PROPERTIES, ontologyID))
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_OBJECT_PROPERTIES, ontologyDocumentId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         when(axiom.getProperties())
                 .thenReturn(Collections.singleton(property));
@@ -58,19 +59,19 @@ public class EquivalentObjectPropertiesAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetEquivalentObjectPropertiesAxiomForObjectProperty() {
-        var axioms = impl.getEquivalentObjectPropertiesAxioms(property, ontologyID).collect(toSet());
+        var axioms = impl.getEquivalentObjectPropertiesAxioms(property, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getEquivalentObjectPropertiesAxioms(property, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getEquivalentObjectPropertiesAxioms(property, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownObjectProperty() {
-        var axioms = impl.getEquivalentObjectPropertiesAxioms(mock(OWLObjectProperty.class), ontologyID).collect(toSet());
+        var axioms = impl.getEquivalentObjectPropertiesAxioms(mock(OWLObjectProperty.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -83,7 +84,7 @@ public class EquivalentObjectPropertiesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullObjectProperty() {
-        impl.getEquivalentObjectPropertiesAxioms(null, ontologyID);
+        impl.getEquivalentObjectPropertiesAxioms(null, ontologyDocumentId);
     }
 
 }

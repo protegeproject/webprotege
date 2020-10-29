@@ -1,19 +1,15 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
-import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +31,7 @@ public class DefaultOntologyIdManagerImpl_TestCase {
     private ProjectOntologiesIndex projectOntologiesIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Before
     public void setUp() {
@@ -49,16 +45,9 @@ public class DefaultOntologyIdManagerImpl_TestCase {
 
     @Test
     public void shouldGetDefaultOntologyId() {
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenAnswer(inv -> Stream.of(ontologyId));
 
-        assertThat(impl.getDefaultOntologyId(), is(ontologyId));
-    }
-
-    @Test
-    public void shouldThrowNoSuchElementExceptionOnEmptyIdList() {
-        var ontologyId = impl.getDefaultOntologyId();
-        var ontologyIri = ontologyId.getOntologyIRI().toJavaUtil().orElseThrow();
-        assertThat(ontologyIri.toString().matches("urn:webprotege:ontology:" + UUIDUtil.UUID_PATTERN), is(true));
+        assertThat(impl.getDefaultOntologyDocumentId(), is(ontologyId));
     }
 }

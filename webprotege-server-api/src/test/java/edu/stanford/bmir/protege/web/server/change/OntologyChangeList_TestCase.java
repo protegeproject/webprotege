@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsCollectionContaining;
@@ -28,7 +29,7 @@ public class OntologyChangeList_TestCase<R> {
     private OntologyChangeList.Builder<R> changeListBuilder;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private OWLAxiom axiom;

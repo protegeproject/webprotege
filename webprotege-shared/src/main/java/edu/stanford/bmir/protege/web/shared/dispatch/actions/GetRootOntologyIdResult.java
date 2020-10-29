@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -17,7 +18,7 @@ public class GetRootOntologyIdResult implements Result, HasProjectId {
 
     private ProjectId projectId;
 
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     /**
      * For serialization only
@@ -25,9 +26,9 @@ public class GetRootOntologyIdResult implements Result, HasProjectId {
     private GetRootOntologyIdResult() {
     }
 
-    public GetRootOntologyIdResult(ProjectId projectId, OWLOntologyID owlOntologyID) {
+    public GetRootOntologyIdResult(ProjectId projectId, OntologyDocumentId ontologyDocumentId) {
         this.projectId = projectId;
-        this.ontologyID = owlOntologyID;
+        this.ontologyDocumentId = ontologyDocumentId;
     }
 
     /**
@@ -41,7 +42,7 @@ public class GetRootOntologyIdResult implements Result, HasProjectId {
         return projectId;
     }
 
-    public OWLOntologyID getObject() {
-        return ontologyID;
+    public OntologyDocumentId getObject() {
+        return ontologyDocumentId;
     }
 }

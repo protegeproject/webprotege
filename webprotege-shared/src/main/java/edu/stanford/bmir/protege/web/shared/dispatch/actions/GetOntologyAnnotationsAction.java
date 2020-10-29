@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -18,19 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetOntologyAnnotationsAction extends AbstractHasProjectAction<GetOntologyAnnotationsResult> {
 
-    private OWLOntologyID ontologyId;
-
     private GetOntologyAnnotationsAction() {
     }
 
-    public GetOntologyAnnotationsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull Optional<OWLOntologyID> ontologyId) {
+    public GetOntologyAnnotationsAction(@Nonnull ProjectId projectId) {
         super(projectId);
-        this.ontologyId = checkNotNull(ontologyId).orElse(null);
-    }
-
-    @Nonnull
-    public Optional<OWLOntologyID> getOntologyId() {
-        return Optional.ofNullable(ontologyId);
     }
 }

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAxiomsByIriReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.AxiomsByReferenceIndexImpl;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class AxiomsByReferenceIndexImpl_TestCase {
     private AnnotationAxiomsByIriReferenceIndex axiomsByIriReferenceIndex;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLEntity entity;
@@ -55,9 +55,11 @@ public class AxiomsByReferenceIndexImpl_TestCase {
     public void setUp() {
         when(entity.getIRI()).thenReturn(entityIri);
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(any(), any())).thenReturn(Stream.empty());
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(entity, ontologyId)).thenReturn(Stream.of(entityRefAxiom));
+        when(axiomsByEntityReferenceIndex.getReferencingAxioms(entity,
+                                                               ontologyDocumentId)).thenReturn(Stream.of(entityRefAxiom));
         when(axiomsByIriReferenceIndex.getReferencingAxioms(any(), any())).thenReturn(Stream.empty());
-        when(axiomsByIriReferenceIndex.getReferencingAxioms(entityIri, ontologyId)).thenReturn(Stream.of(iriRefAxiom));
+        when(axiomsByIriReferenceIndex.getReferencingAxioms(entityIri,
+                                                            ontologyDocumentId)).thenReturn(Stream.of(iriRefAxiom));
         impl = new AxiomsByReferenceIndexImpl(axiomsByEntityReferenceIndex, axiomsByIriReferenceIndex);
     }
 
@@ -68,21 +70,21 @@ public class AxiomsByReferenceIndexImpl_TestCase {
 
     @Test
     public void shouldGetAxiomsByReference() {
-        var referencingAxiomsStream = impl.getReferencingAxioms(Collections.singleton(entity), ontologyId);
+        var referencingAxiomsStream = impl.getReferencingAxioms(Collections.singleton(entity), ontologyDocumentId);
         var referencingAxioms = referencingAxiomsStream.collect(toSet());
         assertThat(referencingAxioms, hasItems(entityRefAxiom, iriRefAxiom));
     }
 
     @Test
     public void shouldGetEmptyStreamForUnknownOntologyId() {
-        var referencingAxiomsStream = impl.getReferencingAxioms(Collections.singleton(entity), mock(OWLOntologyID.class));
+        var referencingAxiomsStream = impl.getReferencingAxioms(Collections.singleton(entity), mock(OntologyDocumentId.class));
         var axiomsCount = referencingAxiomsStream.count();
         assertThat(axiomsCount, is(0L));
     }
 
     @Test
     public void shouldGetEmptyStreamForEmptyEntitiesSet() {
-        var referencingAxiomsStream = impl.getReferencingAxioms(Collections.emptySet(), ontologyId);
+        var referencingAxiomsStream = impl.getReferencingAxioms(Collections.emptySet(), ontologyDocumentId);
         var axiomsCount = referencingAxiomsStream.count();
         assertThat(axiomsCount, is(0L));
     }
@@ -90,7 +92,7 @@ public class AxiomsByReferenceIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionForNullEntitiesSet() {
-        impl.getReferencingAxioms(null, ontologyId);
+        impl.getReferencingAxioms(null, ontologyDocumentId);
     }
 
     @SuppressWarnings("ConstantConditions")

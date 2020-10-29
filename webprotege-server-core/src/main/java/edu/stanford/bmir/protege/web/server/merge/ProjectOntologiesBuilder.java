@@ -3,9 +3,10 @@ package edu.stanford.bmir.protege.web.server.merge;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyIdIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,17 +32,22 @@ public class ProjectOntologiesBuilder {
     @Nonnull
     private final OntologyAxiomsIndex axiomsIndex;
 
+    @Nonnull
+    private final OntologyIdIndex ontologyIdIndex;
+
     @Inject
     public ProjectOntologiesBuilder(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                     @Nonnull OntologyAnnotationsIndex annotationsIndex,
-                                    @Nonnull OntologyAxiomsIndex axiomsIndex) {
+                                    @Nonnull OntologyAxiomsIndex axiomsIndex,
+                                    @Nonnull OntologyIdIndex ontologyIdIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.annotationsIndex = checkNotNull(annotationsIndex);
         this.axiomsIndex = checkNotNull(axiomsIndex);
+        this.ontologyIdIndex = checkNotNull(ontologyIdIndex);
     }
 
     public Collection<Ontology> buildProjectOntologies() {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                                      .map(this::toOntology)
                                      .collect(Collectors.toList());
     }
@@ -51,12 +57,14 @@ public class ProjectOntologiesBuilder {
      *
      * @param ontId The ontology Id
      */
-    private Ontology toOntology(@Nonnull OWLOntologyID ontId) {
+    private Ontology toOntology(@Nonnull OntologyDocumentId ontId) {
         var annotations = annotationsIndex.getOntologyAnnotations(ontId)
                                           .collect(toImmutableSet());
         var axioms = axiomsIndex.getAxioms(ontId)
                                 .collect(toImmutableSet());
+        var ontologyId = ontologyIdIndex.getOntologyId(ontId);
         return Ontology.get(ontId,
+                            ontologyId,
                             ImmutableSet.of(),
                             annotations, axioms);
     }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddOntologyAnnotationChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveOntologyAnnotationChange;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ public class OntologyAnnotationsIndexImpl_TestCase {
     private OntologyAnnotationsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAnnotationValue annotationValue;
@@ -50,52 +51,52 @@ public class OntologyAnnotationsIndexImpl_TestCase {
                                         annotationValue)
                 .getAnnotatedAnnotation(Collections.singleton(annotationAnnotation));
         impl = new OntologyAnnotationsIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
+        impl.applyChanges(ImmutableList.of(AddOntologyAnnotationChange.of(ontologyDocumentId, ontologyAnnotation)));
     }
 
     @Test
     public void shouldContainAnnotation() {
-        assertThat(impl.containsAnnotation(ontologyAnnotation, ontologyId), is(true));
+        assertThat(impl.containsAnnotation(ontologyAnnotation, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldContainEntityInSignature() {
-        assertThat(impl.containsEntityInOntologyAnnotationsSignature(property, ontologyId), is(true));
+        assertThat(impl.containsEntityInOntologyAnnotationsSignature(property, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldContainAnnotationOnAnnotationInSignature() {
-        assertThat(impl.containsEntityInOntologyAnnotationsSignature(otherProperty, ontologyId), is(true));
+        assertThat(impl.containsEntityInOntologyAnnotationsSignature(otherProperty, ontologyDocumentId), is(true));
     }
 
     @Test
     public void shouldGetEmptyStreamForUnknownOntology() {
-        var ontologyAnnotationsStream = impl.getOntologyAnnotations(mock(OWLOntologyID.class));
+        var ontologyAnnotationsStream = impl.getOntologyAnnotations(mock(OntologyDocumentId.class));
         assertThat(ontologyAnnotationsStream.count(), is(0L));
     }
 
     @Test
     public void shouldGetOntologyAnnotations() {
-        var ontologyAnnotationsStream = impl.getOntologyAnnotations(ontologyId);
+        var ontologyAnnotationsStream = impl.getOntologyAnnotations(ontologyDocumentId);
         var ontologyAnnotations = ontologyAnnotationsStream.collect(toSet());
         assertThat(ontologyAnnotations, contains(ontologyAnnotation));
     }
 
     @Test
     public void shouldGetOntologyAnnotationsSignature() {
-        var signature = impl.getOntologyAnnotationsSignature(ontologyId)
+        var signature = impl.getOntologyAnnotationsSignature(ontologyDocumentId)
                             .collect(toSet());
         assertThat(signature, containsInAnyOrder(property, otherProperty));
     }
 
     @Test
     public void shouldNotContainEntityInSignature() {
-        assertThat(impl.containsEntityInOntologyAnnotationsSignature(mock(OWLEntity.class), ontologyId), is(false));
+        assertThat(impl.containsEntityInOntologyAnnotationsSignature(mock(OWLEntity.class), ontologyDocumentId), is(false));
     }
 
     @Test
     public void shouldRemoveAnnotation() {
-        impl.applyChanges(ImmutableList.of(RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
-        assertThat(impl.getOntologyAnnotations(ontologyId).count(), is(0L));
+        impl.applyChanges(ImmutableList.of(RemoveOntologyAnnotationChange.of(ontologyDocumentId, ontologyAnnotation)));
+        assertThat(impl.getOntologyAnnotations(ontologyDocumentId).count(), is(0L));
     }
 }

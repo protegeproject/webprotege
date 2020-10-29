@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.List;
 
@@ -42,16 +41,16 @@ public class RootIndexImpl_TestCase {
     private OWLAxiom axiom;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLAnnotation annotation;
 
     @Before
     public void setUp() {
-        when(ontologyAxiomsIndex.containsAxiom(axiom, ontologyId))
+        when(ontologyAxiomsIndex.containsAxiom(axiom, ontologyDocumentId))
                 .thenReturn(true);
-        when(ontologyAnnotationIndex.containsAnnotation(annotation, ontologyId))
+        when(ontologyAnnotationIndex.containsAnnotation(annotation, ontologyDocumentId))
                 .thenReturn(true);
         impl = new RootIndexImpl(ontologyAxiomsIndex,
                                  ontologyAnnotationIndex);
@@ -59,7 +58,7 @@ public class RootIndexImpl_TestCase {
 
     @Test
     public void shouldNotAddAxiomInOntology() {
-        var change = AddAxiomChange.of(ontologyId, axiom);
+        var change = AddAxiomChange.of(ontologyDocumentId, axiom);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, is(empty()));
     }
@@ -67,14 +66,14 @@ public class RootIndexImpl_TestCase {
     @Test
     public void shouldAddAxiomNotInOntology() {
         var otherAxiom = mock(OWLAxiom.class);
-        var change = AddAxiomChange.of(ontologyId, otherAxiom);
+        var change = AddAxiomChange.of(ontologyDocumentId, otherAxiom);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, contains(change));
     }
 
     @Test
     public void shouldRemoveAxiomInOntology() {
-        var change = RemoveAxiomChange.of(ontologyId, axiom);
+        var change = RemoveAxiomChange.of(ontologyDocumentId, axiom);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, contains(change));
     }
@@ -82,7 +81,7 @@ public class RootIndexImpl_TestCase {
     @Test
     public void shouldNotRemoveAxiomNotInOntology() {
         var otherAxiom = mock(OWLAxiom.class);
-        var change = RemoveAxiomChange.of(ontologyId, otherAxiom);
+        var change = RemoveAxiomChange.of(ontologyDocumentId, otherAxiom);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, is(empty()));
     }
@@ -90,7 +89,7 @@ public class RootIndexImpl_TestCase {
 
     @Test
     public void shouldNotAddAnnotationInOntology() {
-        var change = AddOntologyAnnotationChange.of(ontologyId, annotation);
+        var change = AddOntologyAnnotationChange.of(ontologyDocumentId, annotation);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, is(empty()));
     }
@@ -98,14 +97,14 @@ public class RootIndexImpl_TestCase {
     @Test
     public void shouldAddAnnotationNotInOntology() {
         var otherAnnotation = mock(OWLAnnotation.class);
-        var change = AddOntologyAnnotationChange.of(ontologyId, otherAnnotation);
+        var change = AddOntologyAnnotationChange.of(ontologyDocumentId, otherAnnotation);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, contains(change));
     }
 
     @Test
     public void shouldRemoveAnnotationInOntology() {
-        var change = RemoveOntologyAnnotationChange.of(ontologyId, annotation);
+        var change = RemoveOntologyAnnotationChange.of(ontologyDocumentId, annotation);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, contains(change));
     }
@@ -113,7 +112,7 @@ public class RootIndexImpl_TestCase {
     @Test
     public void shouldNotRemoveAnnotationNotInOntology() {
         var otherAnnotation = mock(OWLAnnotation.class);
-        var change = RemoveOntologyAnnotationChange.of(ontologyId, otherAnnotation);
+        var change = RemoveOntologyAnnotationChange.of(ontologyDocumentId, otherAnnotation);
         var effectiveChanges = getEffectiveChanges(change);
         assertThat(effectiveChanges, is(empty()));
     }
@@ -121,8 +120,8 @@ public class RootIndexImpl_TestCase {
     @Test
     public void shouldFilterOutDuplicateChanges() {
         var otherAxiom = mock(OWLAxiom.class);
-        var firstChange = AddAxiomChange.of(ontologyId, otherAxiom);
-        var secondChange = AddAxiomChange.of(ontologyId, otherAxiom);
+        var firstChange = AddAxiomChange.of(ontologyDocumentId, otherAxiom);
+        var secondChange = AddAxiomChange.of(ontologyDocumentId, otherAxiom);
         var changes = ImmutableList.<OntologyChange>of(
                 firstChange,
                 secondChange
@@ -135,8 +134,8 @@ public class RootIndexImpl_TestCase {
     @Test
     public void shouldFilterOutCancellingChanges() {
         var otherAxiom = mock(OWLAxiom.class);
-        var firstChange = AddAxiomChange.of(ontologyId, otherAxiom);
-        var secondChange = RemoveAxiomChange.of(ontologyId, otherAxiom);
+        var firstChange = AddAxiomChange.of(ontologyDocumentId, otherAxiom);
+        var secondChange = RemoveAxiomChange.of(ontologyDocumentId, otherAxiom);
         var changes = ImmutableList.<OntologyChange>of(
                 firstChange,
                 secondChange

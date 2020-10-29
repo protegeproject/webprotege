@@ -4,9 +4,9 @@ import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,12 +40,11 @@ public class OntologySignatureIndexImpl implements OntologySignatureIndex, Depen
 
     @Nonnull
     @Override
-    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull OWLOntologyID ontologyID) {
-        checkNotNull(ontologyID);
+    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull OntologyDocumentId ontologyDocumentId) {
+        checkNotNull(ontologyDocumentId);
         var streamsBuilder = Stream.<Stream<? extends OWLEntity>>builder();
         EntityType.values().forEach(entityType -> {
-            var sig = axiomsByEntityReferenceIndex.getOntologyAxiomsSignature(entityType,
-                                                                    ontologyID);
+            var sig = axiomsByEntityReferenceIndex.getOntologyAxiomsSignature(entityType, ontologyDocumentId);
             streamsBuilder.add(sig);
         });
         return streamsBuilder.build().flatMap(s -> s);

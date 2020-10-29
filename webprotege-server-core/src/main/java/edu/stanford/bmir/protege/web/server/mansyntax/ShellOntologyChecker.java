@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,13 +23,13 @@ public class ShellOntologyChecker implements OWLOntologyChecker {
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final WebProtegeOntologyIRIShortFormProvider shortFormProvider;
+    private final OntologyDocumentIdDisplayNameProvider shortFormProvider;
 
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Inject
     public ShellOntologyChecker(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                @Nonnull WebProtegeOntologyIRIShortFormProvider shortFormProvider,
+                                @Nonnull OntologyDocumentIdDisplayNameProvider shortFormProvider,
                                 DefaultOntologyIdManager defaultOntologyIdManager) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.shortFormProvider = checkNotNull(shortFormProvider);
@@ -41,11 +40,11 @@ public class ShellOntologyChecker implements OWLOntologyChecker {
     @Override
     public OWLOntology getOntology(@Nullable String name) {
         if(name == null) {
-            OWLOntologyID defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+            var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
             return ShellOwlOntology.get(defaultOntologyId);
         }
-        return projectOntologiesIndex.getOntologyIds()
-                                     .filter(ontId -> shortFormProvider.getShortForm(ontId)
+        return projectOntologiesIndex.getOntologyDocumentIds()
+                                     .filter(ontId -> shortFormProvider.getDisplayName(ontId)
                                                                        .equalsIgnoreCase(name))
                                      .findFirst()
                                      .map(ShellOwlOntology::new)

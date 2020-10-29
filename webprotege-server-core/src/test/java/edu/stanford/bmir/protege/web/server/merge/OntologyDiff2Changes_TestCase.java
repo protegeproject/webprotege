@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class OntologyDiff2Changes_TestCase {
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OntologyDiff ontologyDiff;
@@ -63,7 +63,7 @@ public class OntologyDiff2Changes_TestCase {
                 .thenReturn(axiomDiff);
 
         when(ontologyDiff.getFromOntologyId())
-                .thenReturn(ontologyId);
+                .thenReturn(ontologyDocumentId);
 
 
 
@@ -86,22 +86,22 @@ public class OntologyDiff2Changes_TestCase {
 
     @Test
     public void shouldGenerateAddAxioms() {
-        assertThat(ontologyChanges, hasItem(AddAxiomChange.of(ontologyId, addedAxiom)));
+        assertThat(ontologyChanges, hasItem(AddAxiomChange.of(ontologyDocumentId, addedAxiom)));
     }
 
     @Test
     public void shouldGenerateRemoveAxioms() {
-        assertThat(ontologyChanges, hasItem(RemoveAxiomChange.of(ontologyId, removedAxiom)));
+        assertThat(ontologyChanges, hasItem(RemoveAxiomChange.of(ontologyDocumentId, removedAxiom)));
     }
 
     @Test
     public void shouldGenerateAddAnnotations() {
-        assertThat(ontologyChanges, hasItem(AddOntologyAnnotationChange.of(ontologyId, addedAnnotation)));
+        assertThat(ontologyChanges, hasItem(AddOntologyAnnotationChange.of(ontologyDocumentId, addedAnnotation)));
     }
 
     @Test
     public void shouldGenerateRemvoveAnnotations() {
-        assertThat(ontologyChanges, hasItem(RemoveOntologyAnnotationChange.of(ontologyId, removedAnnotation)));
+        assertThat(ontologyChanges, hasItem(RemoveOntologyAnnotationChange.of(ontologyDocumentId, removedAnnotation)));
     }
 
     @SuppressWarnings("ConstantConditions")

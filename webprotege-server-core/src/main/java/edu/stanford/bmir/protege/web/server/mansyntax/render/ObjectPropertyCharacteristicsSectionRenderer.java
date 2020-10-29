@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -50,17 +51,17 @@ public class ObjectPropertyCharacteristicsSectionRenderer extends AbstractOWLAxi
     }
 
     @Override
-    protected Set<OWLObjectPropertyCharacteristicAxiom> getAxiomsInOntology(OWLObjectProperty subject, OWLOntologyID ontologyId) {
+    protected Set<OWLObjectPropertyCharacteristicAxiom> getAxiomsInOntology(OWLObjectProperty subject, OntologyDocumentId ontologyDocumentId) {
         // Don't use specific indexes as the number of properties, and thus the number
         // of property characteristic axioms in an ontology is small
         return keywordMap.keySet()
                   .stream()
-                  .flatMap(type -> getAxiom(type, ontologyId, subject))
+                  .flatMap(type -> getAxiom(type, ontologyDocumentId, subject))
                   .collect(toSet());
     }
 
     private Stream<? extends OWLObjectPropertyCharacteristicAxiom> getAxiom(AxiomType<? extends OWLObjectPropertyCharacteristicAxiom> type,
-                                                                            OWLOntologyID ontologyId,
+                                                                            OntologyDocumentId ontologyId,
                                                                             OWLObjectProperty subject) {
         return axiomsByTypeIndex.getAxiomsByType(type, ontologyId)
                          .filter(ax ->  ax.getProperty().equals(subject));
@@ -69,7 +70,7 @@ public class ObjectPropertyCharacteristicsSectionRenderer extends AbstractOWLAxi
     @Override
     public List<String> getRenderablesForItem(OWLObjectProperty subject,
                                               OWLObjectPropertyCharacteristicAxiom item,
-                                              OWLOntologyID ontologyId) {
+                                              OntologyDocumentId ontologyDocumentId) {
         var axiomType = item.getAxiomType();
         ManchesterOWLSyntax kw = keywordMap.get(axiomType);
         if(kw != null) {

@@ -41,7 +41,7 @@ public class EntitiesInProjectSignatureIndexImpl implements EntitiesInProjectSig
     @Override
     public boolean containsEntityInSignature(@Nonnull OWLEntity entity) {
         checkNotNull(entity);
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .anyMatch(ontId -> entitiesInOntologySignatureIndex.containsEntityInSignature(entity, ontId));
 
     }

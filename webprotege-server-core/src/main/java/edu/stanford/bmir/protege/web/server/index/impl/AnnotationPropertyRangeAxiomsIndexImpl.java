@@ -4,10 +4,10 @@ import edu.stanford.bmir.protege.web.server.index.AnnotationPropertyRangeAxiomsI
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.Index;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,10 +41,10 @@ public class AnnotationPropertyRangeAxiomsIndexImpl implements AnnotationPropert
     @Nonnull
     @Override
     public Stream<OWLAnnotationPropertyRangeAxiom> getAnnotationPropertyRangeAxioms(@Nonnull OWLAnnotationProperty property,
-                                                                                      @Nonnull OWLOntologyID ontologyId) {
+                                                                                      @Nonnull OntologyDocumentId ontologyDocumentId) {
         checkNotNull(property);
-        checkNotNull(ontologyId);
-        return axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyId)
+        checkNotNull(ontologyDocumentId);
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyDocumentId)
                                 .filter(ax -> ax.getProperty().equals(property));
     }
 }

@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.annotation.Nonnull;
@@ -44,14 +44,14 @@ public class OntologyAnnotationsSectionRenderer extends AbstractSectionRenderer<
 
     @Override
     public List<OWLAnnotation> getItemsInOntology(OWLOntology subject,
-                                                  OWLOntologyID ontologyId,
+                                                  OntologyDocumentId ontologyDocumentId,
                                                   ShortFormProvider shortFormProvider,
                                                   Comparator<OWLObject> comparator) {
-        return annotationsIndex.getOntologyAnnotations(ontologyId).collect(toList());
+        return annotationsIndex.getOntologyAnnotations(ontologyDocumentId).collect(toList());
     }
 
     @Override
-    public List<OWLObject> getRenderablesForItem(OWLOntology subject, OWLAnnotation item, OWLOntologyID ontologyId) {
+    public List<OWLObject> getRenderablesForItem(OWLOntology subject, OWLAnnotation item, OntologyDocumentId ontologyDocumentId) {
         return Lists.newArrayList(item.getProperty(), item.getValue());
     }
 

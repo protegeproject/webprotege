@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="mg" type="edu.stanford.bmir.protege.web.client.merge_add.MergeAddClientBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Specify the Ontology IRI for the new ontology:" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextArea ui:field="ontologyIRI" characterWidth="60" visibleLines="1" addStyleNames="{wp.style.formIriField}"/>
+        </div>
+        <div>
+            <g:Label addStyleNames="{wp.style.warningLabel}">The ontology IRI is used to identify the ontology in the context of the world wide web.</g:Label>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

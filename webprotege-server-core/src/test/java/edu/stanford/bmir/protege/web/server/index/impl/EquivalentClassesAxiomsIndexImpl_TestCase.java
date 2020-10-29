@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +13,6 @@ import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +33,7 @@ public class EquivalentClassesAxiomsIndexImpl_TestCase {
     private EquivalentClassesAxiomsIndexImpl impl;
 
     @Mock
-    private OWLOntologyID ontologyID;
+    private OntologyDocumentId ontologyDocumentId;
 
     @Mock
     private OWLClass cls;
@@ -48,24 +46,24 @@ public class EquivalentClassesAxiomsIndexImpl_TestCase {
         when(axiom.getNamedClasses())
                 .thenReturn(Collections.singleton(cls));
         impl = new EquivalentClassesAxiomsIndexImpl();
-        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyDocumentId, axiom)));
     }
 
     @Test
     public void shouldGetEquivalentClassesAxiomForSubClass() {
-        var axioms = impl.getEquivalentClassesAxioms(cls, ontologyID).collect(toSet());
+        var axioms = impl.getEquivalentClassesAxioms(cls, ontologyDocumentId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownOntologyId() {
-        var axioms = impl.getEquivalentClassesAxioms(cls, mock(OWLOntologyID.class)).collect(toSet());
+        var axioms = impl.getEquivalentClassesAxioms(cls, mock(OntologyDocumentId.class)).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getEquivalentClassesAxioms(mock(OWLClass.class), ontologyID).collect(toSet());
+        var axioms = impl.getEquivalentClassesAxioms(mock(OWLClass.class), ontologyDocumentId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -78,7 +76,7 @@ public class EquivalentClassesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullCls() {
-        impl.getEquivalentClassesAxioms(null, ontologyID);
+        impl.getEquivalentClassesAxioms(null, ontologyDocumentId);
     }
 
 }

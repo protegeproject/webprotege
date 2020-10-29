@@ -11,8 +11,8 @@ import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIr
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +82,7 @@ public class UuidEntityCrudKitHandlerTestCase {
     private EntitiesInProjectSignatureByIriIndex entitiesInSignature;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Mock
     private EntityIriPrefixResolver entityIriPrefixResolver;
@@ -90,7 +90,7 @@ public class UuidEntityCrudKitHandlerTestCase {
     @Before
     public void setUp() throws Exception {
         dictionaryLanguage = AnnotationAssertionDictionaryLanguage.get(annotationPropertyIri, "en");
-        when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
+        when(crudContext.getTargetOntologyDocumentId()).thenReturn(ontologyId);
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of()))

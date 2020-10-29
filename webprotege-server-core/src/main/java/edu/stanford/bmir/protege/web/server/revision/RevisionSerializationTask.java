@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
 import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Date: 15/05/2012
  */
 public class RevisionSerializationTask implements Callable<Integer> {
+
+    private static Logger logger = LoggerFactory.getLogger(RevisionSerializationTask.class);
 
     private final File file;
 
@@ -36,18 +40,19 @@ public class RevisionSerializationTask implements Callable<Integer> {
     }
 
     public Integer call() throws IOException {
-        BinaryOWLMetadata metadata = new BinaryOWLMetadata();
-        metadata.setStringAttribute(RevisionSerializationVocabulary.USERNAME_METADATA_ATTRIBUTE.getVocabularyName(), revision.getUserId().getUserName());
-        metadata.setLongAttribute(RevisionSerializationVocabulary.REVISION_META_DATA_ATTRIBUTE.getVocabularyName(), revision.getRevisionNumber().getValue());
-        metadata.setStringAttribute(RevisionSerializationVocabulary.DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), revision.getHighLevelDescription());
-        metadata.setStringAttribute(RevisionSerializationVocabulary.REVISION_TYPE_META_DATA_ATTRIBUTE.getVocabularyName(), RevisionType.EDIT.name());
-        BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
-        var changeRecords = revision.getChanges()
-                .stream()
-                .map(OntologyChange::toOwlOntologyChangeRecord)
-                .collect(toImmutableList());
-        changeLog.appendChanges(new OntologyChangeRecordList(revision.getTimestamp(), metadata, changeRecords), file);
-        savedHook.run();
+//        BinaryOWLMetadata metadata = new BinaryOWLMetadata();
+//        metadata.setStringAttribute(RevisionSerializationVocabulary.USERNAME_METADATA_ATTRIBUTE.getVocabularyName(), revision.getUserId().getUserName());
+//        metadata.setLongAttribute(RevisionSerializationVocabulary.REVISION_META_DATA_ATTRIBUTE.getVocabularyName(), revision.getRevisionNumber().getValue());
+//        metadata.setStringAttribute(RevisionSerializationVocabulary.DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), revision.getHighLevelDescription());
+//        metadata.setStringAttribute(RevisionSerializationVocabulary.REVISION_TYPE_META_DATA_ATTRIBUTE.getVocabularyName(), RevisionType.EDIT.name());
+//        BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
+//        var changeRecords = revision.getChanges()
+//                .stream()
+//                .map(OntologyChange::toOwlOntologyChangeRecord)
+//                .collect(toImmutableList());
+//        changeLog.appendChanges(new OntologyChangeRecordList(revision.getTimestamp(), metadata, changeRecords), file);
+//        savedHook.run();
+        logger.warn("[RevisionSerializationTask] Change log serialization is disabled");
         return 0;
     }
 }
