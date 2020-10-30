@@ -32,6 +32,11 @@ public abstract class OntologyDocumentId {
     @Nonnull
     public abstract String getId();
 
+    @Nonnull
+    public String toQuotedString() {
+        return "\"" + getId() + "\"";
+    }
+
     @GwtIncompatible
     @Nonnull
     public static OntologyDocumentId generate() {

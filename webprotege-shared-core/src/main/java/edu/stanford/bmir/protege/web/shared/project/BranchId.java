@@ -35,6 +35,11 @@ public abstract class BranchId {
     @Nonnull
     public abstract String getId();
 
+    @Nonnull
+    public String toQuotedString() {
+        return "\"" + getId() + "\"";
+    }
+
     @GwtIncompatible
     public static BranchId generate() {
         return get(UUID.randomUUID().toString());
