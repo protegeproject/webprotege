@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -102,6 +104,11 @@ public class ProjectId implements Serializable, IsSerializable {
         return id;
     }
 
+    @Nonnull
+    public String toQuotedString() {
+        return "\"" + getId() + "\"";
+    }
+
     @Override
     public String toString() {
         return toStringHelper("ProjectId").addValue(id).toString();
@@ -130,5 +137,8 @@ public class ProjectId implements Serializable, IsSerializable {
         return other.id != null && other.id.equals(this.id);
     }
 
-
+    @GwtIncompatible
+    public static ProjectId generate() {
+        return get(UUID.randomUUID().toString());
+    }
 }
