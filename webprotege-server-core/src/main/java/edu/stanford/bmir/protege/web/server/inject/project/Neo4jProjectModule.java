@@ -35,6 +35,7 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
+import edu.stanford.bmir.protege.web.server.project.OntologyDocumentIdDisplayNameProviderImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.*;
@@ -55,21 +56,20 @@ import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
+import edu.stanford.bmir.protege.web.shared.project.BranchId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.owl2lpg.client.read.axiom.*;
 import edu.stanford.owl2lpg.client.read.hierarchy.HierarchyAccessorModule;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jAnnotationPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jClassHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jDataPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jObjectPropertyHierarchyProvider;
-import edu.stanford.owl2lpg.translator.shared.BranchId;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
-import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -98,19 +98,13 @@ public class Neo4jProjectModule {
   private final ProjectId projectId;
 
   public Neo4jProjectModule(ProjectId projectId) {
-    this.projectId = projectId;
+    this.projectId = checkNotNull(projectId);
   }
 
   @Provides
   @ProjectSingleton
-  public edu.stanford.owl2lpg.translator.shared.ProjectId provideNeo4jProjectId() {
-    return edu.stanford.owl2lpg.translator.shared.ProjectId.create("8e62c425-8d8f-4e6a-a188-2d4b4b586468");
-  }
-
-  @Provides
-  @ProjectSingleton
-  public BranchId provideNeo4jBranchId() {
-    return BranchId.create("49b40337-06ff-4d94-a043-7d81733f10d3");
+  public BranchId provideBranchId() {
+    return BranchId.get("49b40337-06ff-4d94-a043-7d81733f10d3");
   }
 
   @Provides
@@ -306,12 +300,6 @@ public class Neo4jProjectModule {
   @Provides
   public HasLang provideHasLang() {
     return () -> "en";
-  }
-
-  @Provides
-  @ProjectSingleton
-  public OntologyIRIShortFormProvider provideOntologyIRIShortFormProvider(WebProtegeOntologyIRIShortFormProvider provider) {
-    return provider;
   }
 
   @Provides
@@ -734,6 +722,13 @@ public class Neo4jProjectModule {
   @Provides
   @ProjectSingleton
   ProjectEntitySearchFiltersManager provideProjectEntitySearchFiltersManager(ProjectEntitySearchFiltersManagerImpl impl) {
+    return impl;
+  }
+
+  @Provides
+  @ProjectSingleton
+  OntologyDocumentIdDisplayNameProvider provideOntologyDocumentIdDisplayNameProvider(
+      OntologyDocumentIdDisplayNameProviderImpl impl) {
     return impl;
   }
 }

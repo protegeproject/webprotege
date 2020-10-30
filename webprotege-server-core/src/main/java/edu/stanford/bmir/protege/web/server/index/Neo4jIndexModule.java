@@ -17,7 +17,7 @@ import edu.stanford.owl2lpg.client.read.axiom.AxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
-import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
+import edu.stanford.owl2lpg.client.read.ontology.OntologyDocumentAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
 import edu.stanford.owl2lpg.client.write.handlers.OntologyChangeHandlerModule;
 
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  */
 @Module(includes = {
     ProjectAccessorModule.class,
-    OntologyAccessorModule.class,
+    OntologyDocumentAccessorModule.class,
     OntologyAnnotationsAccessorModule.class,
     EntityAccessorModule.class,
     NamedIndividualAccessorModule.class,
@@ -54,6 +54,11 @@ public class Neo4jIndexModule {
     @Provides
     AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
         Neo4jAnnotationAssertionAxiomsBySubjectIndex impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyIdIndex provideOntologyIdIndex(OntologyIdIndexImpl impl) {
         return impl;
     }
 
