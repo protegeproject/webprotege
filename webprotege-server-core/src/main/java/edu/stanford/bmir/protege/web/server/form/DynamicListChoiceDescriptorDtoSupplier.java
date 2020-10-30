@@ -20,7 +20,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 @FormDataBuilderSession
 public class DynamicListChoiceDescriptorDtoSupplier {
 
-    public static final int CHOICE_LIMIT = 100;
+    public static final int CHOICE_LIMIT = 1000;
 
     @Nonnull
     private final MatchingEngine matchingEngine;
