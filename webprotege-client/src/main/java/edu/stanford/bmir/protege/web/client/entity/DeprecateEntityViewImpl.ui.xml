@@ -11,6 +11,7 @@
             <g:HTMLPanel ui:field="replaceWithSubView" addStyleNames="{wp.style.formGroup}">
                 <g:Label text="Replace with" addStyleNames="{wp.style.formLabel}"/>
                 <primitive:PrimitiveDataEditor ui:field="replacementEntityEditor"/>
+                <g:Label text="You can choose to replace this entity with another one.  Any children will be moved to this new entity and any existing relationships values to this entity will be replaced with the replacement entity." addStyleNames="{wp.style.formHelpText}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
         <g:HTMLPanel>
