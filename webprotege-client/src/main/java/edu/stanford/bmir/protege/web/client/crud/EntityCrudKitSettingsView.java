@@ -18,4 +18,6 @@ public interface EntityCrudKitSettingsView extends IsWidget {
     @Nonnull
     AcceptsOneWidget getSuffixSettingsViewContainer();
 
+    @Nonnull
+    AcceptsOneWidget getGeneratedAnnotationsViewContainer();
 }

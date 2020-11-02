@@ -4,6 +4,7 @@ import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -55,5 +56,10 @@ public class UuidSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
     @Override
     public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, UuidSuffixSettings suffixSettings) {
         return IRI.create(URL.encode(prefixSettings.getIRIPrefix()), EXAMPLE_SUFFIX);
+    }
+
+    @Override
+    public GeneratedAnnotationsSettings getDefaultGeneratedAnnotationsSettings() {
+        return GeneratedAnnotationsSettings.empty();
     }
 }

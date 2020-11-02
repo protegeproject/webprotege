@@ -916,6 +916,22 @@ public class ClientProjectModule {
     SimilarEntitiesView provideSimilarEntitiesView(SimilarEntitiesViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityCrudKitGeneratedAnnotationsSettingsView provideCrudKitGeneratedAnnotationsSettingsView(
+            EntityCrudKitGeneratedAnnotationsSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GeneratedAnnotationDescriptorView provideGeneratedAnnotationDescriptorView(GeneratedAnnotationDescriptorViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    IncrementingPatternDescriptorView provideIncrementingPatternDescriptorView(IncrementingPatternDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 

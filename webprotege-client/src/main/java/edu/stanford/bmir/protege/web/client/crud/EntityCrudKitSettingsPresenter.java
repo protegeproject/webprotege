@@ -1,15 +1,13 @@
 package edu.stanford.bmir.protege.web.client.crud;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Matthew Horridge
@@ -27,24 +25,30 @@ public class EntityCrudKitSettingsPresenter {
     @Nonnull
     private final EntityCrudKitSuffixSettingsPresenter suffixSettingsPresenter;
 
+    private EntityCrudKitGeneratedAnnotationsSettingsPresenter generatedAnnotationsSettingsPresenter;
+
     @Inject
     public EntityCrudKitSettingsPresenter(@Nonnull EntityCrudKitSettingsView view,
                                           @Nonnull EntityCrudKitPrefixSettingsPresenter prefixSettingsPresenter,
-                                          @Nonnull EntityCrudKitSuffixSettingsPresenter suffixSettingsPresenter) {
+                                          @Nonnull EntityCrudKitSuffixSettingsPresenter suffixSettingsPresenter,
+                                          @Nonnull EntityCrudKitGeneratedAnnotationsSettingsPresenter generatedAnnotationsSettingsPresenter) {
         this.view = view;
         this.prefixSettingsPresenter = prefixSettingsPresenter;
         this.suffixSettingsPresenter = suffixSettingsPresenter;
+        this.generatedAnnotationsSettingsPresenter = generatedAnnotationsSettingsPresenter;
     }
 
     public void clear() {
         prefixSettingsPresenter.clear();
         suffixSettingsPresenter.clear();
+        generatedAnnotationsSettingsPresenter.clear();
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         prefixSettingsPresenter.start(view.getPrefixSettingsViewContainer());
         suffixSettingsPresenter.start(view.getSuffixSettingsViewContainer());
+        generatedAnnotationsSettingsPresenter.start(view.getGeneratedAnnotationsViewContainer());
     }
 
     public void setSettings(@Nonnull EntityCrudKitSettings<?> settings) {
@@ -52,12 +56,15 @@ public class EntityCrudKitSettingsPresenter {
         prefixSettingsPresenter.setPrefixSettings(prefixSettings);
         EntityCrudKitSuffixSettings suffixSettings = settings.getSuffixSettings();
         suffixSettingsPresenter.setSuffixSettings(suffixSettings);
+        GeneratedAnnotationsSettings generatedAnnotationsSettings = settings.getGeneratedAnnotationsSettings();
+        generatedAnnotationsSettingsPresenter.setSettings(generatedAnnotationsSettings);
     }
 
     @Nonnull
     public EntityCrudKitSettings<?> getSettings() {
         EntityCrudKitPrefixSettings prefixSettings = prefixSettingsPresenter.getPrefixSettings();
         EntityCrudKitSuffixSettings suffixSettings = suffixSettingsPresenter.getSuffixSettings();
-        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
+        GeneratedAnnotationsSettings generatedAnnotationsSettings = generatedAnnotationsSettingsPresenter.getSettings();
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings, generatedAnnotationsSettings);
     }
 }

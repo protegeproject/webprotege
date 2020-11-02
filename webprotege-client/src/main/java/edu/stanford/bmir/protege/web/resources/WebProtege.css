@@ -87,7 +87,7 @@
     box-sizing: border-box;
 }
 
-.wp-form-group__row .wp-form-group + .wp-form-group {
+.wp-form-group__row > .wp-form-group + .wp-form-group {
     margin-left: 4em;
 }
 
@@ -115,6 +115,7 @@
     font-weight: bold;
     padding-bottom: 5px;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .wp-form-label--error {

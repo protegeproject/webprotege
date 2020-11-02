@@ -7,6 +7,9 @@ import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -264,6 +267,12 @@ public class RpcWhiteList implements Action, Result {
     public FormRegionOrdering formRegionOrdering;
 
     public FormRegionOrdering gridControlOrdering;
+
+    public GeneratedAnnotationsSettings generatedAnnotationsSettings;
+
+    public GeneratedAnnotationDescriptor generatedAnnotationDescriptor;
+
+    public GeneratedValueDescriptor generatedValueDescriptor;
 
     public FormRegionOrderingDirection formRegionOrderingDirection;
 

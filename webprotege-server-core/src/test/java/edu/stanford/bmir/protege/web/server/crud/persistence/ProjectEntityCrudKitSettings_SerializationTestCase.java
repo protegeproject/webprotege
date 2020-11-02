@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.persistence;
 
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -28,7 +29,8 @@ public class ProjectEntityCrudKitSettings_SerializationTestCase {
         settings = ProjectEntityCrudKitSettings.get(projectId,
                                                     EntityCrudKitSettings.get(
                                                             EntityCrudKitPrefixSettings.get(),
-                                                            UuidSuffixSettings.get()
+                                                            UuidSuffixSettings.get(),
+                                                            GeneratedAnnotationsSettings.empty()
                                                     ));
     }
 

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
@@ -38,7 +39,8 @@ public class AllProjectSettings_Serialization_TestCase {
                                                   DisplayNameSettings.get(ImmutableList.of(), ImmutableList.of()),
                                                   SlackIntegrationSettings.get("http://payloadurl"),
                                                   WebhookSettings.get(ImmutableList.of()));
-        var creationSettings = EntityCrudKitSettings.get(EntityCrudKitPrefixSettings.get(), UuidSuffixSettings.get());
+        var creationSettings = EntityCrudKitSettings.get(EntityCrudKitPrefixSettings.get(), UuidSuffixSettings.get(),
+                                                         GeneratedAnnotationsSettings.empty());
         var prefixDeclarations = ImmutableList.of(PrefixDeclaration.get("ex:", "http://example.org/hello/"));
         var tags = ImmutableList.<Tag>of(Tag.get(TagId.createTagId(),
                                                  projectId,
