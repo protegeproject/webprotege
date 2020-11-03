@@ -62,7 +62,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                                  fieldDescriptor,
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
-                                                 deprecationStrategy == null ? FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT : deprecationStrategy,
+                                                 deprecationStrategy == null ? FormFieldDeprecationStrategy.DELETE_VALUES : deprecationStrategy,
                                                  readOnly,
                                                  expansionState == null ? ExpansionState.EXPANDED : expansionState,
                                                  help == null ? LanguageMap.empty() : help);
