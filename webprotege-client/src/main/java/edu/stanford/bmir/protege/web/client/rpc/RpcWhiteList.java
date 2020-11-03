@@ -279,6 +279,8 @@ public class RpcWhiteList implements Action, Result {
         return source;
     }
 
+    public ProjectSearchSettings searchSettings;
+
     public void setSource(FormPageRequest.SourceType source) {
         this.source = source;
     }

@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCri
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
+import edu.stanford.bmir.protege.web.shared.search.ProjectSearchSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
@@ -60,7 +61,13 @@ public class AllProjectSettings_Serialization_TestCase {
                                            SharingPermission.EDIT)
                 )
         );
-        var settings = AllProjectSettings.get(projectSettings, creationSettings, prefixDeclarations, tags, sharingSettings);
+
+        var searchSettings = ProjectSearchSettings.get(
+                projectId,
+                ImmutableList.of()
+        );
+
+        var settings = AllProjectSettings.get(projectSettings, creationSettings, prefixDeclarations, tags, sharingSettings, searchSettings);
         JsonSerializationTestUtil.testSerialization(settings, AllProjectSettings.class);
     }
 }

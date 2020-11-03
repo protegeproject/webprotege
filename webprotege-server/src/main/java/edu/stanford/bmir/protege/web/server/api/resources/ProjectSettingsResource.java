@@ -13,6 +13,9 @@ import edu.stanford.bmir.protege.web.shared.project.SetProjectPrefixDeclarations
 import edu.stanford.bmir.protege.web.shared.projectsettings.AllProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
+import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsAction;
+import edu.stanford.bmir.protege.web.shared.search.ProjectSearchSettings;
+import edu.stanford.bmir.protege.web.shared.search.SetSearchSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
@@ -60,11 +63,13 @@ public class ProjectSettingsResource {
 
         var tagsResult = actionExecutor.execute(new GetProjectTagsAction(projectId), userId);
         var sharingSettings = actionExecutor.execute(new GetProjectSharingSettingsAction(projectId), userId);
+        var searchSettingsResult = actionExecutor.execute(new GetSearchSettingsAction(projectId), userId);
         var projectSettings = AllProjectSettings.get(projectSettingsResult.getProjectSettings(),
                                                      entityCreationSettingsResult.getSettings(),
                                                      ImmutableList.copyOf(prefixDeclarationSettingsResult.getPrefixDeclarations()),
                                                      ImmutableList.copyOf(tagsResult.getTags()),
-                                                     sharingSettings.getProjectSharingSettings());
+                                                     sharingSettings.getProjectSharingSettings(),
+                                                     ProjectSearchSettings.get(projectId, searchSettingsResult.getFilters()));
         var nilledOutProjectSettings = projectSettings.withProjectId(ProjectId.getNil());
         return Response.ok(nilledOutProjectSettings).build();
     }
@@ -99,6 +104,8 @@ public class ProjectSettingsResource {
         actionExecutor.execute(new SetProjectTagsAction(projectId, projectTagsData), userId);
         var sharingSettings = allProjectSettings.getSharingSettings();
         actionExecutor.execute(new SetProjectSharingSettingsAction(sharingSettings), userId);
+        var searchSettings = allProjectSettings.getSearchSettings();
+        actionExecutor.execute(new SetSearchSettingsAction(projectId, ImmutableList.of(), searchSettings.getSearchFilters()), userId);
         return Response.ok().build();
     }
 }
