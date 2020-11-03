@@ -11,10 +11,7 @@ import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.projectsettings.AllProjectSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
@@ -38,7 +35,8 @@ public class AllProjectSettings_Serialization_TestCase {
                                                   DictionaryLanguage.rdfsLabel("fr"),
                                                   DisplayNameSettings.get(ImmutableList.of(), ImmutableList.of()),
                                                   SlackIntegrationSettings.get("http://payloadurl"),
-                                                  WebhookSettings.get(ImmutableList.of()));
+                                                  WebhookSettings.get(ImmutableList.of()),
+                                                  EntityDeprecationSettings.empty());
         var creationSettings = EntityCrudKitSettings.get(EntityCrudKitPrefixSettings.get(), UuidSuffixSettings.get(),
                                                          GeneratedAnnotationsSettings.empty());
         var prefixDeclarations = ImmutableList.of(PrefixDeclaration.get("ex:", "http://example.org/hello/"));

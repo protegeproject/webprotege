@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityModal;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -64,6 +65,9 @@ public class EntityFormStackPresenter {
     private final LangTagFilterPresenter langTagFilterPresenter;
 
     @Nonnull
+    private final DeprecateEntityModal deprecateEntityModal;
+
+    @Nonnull
     private EntityDisplay entityDisplay = entityData -> {
     };
 
@@ -73,13 +77,15 @@ public class EntityFormStackPresenter {
                                     @Nonnull DispatchServiceManager dispatch,
                                     @Nonnull FormStackPresenter formStackPresenter,
                                     @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                                    @Nonnull LangTagFilterPresenter langTagFilterPresenter) {
+                                    @Nonnull LangTagFilterPresenter langTagFilterPresenter,
+                                    @Nonnull DeprecateEntityModal deprecateEntityModal) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatch);
         this.formStackPresenter = checkNotNull(formStackPresenter);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.langTagFilterPresenter = checkNotNull(langTagFilterPresenter);
+        this.deprecateEntityModal = deprecateEntityModal;
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
@@ -96,6 +102,7 @@ public class EntityFormStackPresenter {
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
         view.setApplyEditsHandler(this::handleApplyEdits);
+        view.setDeprecateEntityHandler(this::handleDeprecateEntity);
         view.setCancelEditsHandler(this::handleCancelEdits);
 
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, view::setEditButtonVisible);
@@ -178,6 +185,7 @@ public class EntityFormStackPresenter {
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
         entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
+        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
         ImmutableList<FormDataDto> formData = result.getFormData();
         // If we have a subset of the forms then just replace the ones that we have
         boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
@@ -212,6 +220,14 @@ public class EntityFormStackPresenter {
                 commitEdits(entity);
             }
         });
+    }
+
+    private void handleDeprecateEntity() {
+        currentEntity.ifPresent(entity -> deprecateEntityModal.showModal(
+                entity,
+                () -> view.setDeprecateButtonVisible(false),
+                () -> {}
+        ));
     }
 
     private void handleCancelEdits() {

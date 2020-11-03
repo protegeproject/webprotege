@@ -51,27 +51,25 @@ public class FormFieldPresenter_TestCase {
     @Before
     public void setUp() {
         FormFieldDescriptorDto fieldDescriptor = FormFieldDescriptorDto.get(fieldId,
-                                                                      owlBinding,
-                                                                      labelMap,
-                                                                      FieldRun.START,
-                                                                      formControlDescriptor,
-                                                                      Optionality.OPTIONAL,
+                                                                            owlBinding,
+                                                                            labelMap,
+                                                                            FieldRun.START,
+                                                                            formControlDescriptor,
+                                                                            Optionality.OPTIONAL,
                                                                             Repeatability.NON_REPEATABLE,
+                                                                            FormFieldDeprecationStrategy.DELETE_VALUES,
                                                                             true,
-                                                                      ExpansionState.COLLAPSED,
-                                                                      helpMap);
+                                                                            ExpansionState.COLLAPSED,
+                                                                            helpMap);
 
 
-        when(languageMapCurrentLocalMapper.getValueForCurrentLocale(labelMap))
-                .thenReturn("TheLabel");
-        when(languageMapCurrentLocalMapper.getValueForCurrentLocale(helpMap))
-                .thenReturn("TheHelpText");
+        when(languageMapCurrentLocalMapper.getValueForCurrentLocale(labelMap)).thenReturn("TheLabel");
+        when(languageMapCurrentLocalMapper.getValueForCurrentLocale(helpMap)).thenReturn("TheHelpText");
         presenter = new FormFieldPresenter(view,
                                            fieldDescriptor,
                                            formControlStackPresenter,
                                            languageMapCurrentLocalMapper);
     }
-
 
 
     @Test

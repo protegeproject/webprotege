@@ -924,12 +924,22 @@ public class ClientProjectModule {
     }
 
     @Provides
+    DeprecateEntityView provideDeprecateEntityView(DeprecateEntityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     GeneratedAnnotationDescriptorView provideGeneratedAnnotationDescriptorView(GeneratedAnnotationDescriptorViewImpl view) {
         return view;
     }
 
     @Provides
     IncrementingPatternDescriptorView provideIncrementingPatternDescriptorView(IncrementingPatternDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
         return impl;
     }
 }

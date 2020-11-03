@@ -8,10 +8,7 @@ import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
@@ -72,7 +69,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                 now,
                 settings.getProjectOwner(),
                 now,
-                settings.getProjectOwner());
+                settings.getProjectOwner(),
+                EntityDeprecationSettings.empty());
         repository.save(record);
     }
 
@@ -108,7 +106,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
             ProjectDetails updatedRecord = rec.withDisplayName(projectSettings.getProjectDisplayName())
                                               .withDescription(projectSettings.getProjectDescription())
                                               .withDefaultLanguage(projectSettings.getDefaultLanguage())
-                                              .withDefaultDisplayNameSettings(projectSettings.getDefaultDisplayNameSettings());
+                                              .withDefaultDisplayNameSettings(projectSettings.getDefaultDisplayNameSettings())
+                    .withEntityDeprecationSettings(projectSettings.getEntityDeprecationSettings());
             repository.save(updatedRecord);
 
         });
@@ -144,7 +143,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                    projectDetails.getDefaultDictionaryLanguage(),
                                    projectDetails.getDefaultDisplayNameSettings(),
                                    SlackIntegrationSettings.get(slackPayloadUrl),
-                                   WebhookSettings.get(webhookSettings));
+                                   WebhookSettings.get(webhookSettings),
+                                   projectDetails.getEntityDeprecationSettings());
     }
 
 }

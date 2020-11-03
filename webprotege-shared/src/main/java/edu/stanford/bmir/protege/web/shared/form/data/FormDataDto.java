@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +26,24 @@ public abstract class FormDataDto implements FormControlDataDto {
                                   @Nonnull ImmutableList<FormFieldDataDto> formFieldData,
                                   int depth) {
         return new AutoValue_FormDataDto(depth, subject, formDescriptor, formFieldData);
+    }
+
+    /**
+     * Create a form with empty data
+     * @param subject The form subject
+     * @param formDescriptor The form descriptor
+     * @param depth The depth of nesting
+     */
+    @Nonnull
+    public static FormDataDto get(@Nonnull FormSubjectDto subject,
+                                  @Nonnull FormDescriptorDto formDescriptor,
+                                  int depth) {
+        ImmutableList<FormFieldDataDto> emptyFields = formDescriptor.getFields()
+                                                                .stream()
+                                                                .map(field -> FormFieldDataDto.get(field,
+                                                                                                   Page.emptyPage()))
+                                                                .collect(toImmutableList());
+        return new AutoValue_FormDataDto(depth, subject, formDescriptor, emptyFields);
     }
 
     /**

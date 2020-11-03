@@ -5,10 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
-import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -63,4 +60,11 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
     ExpansionState getInitialExpansionState();
 
     void setInitialExpansionState(@Nonnull ExpansionState expansionState);
+
+    void setDeprecationStrategyVisible(boolean visible);
+
+    void setDeprecationStrategy(@Nonnull FormFieldDeprecationStrategy deprecationStrategy);
+
+    @Nonnull
+    FormFieldDeprecationStrategy getDeprecationStrategy();
 }

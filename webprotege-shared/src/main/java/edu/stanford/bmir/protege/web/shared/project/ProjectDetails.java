@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.core.shared.GwtIncompatible;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -13,6 +14,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.time.Instant;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -50,6 +53,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
 
     public static final String DEFAULT_DISPLAY_NAME_SETTINGS = "defaultDisplayNameSettings";
 
+    public static final String ENTITY_DEPRECATION_SETTINGS = "entityDeprecationSettings";
+
     /**
      * Constructs a {@link ProjectDetails} object.
      *
@@ -75,7 +80,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                      long createdAt,
                                      @Nonnull UserId createdBy,
                                      long lastModifiedAt,
-                                     @Nonnull UserId lastModifiedBy) {
+                                     @Nonnull UserId lastModifiedBy,
+                                     @Nonnull EntityDeprecationSettings entityDeprecationSettings) {
         return new AutoValue_ProjectDetails(projectId,
                                             displayName,
                                             description,
@@ -86,7 +92,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                             createdAt,
                                             createdBy,
                                             lastModifiedAt,
-                                            lastModifiedBy);
+                                            lastModifiedBy,
+                                            entityDeprecationSettings);
     }
 
     /**
@@ -106,10 +113,12 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                          @JsonProperty(CREATED_AT) Instant createdAt,
                                          @JsonProperty(CREATED_BY) @Nonnull UserId createdBy,
                                          @JsonProperty(MODIFIED_AT) Instant lastModifiedAt,
-                                         @JsonProperty(MODIFIED_BY) @Nonnull UserId lastModifiedBy) {
+                                         @JsonProperty(MODIFIED_BY) @Nonnull UserId lastModifiedBy,
+                                         @JsonProperty(ENTITY_DEPRECATION_SETTINGS) @Nullable EntityDeprecationSettings entityDeprecationSettings) {
         String desc = description == null ? "" : description;
         DictionaryLanguage dl = dictionaryLanguage == null ? DictionaryLanguage.rdfsLabel("") : dictionaryLanguage;
         DisplayNameSettings dns = displayNameSettings == null ? DisplayNameSettings.empty() : displayNameSettings;
+        EntityDeprecationSettings eds = entityDeprecationSettings == null ? EntityDeprecationSettings.empty() : entityDeprecationSettings;
         return get(projectId,
                    displayName,
                    desc,
@@ -120,7 +129,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                    createdAt.toEpochMilli(),
                    createdBy,
                    lastModifiedAt.toEpochMilli(),
-                   lastModifiedBy);
+                   lastModifiedBy,
+                   eds);
     }
 
     public ProjectDetails withDisplayName(@Nonnull String displayName) {
@@ -138,7 +148,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
-                       getLastModifiedBy());
+                       getLastModifiedBy(),
+                       getEntityDeprecationSettings());
         }
     }
 
@@ -157,7 +168,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
-                       getLastModifiedBy());
+                       getLastModifiedBy(),
+                       getEntityDeprecationSettings());
         }
     }
 
@@ -177,7 +189,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
-                       getLastModifiedBy());
+                       getLastModifiedBy(),
+                       getEntityDeprecationSettings());
         }
     }
 
@@ -196,7 +209,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
-                       getLastModifiedBy());
+                       getLastModifiedBy(),
+                       getEntityDeprecationSettings());
         }
     }
 
@@ -217,8 +231,26 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
-                       getLastModifiedBy());
+                       getLastModifiedBy(),
+                       getEntityDeprecationSettings());
         }
+    }
+
+    @Nonnull
+    public ProjectDetails withEntityDeprecationSettings(@Nonnull EntityDeprecationSettings settings) {
+        checkNotNull(settings);
+        return get(getProjectId(),
+                   getDisplayName(),
+                   getDescription(),
+                   getOwner(),
+                   isInTrash(),
+                   getDefaultDictionaryLanguage(),
+                   getDefaultDisplayNameSettings(),
+                   getCreatedAt(),
+                   getCreatedBy(),
+                   getLastModifiedAt(),
+                   getLastModifiedBy(),
+                   settings);
     }
 
     /**
@@ -330,6 +362,10 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
     @Nonnull
     @JsonProperty(MODIFIED_BY)
     public abstract UserId getLastModifiedBy();
+
+    @Nonnull
+    @JsonProperty(ENTITY_DEPRECATION_SETTINGS)
+    public abstract EntityDeprecationSettings getEntityDeprecationSettings();
 
     @Override
     public int compareTo(ProjectDetails o) {

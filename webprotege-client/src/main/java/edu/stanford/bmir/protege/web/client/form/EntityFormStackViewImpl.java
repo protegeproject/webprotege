@@ -42,6 +42,9 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     @Nonnull
     private CancelEditsHandler cancelEditsHandler = () -> {};
 
+    @Nonnull
+    private DeprecateEntityHandler deprecateEntityHandler = () -> {};
+
     @UiField
     AcceptsOneWidget formsStackContainer;
 
@@ -57,6 +60,9 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     @UiField
     Button editButton;
 
+    @UiField
+    Button deprecateButton;
+
     @Inject
     public EntityFormStackViewImpl(MessageBox messageBox, @Nonnull FormsMessages formsMessages) {
         this.messageBox = checkNotNull(messageBox);
@@ -65,6 +71,7 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
         editButton.addClickHandler(event -> enterEditModeHandler.handleEnterEditMode());
         applyEditsButton.addClickHandler(event -> applyEditsHandler.handleApplyEdits());
         cancelEditsButton.addClickHandler(event -> cancelEditsHandler.handleCancelEdits());
+        deprecateButton.addClickHandler(event -> deprecateEntityHandler.handleDeprecateEntity());
     }
 
     @Override
@@ -119,5 +126,15 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     @Override
     public void setCancelEditsButtonVisible(boolean visible) {
         cancelEditsButton.setVisible(visible);
+    }
+
+    @Override
+    public void setDeprecateButtonVisible(boolean visible) {
+        this.deprecateButton.setVisible(visible);
+    }
+
+    @Override
+    public void setDeprecateEntityHandler(DeprecateEntityHandler handler) {
+        this.deprecateEntityHandler = checkNotNull(handler);
     }
 }

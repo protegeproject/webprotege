@@ -1,23 +1,21 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -52,6 +50,14 @@ public class FormDescriptor implements IsSerializable {
     public static FormDescriptor empty(FormId formId) {
         return new FormDescriptor(formId, LanguageMap.empty(), Collections.emptyList(),
                                   Optional.empty());
+    }
+
+    public FormDescriptor withFields(Predicate<FormFieldDescriptor> test) {
+        List<FormFieldDescriptor> filteredFields = elements.stream().filter(test).collect(Collectors.toList());
+        return new FormDescriptor(formId,
+                                  label,
+                                  filteredFields,
+                                  getSubjectFactoryDescriptor());
     }
 
     public FormId getFormId() {

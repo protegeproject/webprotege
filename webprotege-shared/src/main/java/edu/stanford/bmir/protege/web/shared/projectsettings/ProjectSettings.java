@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.WithProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,8 @@ public abstract class ProjectSettings implements Serializable, IsSerializable, W
     private static final String SLACK_INTEGRATION_SETTINGS = "slackIntegrationSettings";
 
     private static final String WEBHOOK_SETTINGS = "webhookSettings";
+
+    private static final String ENTITY_DEPRECATION_SETTINGS = "entityDeprecationSettings";
 
     /**
      * Gets the projectId.
@@ -78,6 +81,10 @@ public abstract class ProjectSettings implements Serializable, IsSerializable, W
     public abstract WebhookSettings getWebhookSettings();
 
     @Nonnull
+    @JsonProperty(ENTITY_DEPRECATION_SETTINGS)
+    public abstract EntityDeprecationSettings getEntityDeprecationSettings();
+
+    @Nonnull
     @JsonCreator
     public static ProjectSettings get(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
                                       @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,
@@ -85,14 +92,16 @@ public abstract class ProjectSettings implements Serializable, IsSerializable, W
                                       @Nonnull @JsonProperty(DEFAULT_LANGUAGE) DictionaryLanguage defaultLanguage,
                                       @Nonnull @JsonProperty(DEFAULT_DISPLAY_NAME_SETTINGS) DisplayNameSettings defaultDisplayNameSettings,
                                       @Nonnull @JsonProperty(SLACK_INTEGRATION_SETTINGS) SlackIntegrationSettings slackIntegrationSettings,
-                                      @Nonnull @JsonProperty(WEBHOOK_SETTINGS) WebhookSettings webhookSettings) {
+                                      @Nonnull @JsonProperty(WEBHOOK_SETTINGS) WebhookSettings webhookSettings,
+                                      @Nullable @JsonProperty(ENTITY_DEPRECATION_SETTINGS) EntityDeprecationSettings entityDeprecationSettings) {
         return new AutoValue_ProjectSettings(projectId,
                                              displayName,
                                              description,
                                              defaultLanguage,
                                              defaultDisplayNameSettings,
                                              slackIntegrationSettings,
-                                             webhookSettings);
+                                             webhookSettings,
+                                             entityDeprecationSettings == null ? EntityDeprecationSettings.empty() : entityDeprecationSettings);
     }
 
     @Override
@@ -103,6 +112,7 @@ public abstract class ProjectSettings implements Serializable, IsSerializable, W
                                    getDefaultLanguage(),
                                    getDefaultDisplayNameSettings(),
                                    getSlackIntegrationSettings(),
-                                   getWebhookSettings());
+                                   getWebhookSettings(),
+                                   getEntityDeprecationSettings());
     }
 }
