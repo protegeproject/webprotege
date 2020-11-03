@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2020-11-02
  */
 @ProjectSingleton
-public class IncrementingPatternDescriptorHandler {
+public class IncrementingPatternDescriptorValueGenerator {
 
     private Map<CacheKey, Integer> cache = new HashMap<>();
 
@@ -38,9 +38,9 @@ public class IncrementingPatternDescriptorHandler {
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Inject
-    public IncrementingPatternDescriptorHandler(@Nonnull OWLDataFactory dataFactory,
-                                                @Nonnull AnnotationAssertionAxiomsByValueIndex index,
-                                                @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
+    public IncrementingPatternDescriptorValueGenerator(@Nonnull OWLDataFactory dataFactory,
+                                                       @Nonnull AnnotationAssertionAxiomsByValueIndex index,
+                                                       @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
         this.dataFactory = checkNotNull(dataFactory);
         this.index = checkNotNull(index);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);

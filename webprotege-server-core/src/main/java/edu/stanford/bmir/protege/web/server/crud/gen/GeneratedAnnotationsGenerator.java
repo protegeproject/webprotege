@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.server.crud.gen;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixCriteriaRewriter;
 import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationDescriptor;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedValueDescriptorVisitor;
@@ -17,7 +14,6 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,7 +31,7 @@ public class GeneratedAnnotationsGenerator {
     private final EntityIriPrefixCriteriaRewriter rewriter;
 
     @Nonnull
-    private final IncrementingPatternDescriptorHandler incrementingPatternDescriptorHandler;
+    private final IncrementingPatternDescriptorValueGenerator incrementingPatternDescriptorValueGenerator;
 
     @Nonnull
     private OWLDataFactory dataFactory;
@@ -46,12 +42,12 @@ public class GeneratedAnnotationsGenerator {
     @Inject
     public GeneratedAnnotationsGenerator(@Nonnull MatcherFactory matcherFactory,
                                          @Nonnull EntityIriPrefixCriteriaRewriter rewriter,
-                                         @Nonnull IncrementingPatternDescriptorHandler incrementingPatternDescriptorHandler,
+                                         @Nonnull IncrementingPatternDescriptorValueGenerator incrementingPatternDescriptorValueGenerator,
                                          @Nonnull OWLDataFactory dataFactory,
                                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.matcherFactory = checkNotNull(matcherFactory);
         this.rewriter = checkNotNull(rewriter);
-        this.incrementingPatternDescriptorHandler = checkNotNull(incrementingPatternDescriptorHandler);
+        this.incrementingPatternDescriptorValueGenerator = checkNotNull(incrementingPatternDescriptorValueGenerator);
         this.dataFactory = checkNotNull(dataFactory);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
     }
@@ -98,8 +94,8 @@ public class GeneratedAnnotationsGenerator {
         return generatedValueDescriptor.accept(new GeneratedValueDescriptorVisitor<OWLLiteral>() {
             @Override
             public OWLLiteral visit(@Nonnull IncrementingPatternDescriptor descriptor) {
-                return incrementingPatternDescriptorHandler.generateNextValue(annotationProperty,
-                                                                       descriptor);
+                return incrementingPatternDescriptorValueGenerator.generateNextValue(annotationProperty,
+                                                                                     descriptor);
 
             }
         });
