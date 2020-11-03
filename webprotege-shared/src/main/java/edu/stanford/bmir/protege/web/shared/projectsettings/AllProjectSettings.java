@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.WithProjectId;
+import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
@@ -31,14 +32,17 @@ public abstract class AllProjectSettings implements WithProjectId<AllProjectSett
 
     public static final String PROJECT_TAGS = "projectTags";
 
+    public static final String SHARING_SETTINGS = "sharingSettings";
+
     @JsonCreator
     @Nonnull
     public static AllProjectSettings get(@JsonProperty(PROJECT_SETTINGS) @Nonnull ProjectSettings projectSettings,
                                          @JsonProperty(ENTITY_CREATION_SETTINGS) @Nonnull EntityCrudKitSettings entityCrudKitSettings,
                                          @JsonProperty(PREFIX_DECLARATIONS) @Nonnull ImmutableList<PrefixDeclaration> prefixDeclarations,
-                                         @JsonProperty(PROJECT_TAGS) @Nonnull ImmutableList<Tag> tags) {
+                                         @JsonProperty(PROJECT_TAGS) @Nonnull ImmutableList<Tag> tags,
+                                         @JsonProperty(SHARING_SETTINGS) @Nonnull ProjectSharingSettings projectSharingSettings) {
         return new AutoValue_AllProjectSettings(projectSettings, entityCrudKitSettings, prefixDeclarations,
-                                                tags);
+                                                tags, projectSharingSettings);
     }
 
     @JsonProperty(PROJECT_SETTINGS)
@@ -57,13 +61,18 @@ public abstract class AllProjectSettings implements WithProjectId<AllProjectSett
     @Nonnull
     public abstract ImmutableList<Tag> getProjectTags();
 
+    @JsonProperty(SHARING_SETTINGS)
+    @Nonnull
+    public abstract ProjectSharingSettings getSharingSettings();
+
     @Override
     public AllProjectSettings withProjectId(@Nonnull ProjectId projectId) {
         return AllProjectSettings.get(
                 getProjectSettings().withProjectId(projectId),
                 getEntityCreationSettings(),
                 getPrefixDeclarations(),
-                getProjectTags().stream().map(t -> t.withProjectId(projectId)).collect(toImmutableList())
+                getProjectTags().stream().map(t -> t.withProjectId(projectId)).collect(toImmutableList()),
+                getSharingSettings()
         );
     }
 }

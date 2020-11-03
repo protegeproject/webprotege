@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.project.SetProjectPrefixDeclarations
 import edu.stanford.bmir.protege.web.shared.projectsettings.AllProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
+import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
+import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
@@ -57,10 +59,12 @@ public class ProjectSettingsResource {
                                                                      userId);
 
         var tagsResult = actionExecutor.execute(new GetProjectTagsAction(projectId), userId);
+        var sharingSettings = actionExecutor.execute(new GetProjectSharingSettingsAction(projectId), userId);
         var projectSettings = AllProjectSettings.get(projectSettingsResult.getProjectSettings(),
                                                      entityCreationSettingsResult.getSettings(),
                                                      ImmutableList.copyOf(prefixDeclarationSettingsResult.getPrefixDeclarations()),
-                                                     ImmutableList.copyOf(tagsResult.getTags()));
+                                                     ImmutableList.copyOf(tagsResult.getTags()),
+                                                     sharingSettings.getProjectSharingSettings());
         var nilledOutProjectSettings = projectSettings.withProjectId(ProjectId.getNil());
         return Response.ok(nilledOutProjectSettings).build();
     }
@@ -93,6 +97,8 @@ public class ProjectSettingsResource {
                                                                  0))
                                          .collect(toImmutableList());
         actionExecutor.execute(new SetProjectTagsAction(projectId, projectTagsData), userId);
+        var sharingSettings = allProjectSettings.getSharingSettings();
+        actionExecutor.execute(new SetProjectSharingSettingsAction(sharingSettings), userId);
         return Response.ok().build();
     }
 }

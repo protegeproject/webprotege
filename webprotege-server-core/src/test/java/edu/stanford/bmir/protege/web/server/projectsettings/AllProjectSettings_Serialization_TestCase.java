@@ -12,12 +12,17 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCri
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
+import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
+import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -47,7 +52,15 @@ public class AllProjectSettings_Serialization_TestCase {
                                                  Color.getWhite(),
                                                  Color.getWhite(),
                                                  ImmutableList.of(EntityIsDeprecatedCriteria.get())));
-        var settings = AllProjectSettings.get(projectSettings, creationSettings, prefixDeclarations, tags);
+        var sharingSettings = new ProjectSharingSettings(
+                projectId,
+                Optional.empty(),
+                ImmutableList.of(
+                        new SharingSetting(PersonId.get("Someone"),
+                                           SharingPermission.EDIT)
+                )
+        );
+        var settings = AllProjectSettings.get(projectSettings, creationSettings, prefixDeclarations, tags, sharingSettings);
         JsonSerializationTestUtil.testSerialization(settings, AllProjectSettings.class);
     }
 }
