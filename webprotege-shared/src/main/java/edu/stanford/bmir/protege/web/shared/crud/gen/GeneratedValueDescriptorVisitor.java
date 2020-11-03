@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-11-01
  */
-public interface GeneratedValueDescriptorVisitor {
+public interface GeneratedValueDescriptorVisitor<R> {
 
-    void visit(@Nonnull IncrementingPatternDescriptor incrementingPatternDescriptor);
+    R visit(@Nonnull IncrementingPatternDescriptor incrementingPatternDescriptor);
 }

@@ -14,5 +14,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public interface GeneratedValueDescriptor {
 
-    void accept(GeneratedValueDescriptorVisitor visitor);
+    <R> R accept(GeneratedValueDescriptorVisitor<R> visitor);
 }

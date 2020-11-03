@@ -8,16 +8,13 @@ import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.crud.gen.GeneratedAnnotationsGenerator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
 import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
@@ -151,6 +148,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final IriReplacerFactory iriReplacerFactory;
 
+    @Nonnull
+    private final GeneratedAnnotationsGenerator generatedAnnotationsGenerator;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLDataFactory dataFactory,
@@ -176,7 +176,8 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
                          @Nonnull IndexUpdater indexUpdater,
                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                         @Nonnull IriReplacerFactory iriReplacerFactory) {
+                         @Nonnull IriReplacerFactory iriReplacerFactory,
+                         @Nonnull GeneratedAnnotationsGenerator generatedAnnotationsGenerator) {
         this.projectId = projectId;
         this.dataFactory = dataFactory;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -202,6 +203,7 @@ public class ChangeManager implements HasApplyChanges {
         this.indexUpdater = indexUpdater;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.iriReplacerFactory = iriReplacerFactory;
+        this.generatedAnnotationsGenerator = generatedAnnotationsGenerator;
     }
 
     /**
@@ -433,6 +435,10 @@ public class ChangeManager implements HasApplyChanges {
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler = getEntityCrudKitHandler();
         handler.createChangeSetSession();
         E ent = handler.create(session, entityType, EntityShortForm.get(shortName), langTag, parents, context, builder);
+        // Generate changes to apply annotations
+        generatedAnnotationsGenerator.generateAnnotations(ent,
+                                                          getEntityCrudKitHandler().getSettings(),
+                                                          builder);
         return new OWLEntityCreator<>(ent,
                                       builder.build(ent)
                                              .getChanges());

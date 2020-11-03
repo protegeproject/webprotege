@@ -110,6 +110,7 @@ public class GeneratedAnnotationDescriptorPresenter {
             incrementingPatternDescriptorPresenter.start(view.getValueDescriptorContainer());
             incrementingPatternDescriptorPresenter.setValue(incrementingPatternDescriptor);
             setSelectedPresenter(incrementingPatternDescriptorPresenter);
+            return null;
         });
     }
 

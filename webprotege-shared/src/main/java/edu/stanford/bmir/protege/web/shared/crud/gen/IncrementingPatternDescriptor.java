@@ -43,7 +43,7 @@ public abstract class IncrementingPatternDescriptor implements GeneratedValueDes
     public abstract String getFormat();
 
     @Override
-    public void accept(GeneratedValueDescriptorVisitor visitor) {
-        visitor.visit(this);
+    public <R> R accept(GeneratedValueDescriptorVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }
