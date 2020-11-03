@@ -100,7 +100,7 @@ public class IncrementingPatternDescriptorValueGenerator {
 
         public static CacheKey get(@Nonnull OWLAnnotationProperty property,
                                    @Nonnull IncrementingPatternDescriptor descriptor) {
-            return new AutoValue_IncrementingPatternDescriptorHandler_CacheKey(property, descriptor);
+            return new AutoValue_IncrementingPatternDescriptorValueGenerator_CacheKey(property, descriptor);
         }
 
         public abstract OWLAnnotationProperty getProperty();
