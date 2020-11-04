@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalButtonHandler;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -36,6 +34,8 @@ public class DeprecateEntityModal {
 
     private DeprecateEntityPresenterFactory deprecateEntityPresenterFactory;
 
+    private final DeprecateEntityAsyncCallbackFactory callbackFactory;
+
     private final DispatchServiceManager dispatch;
 
     @Nonnull
@@ -45,10 +45,13 @@ public class DeprecateEntityModal {
     public DeprecateEntityModal(ModalManager modalManager,
                                 Provider<ModalPresenter> modalPresenterProvider,
                                 DeprecateEntityPresenterFactory deprecateEntityPresenterFactory,
-                                DispatchServiceManager dispatch, @Nonnull ProjectId projectId) {
+                                DeprecateEntityAsyncCallbackFactory callbackFactory,
+                                DispatchServiceManager dispatch,
+                                @Nonnull ProjectId projectId) {
         this.modalManager = checkNotNull(modalManager);
         this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
         this.deprecateEntityPresenterFactory = checkNotNull(deprecateEntityPresenterFactory);
+        this.callbackFactory = callbackFactory;
         this.dispatch = checkNotNull(dispatch);
         this.projectId = checkNotNull(projectId);
     }
@@ -79,11 +82,12 @@ public class DeprecateEntityModal {
 
 
         modalPresenter.setButtonHandler(DEPRECATE_BUTTON, closer -> {
+            closer.closeModal();
+            DeprecateEntityAsyncCallback callback = callbackFactory.create(entityRendering);
             dispatch.execute(new DeprecateEntityByFormAction(entity,
                                                              deprecateEntityPresenter.getDeprecationFormData(),
                                                              deprecateEntityPresenter.getReplacementEntity(),
-                                                             projectId),
-                             r -> {closer.closeModal(); entityDeprecatedHandler.run();});
+                                                             projectId), callback);
         });
         modalPresenter.setButtonHandler(DialogButton.CANCEL,
                                         closer -> {closer.closeModal(); cancelHandler.run();});

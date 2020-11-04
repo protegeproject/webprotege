@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
@@ -9,8 +10,10 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -49,6 +52,8 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
 
     private EventBus eventBus = new SimpleEventBus();
 
+    private ProjectId projectId;
+
 
     private EventTag currentTag = EventTag.getFirst();
 
@@ -62,8 +67,9 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
 
 
     @Inject
-    public EventManager(EventLifeTime eventLifeTime) {
+    public EventManager(EventLifeTime eventLifeTime, ProjectId projectId) {
         this.eventLifeTime = checkNotNull(eventLifeTime);
+        this.projectId = checkNotNull(projectId);
         final long eventLifeTimeInMilliseconds = eventLifeTime.getEventLifeTimeInMilliseconds();
         purgeSweepService.scheduleAtFixedRate(new PurgeExpiredEventsTask(writeLock, eventQueue),
                 eventLifeTimeInMilliseconds,
@@ -96,15 +102,22 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
      * @throws NullPointerException if {@code events} is {@code null}.
      */
     public EventTag postEvents(List<E> events) {
-        if(events.size() > EVENT_LIST_SIZE_LIMIT) {
-            // Just don't bother
-            return currentTag;
-        }
         try {
             writeLock.lock();
             currentTag = currentTag.next();
-            EventBucket<E> e = new EventBucket<>(System.currentTimeMillis(), checkNotNull(events, "events must not be null"), currentTag, eventLifeTime);
-            eventQueue.add(e);
+            var currentTime = System.currentTimeMillis();
+            if(events.size() > EVENT_LIST_SIZE_LIMIT) {
+                var collapsedEvents = ImmutableList.of(new LargeNumberOfChangesEvent(projectId));
+                eventQueue.add(new EventBucket<>(currentTime,
+                                                 collapsedEvents,
+                                                 currentTag,
+                                                 eventLifeTime));
+            }
+            else {
+                EventBucket<E> e = new EventBucket<>(currentTime, checkNotNull(events, "events must not be null"), currentTag, eventLifeTime);
+                eventQueue.add(e);
+            }
+
         }
         finally {
             writeLock.unlock();

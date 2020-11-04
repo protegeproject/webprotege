@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
@@ -51,7 +53,11 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final EventPollingManager eventPollingManager;
 
+    private final WebProtegeEventBus eventBus;
+
     private final ProjectTagsStyleManager projectTagsStyleManager;
+
+    private final LargeNumberOfChangesManager largeNumberOfChangesHandler;
 
 
     @Inject
@@ -64,7 +70,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             PerspectiveSwitcherPresenter linkBarPresenter,
                             PerspectivePresenter perspectivePresenter,
                             PermissionScreener permissionScreener,
-                            ProjectTagsStyleManager projectTagsStyleManager) {
+                            WebProtegeEventBus eventBus,
+                            ProjectTagsStyleManager projectTagsStyleManager,
+                            LargeNumberOfChangesManager largeNumberOfChangesHandler) {
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;
@@ -74,7 +82,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
+        this.eventBus = eventBus;
         this.projectTagsStyleManager = projectTagsStyleManager;
+        this.largeNumberOfChangesHandler = largeNumberOfChangesHandler;
     }
 
     @Nonnull
@@ -107,6 +117,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
         eventPollingManager.start();
+        eventBus.addHandlerToSource(LargeNumberOfChangesEvent.LARGE_NUMBER_OF_CHANGES,
+                                    projectId,
+                                    largeNumberOfChangesHandler);
         container.setWidget(view);
         dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
                                        r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
