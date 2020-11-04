@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -33,6 +34,8 @@ public abstract class EntityDeprecationSettings {
 
     public static final String REPLACED_BY_PROPERTY_IRI = "replacedByPropertyIri";
 
+    public static final String REPLACED_BY_FILTER = "replacedByFilter";
+
     @JsonProperty(REPLACED_BY_PROPERTY_IRI)
     @Nullable
     abstract IRI getReplacedByPropertyIriInternal();
@@ -42,6 +45,16 @@ public abstract class EntityDeprecationSettings {
     public Optional<IRI> getReplacedByPropertyIri() {
         return Optional.ofNullable(getReplacedByPropertyIriInternal());
     }
+
+    @JsonProperty
+    @Nonnull
+    public Optional<CompositeRootCriteria> getReplacedByFilter() {
+        return Optional.ofNullable(getReplacedByFilterInternal());
+    }
+
+    @JsonIgnore
+    @Nullable
+    abstract CompositeRootCriteria getReplacedByFilterInternal();
 
 
     @JsonProperty(DEPRECATED_CLASSES_PARENT)
@@ -96,18 +109,20 @@ public abstract class EntityDeprecationSettings {
 
     @Nonnull
     public static EntityDeprecationSettings empty() {
-        return get(null, null, null, null, null, null);
+        return get(null, null, null, null, null, null, null);
     }
 
     @Nonnull
     @JsonCreator
     public static EntityDeprecationSettings get(@JsonProperty(REPLACED_BY_PROPERTY_IRI) @Nullable IRI replacedByPropertyIri,
+                                                @JsonProperty(REPLACED_BY_FILTER) @Nullable CompositeRootCriteria replacedByFilter,
                                                 @JsonProperty(DEPRECATED_CLASSES_PARENT) @Nullable OWLClass deprecatedClassesParent,
                                                 @JsonProperty(DEPRECATED_OBJECT_PROPERTIES_PARENT) OWLObjectProperty deprecatedObjectPropertiesParent,
                                                 @JsonProperty(DEPRECATED_DATA_PROPERTIES_PARENT) @Nullable OWLDataProperty deprecatedDataPropertiesParent,
                                                 @JsonProperty(DEPRECATED_ANNOTATION_PROPERTIES_PARENT) @Nullable OWLAnnotationProperty deprecatedAnnotationPropertiesParent,
                                                 @JsonProperty(DEPRECATED_INDIVIDUALS_PARENT) @Nullable OWLClass deprecatedIndividualsParent) {
         return new AutoValue_EntityDeprecationSettings(replacedByPropertyIri,
+                                                       replacedByFilter,
                                                        deprecatedClassesParent,
                                                        deprecatedObjectPropertiesParent,
                                                        deprecatedDataPropertiesParent,

@@ -6,6 +6,12 @@
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Replaced-By property IRI" addStyleNames="{wp.style.formLabel}"/>
             <primitive:PrimitiveDataEditor ui:field="replacedByPropertyEditor" annotationPropertiesAllowed="true"/>
+            <g:Label text=""/>
+        </g:HTMLPanel>
+
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Replaced-By filter" addStyleNames="{wp.style.formLabel}"/>
+            <g:SimplePanel ui:field="replacedByFilterCriteriaContainer"/>
         </g:HTMLPanel>
 
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">

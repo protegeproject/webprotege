@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -42,4 +44,7 @@ public interface EntityDeprecationSettingsView extends IsWidget {
     Optional<IRI> getReplacedByPropertyIri();
 
     void setReplacedByProperty(@Nonnull OWLAnnotationPropertyData property);
+
+    @Nonnull
+    AcceptsOneWidget getReplacedByFilterContainer();
 }

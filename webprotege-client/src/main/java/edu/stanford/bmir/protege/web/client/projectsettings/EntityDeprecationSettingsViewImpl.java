@@ -3,13 +3,16 @@ package edu.stanford.bmir.protege.web.client.projectsettings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -44,6 +47,10 @@ public class EntityDeprecationSettingsViewImpl extends Composite implements Enti
     @UiField(provided = true)
     PrimitiveDataEditor replacedByPropertyEditor;
 
+    @UiField
+    SimplePanel replacedByFilterCriteriaContainer;
+
+
     @Inject
     public EntityDeprecationSettingsViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         replacedByPropertyEditor = primitiveDataEditorProvider.get();
@@ -77,6 +84,12 @@ public class EntityDeprecationSettingsViewImpl extends Composite implements Enti
     @Override
     public void setReplacedByProperty(@Nonnull OWLAnnotationPropertyData property) {
         replacedByPropertyEditor.setValue(property);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getReplacedByFilterContainer() {
+        return replacedByFilterCriteriaContainer;
     }
 
     @Override
