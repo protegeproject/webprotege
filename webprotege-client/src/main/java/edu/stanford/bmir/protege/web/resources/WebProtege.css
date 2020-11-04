@@ -273,6 +273,7 @@
     background-image: numberIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
