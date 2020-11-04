@@ -38,6 +38,12 @@ public class FileSystemConfigurationModule {
     }
 
     @Provides
+    @ImportDirectory
+    public File provideImportDirectory(Neo4jImportDirectoryProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
     public RootOntologyDocumentFileMatcher provideRootOntologyDocumentFileMatcher(RootOntologyDocumentMatcherImpl impl) {
         return impl;
     }

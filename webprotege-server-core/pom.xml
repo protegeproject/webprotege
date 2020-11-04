@@ -11,6 +11,10 @@
 
     <artifactId>webprotege-server-core</artifactId>
 
+    <properties>
+        <owl2lpg.version>1.0-SNAPSHOT</owl2lpg.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -30,9 +34,13 @@
         <dependency>
             <groupId>edu.stanford.owl2lpg</groupId>
             <artifactId>owl2lpg-client-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${owl2lpg.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>edu.stanford.owl2lpg</groupId>
+            <artifactId>owl2lpg-translation-exporter</artifactId>
+            <version>${owl2lpg.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>

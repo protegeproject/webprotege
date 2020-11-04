@@ -375,6 +375,10 @@ public class ApplicationModule {
         return impl;
     }
 
+    @Provides
+    CsvDocumentResolver provideCsvDocumentResolver(CsvDocumentResolverImpl impl) {
+        return impl;
+    }
 
     @Provides
     OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {

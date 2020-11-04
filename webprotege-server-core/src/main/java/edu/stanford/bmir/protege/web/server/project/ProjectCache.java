@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.project.BranchId;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
@@ -200,9 +201,10 @@ public class ProjectCache implements HasDispose {
 
     public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
+        BranchId branchId = BranchId.get("49b40337-06ff-4d94-a043-7d81733f10d3");
         Optional<DocumentId> sourceDocumentId = newProjectSettings.getSourceDocumentId();
         if(sourceDocumentId.isPresent()) {
-            ProjectImporter importer = projectImporterFactory.create(projectId);
+            ProjectImporter importer = projectImporterFactory.create(projectId, branchId);
             importer.createProjectFromSources(sourceDocumentId.get(), newProjectSettings.getProjectOwner());
         }
         return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER).getProjectId();
