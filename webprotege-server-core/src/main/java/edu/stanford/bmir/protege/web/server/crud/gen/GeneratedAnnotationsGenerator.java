@@ -15,6 +15,9 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collection;
+import java.util.Set;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -54,13 +57,14 @@ public class GeneratedAnnotationsGenerator {
 
 
     public <E> void generateAnnotations(@Nonnull OWLEntity entity,
+                                    @Nonnull Collection<OWLEntity> parents,
                                     @Nonnull EntityCrudKitSettings<?> crudKitSettings,
                                     @Nonnull OntologyChangeList.Builder<E> changeListBuilder) {
 
         var generatedAnnotationSettings = crudKitSettings.getGeneratedAnnotationsSettings();
 
         for(var descriptor : generatedAnnotationSettings.getDescriptors()) {
-            if(isActivatedForEntity(entity, descriptor)) {
+            if(isActivatedForEntity(entity, parents, descriptor)) {
                 var chg = generateNextValueAndOntologyChange(entity, descriptor);
                 changeListBuilder.add(chg);
             }
@@ -80,12 +84,15 @@ public class GeneratedAnnotationsGenerator {
         return AddAxiomChange.of(ontId, ax);
     }
 
-    private boolean isActivatedForEntity(@Nonnull OWLEntity entity, GeneratedAnnotationDescriptor descriptor) {
+    private boolean isActivatedForEntity(@Nonnull OWLEntity entity,
+                                         @Nonnull Collection<OWLEntity> parents,
+                                         @Nonnull GeneratedAnnotationDescriptor descriptor) {
         return descriptor.getActivatedBy()
                   .map(criteria -> {
                       var rewrittenCriteria = rewriter.rewriteCriteria(criteria);
                       var matcher = matcherFactory.getMatcher(rewrittenCriteria);
-                      return matcher.matches(entity);
+                      return parents.stream()
+                              .allMatch(matcher::matches);
                   })
                   .orElse(false);
     }

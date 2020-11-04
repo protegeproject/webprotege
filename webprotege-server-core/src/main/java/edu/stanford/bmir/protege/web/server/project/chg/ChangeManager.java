@@ -437,6 +437,7 @@ public class ChangeManager implements HasApplyChanges {
         E ent = handler.create(session, entityType, EntityShortForm.get(shortName), langTag, parents, context, builder);
         // Generate changes to apply annotations
         generatedAnnotationsGenerator.generateAnnotations(ent,
+                                                          parents,
                                                           getEntityCrudKitHandler().getSettings(),
                                                           builder);
         return new OWLEntityCreator<>(ent,
