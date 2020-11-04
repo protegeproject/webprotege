@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -26,4 +27,6 @@ public interface DeprecateEntityView extends IsWidget, HasRequestFocus {
     Optional<OWLEntity> getReplacementEntity();
 
     void setReferencesCount(long referencesCount);
+
+    void setReplacedByFilterCriteria(Optional<CompositeRootCriteria> replacedByFilterCriteria);
 }

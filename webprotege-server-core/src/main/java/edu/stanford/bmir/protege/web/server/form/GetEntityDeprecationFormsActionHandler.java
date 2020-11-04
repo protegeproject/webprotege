@@ -7,12 +7,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -30,6 +31,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class GetEntityDeprecationFormsActionHandler extends AbstractProjectActionHandler<GetEntityDeprecationFormsAction, GetEntityDeprecationFormsResult> {
 
     @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final EntityFormManager entityFormManager;
 
     @Nonnull
@@ -44,19 +48,26 @@ public class GetEntityDeprecationFormsActionHandler extends AbstractProjectActio
     @Nonnull
     private final AxiomSubjectProvider axiomSubjectProvider;
 
+    @Nonnull
+    private final ProjectDetailsManager projectDetailsManager;
+
     @Inject
-    public GetEntityDeprecationFormsActionHandler(@Nonnull AccessManager accessManager,
+    public GetEntityDeprecationFormsActionHandler(@Nonnull ProjectId projectId,
+                                                  @Nonnull AccessManager accessManager,
                                                   @Nonnull EntityFormManager entityFormManager,
                                                   @Nonnull ProjectComponent projectComponent,
                                                   @Nonnull AxiomsByReferenceIndex axiomsByReferenceIndex,
                                                   @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                                  @Nonnull AxiomSubjectProvider axiomSubjectProvider) {
+                                                  @Nonnull AxiomSubjectProvider axiomSubjectProvider,
+                                                  @Nonnull ProjectDetailsManager projectDetailsManager) {
         super(accessManager);
+        this.projectId = checkNotNull(projectId);
         this.entityFormManager = checkNotNull(entityFormManager);
         this.projectComponent = checkNotNull(projectComponent);
         this.axiomsByReferenceIndex = checkNotNull(axiomsByReferenceIndex);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.axiomSubjectProvider = checkNotNull(axiomSubjectProvider);
+        this.projectDetailsManager = projectDetailsManager;
     }
 
     @Nonnull
@@ -83,7 +94,11 @@ public class GetEntityDeprecationFormsActionHandler extends AbstractProjectActio
                                                                           ontId))
                 .filter(ax -> !hasSubject(action.getEntity(), ax))
                 .count();
-        return GetEntityDeprecationFormsResult.get(formDtos, referencesCount);
+        var criteria = projectDetailsManager.getProjectDetails(projectId)
+                .getEntityDeprecationSettings()
+                .getReplacedByFilter()
+                .orElse(null);
+        return GetEntityDeprecationFormsResult.get(formDtos, referencesCount, criteria);
     }
 
     private boolean hasSubject(@Nonnull OWLEntity entity, OWLAxiom ax) {

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -69,6 +70,11 @@ public class DeprecateEntityViewImpl extends Composite implements DeprecateEntit
             replaceWithSubView.setVisible(true);
             referencesCountField.setText("Warning: This entity is used in " + referencesCount + " places");
         }
+    }
+
+    @Override
+    public void setReplacedByFilterCriteria(Optional<CompositeRootCriteria> replacedByFilterCriteria) {
+        replacedByFilterCriteria.ifPresent(replacementEntityEditor::setCriteria);
     }
 
     @Nonnull
