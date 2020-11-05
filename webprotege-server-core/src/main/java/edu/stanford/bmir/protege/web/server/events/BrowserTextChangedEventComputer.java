@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.HasContainsEntityInSignature;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -57,12 +59,14 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
     public void prepareForOntologyChanges(List<OntologyChange> submittedChanges) {
         shortFormMap.clear();
         submittedChanges.stream()
+                        // All display names are based on annotations, or paths of annotations
+                        .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
                         .flatMap(change -> changeSubjectsProvider.getChangeSubjects(change).stream())
                         // The changes might only be extending the signature, so check for this.
                         // If this is the case, then there will not be any existing short form.
                         .filter(signature::containsEntityInSignature)
                         .forEach(entity -> {
-                            ImmutableMap<DictionaryLanguage, String> shortForms = dictionaryManager.getShortForms(entity);
+                            var shortForms = dictionaryManager.getShortForms(entity);
                             shortFormMap.put(entity, shortForms);
                         });
     }
