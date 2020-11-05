@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.crud.gen.GeneratedAnnotationsGenerator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
+import edu.stanford.bmir.protege.web.server.events.HighLevelProjectEventProxy;
 import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
@@ -534,12 +535,12 @@ public class ChangeManager implements HasApplyChanges {
             return;
         }
         revision.ifPresent(rev -> {
-            var highLevelEvents = new ArrayList<ProjectEvent<?>>();
+            var highLevelEvents = new ArrayList<HighLevelProjectEventProxy>();
             eventTranslatorManager.translateOntologyChanges(rev, finalResult, highLevelEvents);
             if(changeListGenerator instanceof HasHighLevelEvents) {
                 highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
             }
-            projectEventManager.postEvents(highLevelEvents);
+            projectEventManager.postHighLevelEvents(highLevelEvents);
             projectChangedWebhookInvoker.invoke(userId, rev.getRevisionNumber(), rev.getTimestamp());
         });
     }

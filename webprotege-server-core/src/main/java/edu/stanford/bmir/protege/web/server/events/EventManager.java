@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -25,6 +26,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -93,6 +95,19 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
         final List<E> events = new ArrayList<>(1);
         events.add(checkNotNull(event, "event must not be null"));
         return postEvents(events);
+    }
+
+    @Nonnull
+    public EventTag postHighLevelEvents(List<HighLevelProjectEventProxy> eventProxies) {
+        if(eventProxies.size() > EVENT_LIST_SIZE_LIMIT) {
+            return postEvent((E) new LargeNumberOfChangesEvent(projectId));
+        }
+        else {
+            var realEvents = eventProxies.stream()
+                        .map(e -> (E) e.asProjectEvent())
+                        .collect(toList());
+            return postEvents(realEvents);
+        }
     }
 
     /**

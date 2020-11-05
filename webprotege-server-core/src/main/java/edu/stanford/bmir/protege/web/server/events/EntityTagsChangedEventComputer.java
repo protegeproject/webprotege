@@ -58,12 +58,12 @@ public class EntityTagsChangedEventComputer implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<HighLevelProjectEventProxy> projectEventList) {
         changes.getChangeList().forEach(chg -> {
             provider.getChangeSubjects(chg).forEach(entity -> {
                 Collection<Tag> tags = tagsManager.getTags(entity);
                 if(!tags.equals(beforeChangesTags.get(entity))) {
-                    projectEventList.add(new EntityTagsChangedEvent(projectId, entity, tags));
+                    projectEventList.add(SimpleHighLevelProjectEventProxy.wrap(new EntityTagsChangedEvent(projectId, entity, tags)));
                 }
             });
         });

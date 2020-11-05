@@ -48,7 +48,7 @@ public class EntityDeprecatedChangedEventTranslator implements EventTranslator {
     @Override
     public void translateOntologyChanges(Revision revision,
                                          ChangeApplicationResult<?> changes,
-                                         List<ProjectEvent<?>> projectEventList) {
+                                         List<HighLevelProjectEventProxy> projectEventList) {
         for(OntologyChange change : changes.getChangeList()) {
             if(change.isChangeFor(ANNOTATION_ASSERTION)) {
                 var annotationAssertion = (OWLAnnotationAssertionAxiom) change.getAxiomOrThrow();
@@ -61,6 +61,7 @@ public class EntityDeprecatedChangedEventTranslator implements EventTranslator {
                                          var deprecated = deprecatedEntityChecker.isDeprecated(entity);
                                          return new EntityDeprecatedChangedEvent(projectId, entity, deprecated);
                                      })
+                                     .map(SimpleHighLevelProjectEventProxy::wrap)
                                      .forEach(projectEventList::add);
                     }
                 }

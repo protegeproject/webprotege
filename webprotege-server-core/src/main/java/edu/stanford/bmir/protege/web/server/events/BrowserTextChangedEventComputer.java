@@ -5,11 +5,9 @@ import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.HasContainsEntityInSignature;
@@ -72,7 +70,7 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<HighLevelProjectEventProxy> projectEventList) {
         Set<OWLEntity> processedEntities = new HashSet<>();
         changes.getChangeList().stream()
                .flatMap(change -> changeSubjectsProvider.getChangeSubjects(change).stream())
@@ -81,7 +79,13 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
                    ImmutableMap<DictionaryLanguage, String> oldShortForms = shortFormMap.get(entity);
                    ImmutableMap<DictionaryLanguage, String> shortForms = dictionaryManager.getShortForms(entity);
                    if(oldShortForms == null || !shortForms.equals(oldShortForms)) {
-                       projectEventList.add(new BrowserTextChangedEvent(entity, dictionaryManager.getShortForm(entity), projectId, dictionaryManager.getShortForms(entity)));
+                       var browserTextChangedEvent = new BrowserTextChangedEvent(entity,
+                                                                                                     dictionaryManager.getShortForm(
+                                                                                                             entity),
+                                                                                                     projectId,
+                                                                                                     dictionaryManager.getShortForms(
+                                                                                                             entity));
+                       projectEventList.add(SimpleHighLevelProjectEventProxy.wrap(browserTextChangedEvent));
                    }
                });
     }

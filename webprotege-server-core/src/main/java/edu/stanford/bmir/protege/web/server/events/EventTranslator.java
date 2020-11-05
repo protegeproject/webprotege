@@ -27,6 +27,6 @@ public interface EventTranslator {
      * @param changes The applied changes.
      * @param projectEventList A list to be filled with high level project events that were generated from the changes.
      */
-    void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<ProjectEvent<?>> projectEventList);
+    void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<HighLevelProjectEventProxy> projectEventList);
 }
 
