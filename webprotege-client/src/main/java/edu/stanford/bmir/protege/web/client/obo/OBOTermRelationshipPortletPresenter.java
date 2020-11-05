@@ -47,7 +47,7 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
                                                @Nonnull DispatchServiceManager dispatch,
                                                @Nonnull OBOTermRelationshipEditor editor,
                                                @Nonnull DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
     }

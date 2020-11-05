@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.events.RefreshUserInterfaceEvent;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesEvent;
 import edu.stanford.bmir.protege.web.shared.event.LargeNumberOfChangesHandler;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,13 +24,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class LargeNumberOfChangesManager implements LargeNumberOfChangesHandler {
 
-    private Set<LargeNumberOfChangesEvent> handledEvents = new HashSet<>();
+    private final Set<LargeNumberOfChangesEvent> handledEvents = new HashSet<>();
 
-    private MessageBox messageBox;
+
+    @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
+    private final EventBus eventBus;
 
     @Inject
-    public LargeNumberOfChangesManager(MessageBox messageBox) {
+    public LargeNumberOfChangesManager(@Nonnull ProjectId projectId,
+                                       @Nonnull MessageBox messageBox,
+                                       @Nonnull EventBus eventBus) {
         this.messageBox = checkNotNull(messageBox);
+        this.eventBus = checkNotNull(eventBus);
     }
 
     @Override
@@ -51,6 +63,6 @@ public class LargeNumberOfChangesManager implements LargeNumberOfChangesHandler 
     }
 
     private void handleRefreshRequest() {
-
+        eventBus.fireEvent(RefreshUserInterfaceEvent.get());
     }
 }

@@ -33,6 +33,9 @@ public class EditorPaneSimpleEditorPresenter implements EditorPanePresenter {
     @Nonnull
     private final WebProtegeClientBundle clientBundle;
 
+    @Nonnull
+    private Optional<OWLEntity> currentEntity = Optional.empty();
+
     @Inject
     public EditorPaneSimpleEditorPresenter(@Nonnull ProjectId projectId,
                                            @Nonnull EditorPresenter editorPresenter,
@@ -68,7 +71,12 @@ public class EditorPaneSimpleEditorPresenter implements EditorPanePresenter {
 
     @Override
     public void setEntity(@Nonnull OWLEntity entity) {
-        editorPresenter.setEditorContext(Optional.of(new OWLEntityContext(projectId, entity)));
+        this.currentEntity = Optional.of(checkNotNull(entity));
+        refill();
+    }
+
+    private void refill() {
+        currentEntity.ifPresent(entity -> editorPresenter.setEditorContext(Optional.of(new OWLEntityContext(projectId, entity))));
     }
 
     @Override
@@ -89,5 +97,10 @@ public class EditorPaneSimpleEditorPresenter implements EditorPanePresenter {
     @Override
     public boolean isActive() {
         return ElementalUtil.isWidgetOrDescendantWidgetActive(editorPresenter.getView());
+    }
+
+    @Override
+    public void reload() {
+        refill();
     }
 }

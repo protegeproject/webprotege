@@ -39,7 +39,7 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
                                                @Nonnull ProjectId projectId,
                                                @Nonnull OBOTermCrossProductEditor editor,
                                                @Nonnull DispatchServiceManager dispatch, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.editor = editor;
         this.dispatch = dispatch;
     }

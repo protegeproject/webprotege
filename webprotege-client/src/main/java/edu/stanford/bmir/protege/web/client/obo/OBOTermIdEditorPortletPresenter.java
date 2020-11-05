@@ -44,8 +44,9 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
                                            @Nonnull ProjectId projectId,
                                            @Nonnull OBOTermIdEditor editor,
                                            @Nonnull DispatchServiceManager dispatchServiceManager,
-                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                           DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer, dispatchServiceManager);
         this.editor = editor;
         this.dispatch = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

@@ -27,8 +27,12 @@ public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresent
     private OntologyIdView editor;
 
     @Inject
-    public OntologyIdPortletPresenter(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+    public OntologyIdPortletPresenter(SelectionModel selectionModel,
+                                      DispatchServiceManager dispatchServiceManager,
+                                      ProjectId projectId,
+                                      DisplayNameRenderer displayNameRenderer,
+                                      DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
         editor.setEnabled(false);
@@ -37,6 +41,11 @@ public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresent
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(editor.asWidget());
+        updateDisplay();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
         updateDisplay();
     }
 

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -49,8 +50,10 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
                                           FilterView filterView,
                                           SelectionModel selectionModel,
                                           ProjectId projectId,
-                                          Messages messages, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                          Messages messages,
+                                          DisplayNameRenderer displayNameRenderer,
+                                          DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.filterView = filterView;
@@ -76,6 +79,11 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         presenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
+        reload();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
         reload();
     }
 

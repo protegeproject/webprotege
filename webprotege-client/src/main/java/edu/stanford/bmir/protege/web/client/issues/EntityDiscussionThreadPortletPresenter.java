@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -61,8 +62,10 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                                   @Nonnull Messages messages,
                                                   @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                                   @Nonnull ProjectId projectId,
-                                                  @Nonnull DiscussionThreadListPresenter presenter, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                                  @Nonnull DiscussionThreadListPresenter presenter,
+                                                  DisplayNameRenderer displayNameRenderer,
+                                                  DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.filterView = filterView;
         this.messages = messages;
         this.displayResolvedThreadsFilter = new FilterId(messages.discussionThread_DisplayResolvedThreads());
@@ -100,12 +103,17 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     }
 
     private void handlePemissionsChange(PermissionsChangedEvent event) {
-        handleAfterSetEntity(Optional.empty());
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         handleSetEntity(entity);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     private void handleSetEntity(Optional<OWLEntity> entity) {

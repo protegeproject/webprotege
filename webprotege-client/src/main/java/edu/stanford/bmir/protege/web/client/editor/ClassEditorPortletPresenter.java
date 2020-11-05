@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -31,8 +32,10 @@ public class ClassEditorPortletPresenter extends AbstractWebProtegePortletPresen
     @Inject
     public ClassEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
                                        @Nonnull ProjectId projectId,
-                                       @Nonnull EditorPortletPresenter editorPresenter, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                       @Nonnull EditorPortletPresenter editorPresenter,
+                                       DisplayNameRenderer displayNameRenderer,
+                                       DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.editorPresenter = checkNotNull(editorPresenter);
     }
 
@@ -40,5 +43,10 @@ public class ClassEditorPortletPresenter extends AbstractWebProtegePortletPresen
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         editorPresenter.setDisplayedTypes(CLASS);
         editorPresenter.start(portletUi, eventBus);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        editorPresenter.handleReloadRequest();
     }
 }
