@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
@@ -32,35 +33,42 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     @Nonnull
     private final ClassHierarchyProvider classHierarchyProvider;
 
+    private final EntityHierarchyChangedEventProxyFactory proxyFactory;
+
     @Inject
     public OWLClassHierarchyChangeComputer(@Nonnull ProjectId projectId,
                                            @Nonnull ClassHierarchyProvider classHierarchyProvider,
-                                           @Nonnull EntityNodeRenderer renderer) {
+                                           @Nonnull EntityNodeRenderer renderer,
+                                           EntityHierarchyChangedEventProxyFactory proxyFactory) {
         super(projectId, EntityType.CLASS, classHierarchyProvider, CLASS_HIERARCHY, renderer);
         this.renderer = checkNotNull(renderer);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
+        this.proxyFactory = checkNotNull(proxyFactory);
     }
 
     @Override
     protected Collection<HighLevelProjectEventProxy> createRemovedEvents(OWLClass child, OWLClass parent) {
-        RemoveEdge<EntityNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent)),
-                new GraphNode<>(renderer.render(child))
-        ));
-        return Arrays.asList(
-                SimpleHighLevelProjectEventProxy.wrap(new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))))
+        var removeEdge = new RemoveEdge<>(
+                new GraphEdge<>(
+                        new GraphNode<>(parent, classHierarchyProvider.isLeaf(parent)),
+                        new GraphNode<>(child, classHierarchyProvider.isLeaf(child))
+                )
         );
+        var event = new GraphModelChangedEvent<>(ImmutableList.of(removeEdge));
+        var proxyEvent = proxyFactory.create(event, classHierarchyProvider, CLASS_HIERARCHY);
+        return ImmutableList.of(proxyEvent);
     }
 
     @Override
     protected Collection<HighLevelProjectEventProxy> createAddedEvents(OWLClass child, OWLClass parent) {
-        AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), classHierarchyProvider.isLeaf(parent)),
-                new GraphNode<>(renderer.render(child), classHierarchyProvider.isLeaf(child))
-        ));
-        return Collections.singletonList(SimpleHighLevelProjectEventProxy.wrap(new EntityHierarchyChangedEvent(getProjectId(),
-                                                                         CLASS_HIERARCHY,
-                                                                         new GraphModelChangedEvent<>(Collections.singletonList(
-                                                                                 addEdge)))));
+        var addEdge = new AddEdge<>(
+                new GraphEdge<>(
+                        new GraphNode<>(parent, classHierarchyProvider.isLeaf(parent)),
+                        new GraphNode<>(child, classHierarchyProvider.isLeaf(child))
+                )
+        );
+        var event = new GraphModelChangedEvent<>(ImmutableList.of(addEdge));
+        var proxyEvent = proxyFactory.create(event, classHierarchyProvider, CLASS_HIERARCHY);
+        return ImmutableList.of(proxyEvent);
     }
 }
