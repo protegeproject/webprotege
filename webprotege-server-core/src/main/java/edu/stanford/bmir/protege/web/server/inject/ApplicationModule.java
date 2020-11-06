@@ -57,6 +57,8 @@ import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.owl2lpg.client.bind.project.importer.ApocCsvImporter;
+import edu.stanford.owl2lpg.client.bind.project.importer.CsvImporter;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
@@ -372,6 +374,11 @@ public class ApplicationModule {
 
     @Provides
     DocumentResolver provideDocumentResolver(DocumentResolverImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CsvImporter provideCsvImporter(ApocCsvImporter impl) {
         return impl;
     }
 
