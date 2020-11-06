@@ -201,7 +201,7 @@ public class ProjectCache implements HasDispose {
 
     public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
-        BranchId branchId = BranchId.get("49b40337-06ff-4d94-a043-7d81733f10d3");
+        BranchId branchId = BranchIdFactory.getFreshBranchId();
         Optional<DocumentId> sourceDocumentId = newProjectSettings.getSourceDocumentId();
         if(sourceDocumentId.isPresent()) {
             ProjectImporter importer = projectImporterFactory.create(projectId, branchId);
