@@ -31,4 +31,6 @@ public interface EntityTagsRepository {
 
     @Nonnull
     Collection<EntityTags> findByTagId(@Nonnull TagId tagId);
+
+    long countTaggedEntities();
 }

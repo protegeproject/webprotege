@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -42,6 +43,8 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
 
     private final Lock writeLock = readWriteLock.writeLock();
 
+    private boolean empty = false;
+
     @Inject
     public EntityTagsRepositoryImpl(@Nonnull ProjectId projectId,
                                     @Nonnull Datastore datastore) {
@@ -52,6 +55,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     @Override
     public void ensureIndexes() {
         datastore.ensureIndexes(EntityTags.class);
+        empty = countTaggedEntities() == 0;
     }
 
     @Override
@@ -60,6 +64,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
             writeLock.lock();
             datastore.delete(tagWithProjectIdAndEntity(tag.getProjectId(), tag.getEntity()));
             datastore.save(tag);
+            empty = false;
         } finally {
             writeLock.unlock();
         }
@@ -73,6 +78,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
             UpdateOperations<EntityTags> updateOps = datastore.createUpdateOperations(EntityTags.class);
             updateOps.addToSet(TAGS, tagId);
             datastore.update(query, updateOps);
+            empty = false;
         } finally {
             writeLock.unlock();
         }
@@ -86,6 +92,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
             UpdateOperations<EntityTags> updateOps = datastore.createUpdateOperations(EntityTags.class);
             updateOps.removeAll(TAGS, tagId);
             datastore.update(query, updateOps);
+            empty = countTaggedEntities() == 0;
         } finally {
             writeLock.unlock();
         }
@@ -100,6 +107,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
             UpdateOperations<EntityTags> updateOps = datastore.createUpdateOperations(EntityTags.class);
             updateOps.removeAll(TAGS, tagId);
             datastore.update(query, updateOps);
+            empty = countTaggedEntities() == 0;
         } finally {
             writeLock.unlock();
         }
@@ -115,6 +123,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     public Map<OWLEntity, EntityTags> findAll() {
         try {
             readLock.lock();
+            if(empty) {
+                return Collections.emptyMap();
+            }
             return datastore.createQuery(EntityTags.class)
                             .field(PROJECT_ID).equal(projectId)
                             .asList()
@@ -130,6 +141,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     public Optional<EntityTags> findByEntity(@Nonnull OWLEntity entity) {
         try {
             readLock.lock();
+            if(empty) {
+                return Optional.empty();
+            }
             return Optional.ofNullable(tagWithProjectIdAndEntity(projectId, entity).get());
         } finally {
             readLock.unlock();
@@ -141,6 +155,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     public Collection<EntityTags> findByTagId(@Nonnull TagId tagId) {
         try {
             readLock.lock();
+            if(empty) {
+                return Collections.emptySet();
+            }
             return datastore.find(EntityTags.class)
                             .field(TAGS)
                             .equal(tagId)
@@ -148,6 +165,13 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
         } finally {
             readLock.unlock();
         }
+    }
+
+    @Override
+    public long countTaggedEntities() {
+        return datastore.createQuery(EntityTags.class)
+                .field(PROJECT_ID).equal(projectId)
+                .count();
     }
 
 }
