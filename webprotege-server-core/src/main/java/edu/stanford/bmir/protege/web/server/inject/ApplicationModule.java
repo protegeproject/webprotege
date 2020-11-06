@@ -21,6 +21,9 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslato
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.csv.CsvDirectoryResolver;
+import edu.stanford.bmir.protege.web.server.csv.CsvDirectoryResolverImpl;
+import edu.stanford.bmir.protege.web.server.csv.CsvImporter;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
@@ -31,6 +34,9 @@ import edu.stanford.bmir.protege.web.server.form.EntityFormRepository;
 import edu.stanford.bmir.protege.web.server.form.EntityFormRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.form.EntityFormSelectorRepository;
 import edu.stanford.bmir.protege.web.server.form.EntityFormSelectorRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.graph.GraphIndexer;
+import edu.stanford.bmir.protege.web.server.graph.GraphManager;
+import edu.stanford.bmir.protege.web.server.graph.IndexBuilder;
 import edu.stanford.bmir.protege.web.server.index.IndexUpdatingService;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
@@ -58,14 +64,12 @@ import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.owl2lpg.client.bind.project.importer.ApocCsvImporter;
-import edu.stanford.owl2lpg.client.bind.project.importer.CsvImporter;
-import edu.stanford.owl2lpg.client.bind.project.index.DefaultIndexLoader;
-import edu.stanford.owl2lpg.client.bind.project.index.FullTextIndexLoader;
-import edu.stanford.owl2lpg.client.bind.project.index.GraphIndexer;
-import edu.stanford.owl2lpg.client.bind.project.index.IndexLoader;
-import edu.stanford.owl2lpg.client.bind.project.index.Neo4jGraphIndexer;
+import edu.stanford.owl2lpg.client.bind.csv.ApocCsvImporter;
+import edu.stanford.owl2lpg.client.bind.graph.FullTextIndexBuilder;
+import edu.stanford.owl2lpg.client.bind.graph.Neo4jGraphIndexer;
+import edu.stanford.owl2lpg.client.bind.graph.Neo4jGraphManager;
+import edu.stanford.owl2lpg.client.bind.graph.Neo4jGraphManagerModule;
+import edu.stanford.owl2lpg.client.bind.graph.NodePropertyIndexBuilder;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
@@ -85,7 +89,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-@Module
+@Module(includes = Neo4jGraphManagerModule.class)
 public class ApplicationModule {
 
     private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
@@ -385,6 +389,11 @@ public class ApplicationModule {
     }
 
     @Provides
+    GraphManager provideGraphManager(Neo4jGraphManager impl) {
+        return impl;
+    }
+
+    @Provides
     @ApplicationSingleton
     CsvImporter provideCsvImporter(ApocCsvImporter impl) {
         return impl;
@@ -392,21 +401,21 @@ public class ApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    CsvDocumentResolver provideCsvDocumentResolver(CsvDocumentResolverImpl impl) {
+    CsvDirectoryResolver provideCsvDirectoryResolver(CsvDirectoryResolverImpl impl) {
         return impl;
     }
 
     @Provides
     @ApplicationSingleton
     @IntoSet
-    IndexLoader providePropertyNodeIndexLoader(DefaultIndexLoader impl) {
+    IndexBuilder provideNodePropertyIndexBuilder(NodePropertyIndexBuilder impl) {
         return impl;
     }
 
     @Provides
     @ApplicationSingleton
     @IntoSet
-    IndexLoader provideFullTextIndexLoader(FullTextIndexLoader impl) {
+    IndexBuilder provideFullTextIndexBuilder(FullTextIndexBuilder impl) {
         return impl;
     }
 

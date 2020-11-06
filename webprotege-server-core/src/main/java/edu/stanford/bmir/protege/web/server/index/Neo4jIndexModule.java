@@ -19,7 +19,7 @@ import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyDocumentAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
-import edu.stanford.owl2lpg.client.write.handlers.OntologyChangeHandlerModule;
+import edu.stanford.owl2lpg.client.write.changes.handlers.OntologyChangeHandlerModule;
 
 import javax.annotation.Nonnull;
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mongodb.client.MongoDatabase;
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
@@ -35,10 +36,6 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
-import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchManager;
-import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchManagerModule;
-import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchOntologyDocumentManager;
-import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchOntologyDocumentManagerModule;
 import edu.stanford.bmir.protege.web.server.project.OntologyDocumentIdDisplayNameProviderImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectBranchManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectBranchOntologyDocumentManager;
@@ -68,11 +65,14 @@ import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNam
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
+import edu.stanford.owl2lpg.client.bind.project.Neo4jProjectBranchManager;
+import edu.stanford.owl2lpg.client.bind.project.Neo4jProjectBranchOntologyDocumentManager;
 import edu.stanford.owl2lpg.client.read.hierarchy.HierarchyAccessorModule;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jAnnotationPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jClassHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jDataPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jObjectPropertyHierarchyProvider;
+import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
@@ -95,11 +95,10 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  */
 @Module(includes = {
-    Neo4jProjectBranchManagerModule.class,
-    Neo4jProjectBranchOntologyDocumentManagerModule.class,
     Neo4jIndexModule.class,
     Neo4jShortFormModule.class,
     ProjectActionHandlersModule.class,
+    ProjectAccessorModule.class,
     HierarchyAccessorModule.class
 })
 public class Neo4jProjectModule {
@@ -118,8 +117,20 @@ public class Neo4jProjectModule {
 
   @Provides
   @ProjectSingleton
+  public ProjectBranchManager provideProjectBranchManager(Neo4jProjectBranchManager impl) {
+    return impl;
+  }
+
+  @Provides
+  @ProjectSingleton
   public BranchId provideDefaultBranchId(ProjectBranchManager manager) {
     return manager.getDefaultBranchId();
+  }
+
+  @Provides
+  @ProjectSingleton
+  public ProjectBranchOntologyDocumentManager provideProjectBranchOntologyDocumentManager(Neo4jProjectBranchOntologyDocumentManager impl) {
+    return impl;
   }
 
   @Provides

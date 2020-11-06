@@ -5,9 +5,12 @@ import com.google.auto.factory.Provided;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.csv.CsvDirectoryResolver;
+import edu.stanford.bmir.protege.web.server.csv.CsvImporter;
+import edu.stanford.bmir.protege.web.server.graph.GraphIndexer;
+import edu.stanford.bmir.protege.web.server.graph.GraphManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreFactory;
-import edu.stanford.bmir.protege.web.server.upload.CsvDocumentResolver;
 import edu.stanford.bmir.protege.web.server.upload.DocumentResolver;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
@@ -17,8 +20,6 @@ import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.owl2lpg.client.bind.project.importer.CsvImporter;
-import edu.stanford.owl2lpg.client.bind.project.index.GraphIndexer;
 import edu.stanford.owl2lpg.exporter.csv.DaggerApocCsvExporterComponent;
 import edu.stanford.owl2lpg.exporter.csv.OntologyCsvExporter;
 import edu.stanford.owl2lpg.exporter.csv.writer.apoc.ApocCsvWriterModule;
@@ -60,13 +61,13 @@ public class ProjectImporter {
     private final RevisionStoreFactory revisionStoreFactory;
 
     @Nonnull
-    private final ProjectBranchOntologyDocumentManager projectBranchOntologyDocumentManager;
+    private final GraphManager graphManager;
 
     @Nonnull
     private final CsvImporter csvImporter;
 
     @Nonnull
-    private final CsvDocumentResolver csvDocumentResolver;
+    private final CsvDirectoryResolver csvDirectoryResolver;
 
     @Nonnull
     private final GraphIndexer graphIndexer;
@@ -78,18 +79,18 @@ public class ProjectImporter {
                            @Provided @Nonnull UploadedOntologiesProcessor uploadedOntologiesProcessor,
                            @Provided @Nonnull DocumentResolver documentResolver,
                            @Provided @Nonnull RevisionStoreFactory revisionStoreFactory,
-                           @Provided @Nonnull ProjectBranchOntologyDocumentManager projectBranchOntologyDocumentManager,
+                           @Provided @Nonnull GraphManager graphManager,
                            @Provided @Nonnull CsvImporter csvImporter,
-                           @Provided @Nonnull CsvDocumentResolver csvDocumentResolver,
+                           @Provided @Nonnull CsvDirectoryResolver csvDirectoryResolver,
                            @Provided @Nonnull GraphIndexer graphIndexer) {
         this.projectId = checkNotNull(projectId);
         this.branchId = checkNotNull(branchId);
         this.uploadedOntologiesProcessor = checkNotNull(uploadedOntologiesProcessor);
         this.documentResolver = checkNotNull(documentResolver);
         this.revisionStoreFactory = checkNotNull(revisionStoreFactory);
-        this.projectBranchOntologyDocumentManager = checkNotNull(projectBranchOntologyDocumentManager);
+        this.graphManager = checkNotNull(graphManager);
         this.csvImporter = checkNotNull(csvImporter);
-        this.csvDocumentResolver = checkNotNull(csvDocumentResolver);
+        this.csvDirectoryResolver = checkNotNull(csvDirectoryResolver);
         this.graphIndexer = checkNotNull(graphIndexer);
     }
 
@@ -143,7 +144,8 @@ public class ProjectImporter {
     }
 
     private OntologyCsvExporter createOntologyCsvExporter(OntologyDocumentId ontDocId) {
-        var csvWriterModule = new ApocCsvWriterModule(csvDocumentResolver.resolve(ontDocId));
+        var directoryName = ontDocId.getId();
+        var csvWriterModule = new ApocCsvWriterModule(csvDirectoryResolver.resolve(directoryName));
         return DaggerApocCsvExporterComponent.builder()
             .apocCsvWriterModule(csvWriterModule)
             .build()
@@ -151,15 +153,17 @@ public class ProjectImporter {
     }
 
     private void loadCsvToNeo4j(OntologyDocumentId ontDocId) {
-        csvImporter.loadOntologyDocument(ontDocId.getId());
+        var directoryName = ontDocId.getId();
+        csvImporter.loadOntologyFromDirectory(directoryName);
     }
 
     private void setDefaultOntologyDocument(OntologyDocumentId ontDocId) {
-        projectBranchOntologyDocumentManager.setDefaultOntologyDocumentId(ontDocId);
+        graphManager.setDefaultOntologyDocumentId(projectId, branchId, ontDocId);
     }
 
     private void deleteCsvFiles(OntologyDocumentId ontDocId) {
-        var csvFilePath = csvDocumentResolver.resolve(ontDocId);
+        var directoryName = ontDocId.getId();
+        var csvFilePath = csvDirectoryResolver.resolve(directoryName);
         try {
             Files.deleteIfExists(csvFilePath);
         } catch(IOException e) {
