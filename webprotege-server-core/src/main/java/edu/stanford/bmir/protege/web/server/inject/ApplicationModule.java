@@ -5,6 +5,7 @@ import com.google.common.base.Ticker;
 import com.google.common.collect.ImmutableList;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
@@ -57,8 +58,14 @@ import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.project.importer.ApocCsvImporter;
 import edu.stanford.owl2lpg.client.bind.project.importer.CsvImporter;
+import edu.stanford.owl2lpg.client.bind.project.index.DefaultIndexLoader;
+import edu.stanford.owl2lpg.client.bind.project.index.FullTextIndexLoader;
+import edu.stanford.owl2lpg.client.bind.project.index.GraphIndexer;
+import edu.stanford.owl2lpg.client.bind.project.index.IndexLoader;
+import edu.stanford.owl2lpg.client.bind.project.index.Neo4jGraphIndexer;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
@@ -378,12 +385,34 @@ public class ApplicationModule {
     }
 
     @Provides
+    @ApplicationSingleton
     CsvImporter provideCsvImporter(ApocCsvImporter impl) {
         return impl;
     }
 
     @Provides
+    @ApplicationSingleton
     CsvDocumentResolver provideCsvDocumentResolver(CsvDocumentResolverImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    @IntoSet
+    IndexLoader providePropertyNodeIndexLoader(DefaultIndexLoader impl) {
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    @IntoSet
+    IndexLoader provideFullTextIndexLoader(FullTextIndexLoader impl) {
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    GraphIndexer provideGraphIndexer(Neo4jGraphIndexer impl) {
         return impl;
     }
 

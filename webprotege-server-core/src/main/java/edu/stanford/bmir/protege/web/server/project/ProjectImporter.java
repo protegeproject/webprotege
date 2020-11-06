@@ -4,7 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
-import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreFactory;
@@ -19,7 +18,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.owl2lpg.client.bind.project.importer.CsvImporter;
-import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessor;
+import edu.stanford.owl2lpg.client.bind.project.index.GraphIndexer;
 import edu.stanford.owl2lpg.exporter.csv.DaggerApocCsvExporterComponent;
 import edu.stanford.owl2lpg.exporter.csv.OntologyCsvExporter;
 import edu.stanford.owl2lpg.exporter.csv.writer.apoc.ApocCsvWriterModule;
@@ -69,6 +68,9 @@ public class ProjectImporter {
     @Nonnull
     private final CsvDocumentResolver csvDocumentResolver;
 
+    @Nonnull
+    private final GraphIndexer graphIndexer;
+
     @AutoFactory
     @Inject
     public ProjectImporter(@Nonnull ProjectId projectId,
@@ -76,10 +78,10 @@ public class ProjectImporter {
                            @Provided @Nonnull UploadedOntologiesProcessor uploadedOntologiesProcessor,
                            @Provided @Nonnull DocumentResolver documentResolver,
                            @Provided @Nonnull RevisionStoreFactory revisionStoreFactory,
-                           @Provided @Nonnull ProjectBranchManager projectBranchManager,
                            @Provided @Nonnull ProjectBranchOntologyDocumentManager projectBranchOntologyDocumentManager,
                            @Provided @Nonnull CsvImporter csvImporter,
-                           @Provided @Nonnull CsvDocumentResolver csvDocumentResolver) {
+                           @Provided @Nonnull CsvDocumentResolver csvDocumentResolver,
+                           @Provided @Nonnull GraphIndexer graphIndexer) {
         this.projectId = checkNotNull(projectId);
         this.branchId = checkNotNull(branchId);
         this.uploadedOntologiesProcessor = checkNotNull(uploadedOntologiesProcessor);
@@ -88,6 +90,7 @@ public class ProjectImporter {
         this.projectBranchOntologyDocumentManager = checkNotNull(projectBranchOntologyDocumentManager);
         this.csvImporter = checkNotNull(csvImporter);
         this.csvDocumentResolver = checkNotNull(csvDocumentResolver);
+        this.graphIndexer = checkNotNull(graphIndexer);
     }
 
 
@@ -100,24 +103,32 @@ public class ProjectImporter {
         logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
         var memoryMonitor = new MemoryMonitor(logger);
         memoryMonitor.logMemoryUsage();
-        logger.info("{} Storing ontologies to Neo4j", projectId);
+        logger.info("{} Storing ontologies to the Neo4j graph database", projectId);
         for (var ontology : uploadedOntologies) {
             var ontDocId = ontology.getOntologyDocumentId();
             logger.info("   ... Processing ontology document {}", ontDocId);
-            stopwatch.reset();
-            stopwatch.start();
+            restart(stopwatch);
             convertOntologyToCsv(ontology, ontDocId);
             loadCsvToNeo4j(ontDocId);
             setDefaultOntologyDocument(ontDocId);
             logger.info("   ... Stored ontology document in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
             deleteCsvFiles(ontDocId);
         }
+        restart(stopwatch);
+        logger.info("{} Indexing the ontologies", projectId);
+        graphIndexer.run();
+        logger.info("   ... Done indexing in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         logger.info("{} Writing change log", projectId);
         generateInitialChanges(owner, uploadedOntologies);
         deleteSourceFile(sourcesId);
 
         logger.info("{} Project creation from sources complete in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
         memoryMonitor.logMemoryUsage();
+    }
+
+    private static void restart(Stopwatch stopwatch) {
+        stopwatch.reset();
+        stopwatch.start();
     }
 
     private void convertOntologyToCsv(Ontology ontology, OntologyDocumentId ontDocId) {
