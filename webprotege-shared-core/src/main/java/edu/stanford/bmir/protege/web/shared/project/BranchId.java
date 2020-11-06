@@ -19,13 +19,18 @@ import java.util.UUID;
 @GwtCompatible(serializable = true)
 public abstract class BranchId {
 
-    @JsonCreator
     @Nonnull
     public static BranchId get(@Nonnull String id) {
+        return get(id, false);
+    }
+
+    @JsonCreator
+    @Nonnull
+    public static BranchId get(@Nonnull String id, boolean isDefault) {
         if(!UUIDUtil.isWellFormed(id)) {
             throw new RuntimeException("BranchId is malformed.  BranchIds must be UUIDs");
         }
-        return new AutoValue_BranchId(id);
+        return new AutoValue_BranchId(id, isDefault);
     }
 
     /**
@@ -34,6 +39,10 @@ public abstract class BranchId {
     @JsonValue
     @Nonnull
     public abstract String getId();
+
+    @JsonValue
+    @Nonnull
+    public abstract boolean isDefault();
 
     @Nonnull
     public String toQuotedString() {

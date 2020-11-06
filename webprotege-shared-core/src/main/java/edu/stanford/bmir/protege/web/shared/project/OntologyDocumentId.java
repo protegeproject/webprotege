@@ -19,18 +19,27 @@ import java.util.UUID;
 @GwtCompatible(serializable = true)
 public abstract class OntologyDocumentId {
 
-    @JsonCreator
     @Nonnull
     public static OntologyDocumentId get(@Nonnull String id) {
+        return get(id, false);
+    }
+
+    @JsonCreator
+    @Nonnull
+    public static OntologyDocumentId get(@Nonnull String id, boolean isDefault) {
         if(!UUIDUtil.isWellFormed(id)) {
             throw new RuntimeException("Malformed OntologyDocumentId.  OntologyDocumentIds should be UUIDs");
         }
-        return new AutoValue_OntologyDocumentId(id);
+        return new AutoValue_OntologyDocumentId(id, isDefault);
     }
 
     @JsonValue
     @Nonnull
     public abstract String getId();
+
+    @JsonValue
+    @Nonnull
+    public abstract boolean isDefault();
 
     @Nonnull
     public String toQuotedString() {
