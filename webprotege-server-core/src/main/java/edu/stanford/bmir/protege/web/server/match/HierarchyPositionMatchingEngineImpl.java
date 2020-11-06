@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.IndividualsByTypeIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -12,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,11 +32,16 @@ public class HierarchyPositionMatchingEngineImpl implements HierarchyPositionMat
     @Nonnull
     private final IndividualsByTypeIndex individualsByTypeIndex;
 
+    @Nonnull
+    private final ProjectSignatureIndex projectSignatureIndex;
+
     @Inject
     public HierarchyPositionMatchingEngineImpl(@Nonnull ClassHierarchyProvider classHierarchyProvider,
-                                               @Nonnull IndividualsByTypeIndex individualsByTypeIndex) {
+                                               @Nonnull IndividualsByTypeIndex individualsByTypeIndex,
+                                               @Nonnull ProjectSignatureIndex projectSignatureIndex) {
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.individualsByTypeIndex = checkNotNull(individualsByTypeIndex);
+        this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
     }
 
     @Nonnull
@@ -92,6 +97,16 @@ public class HierarchyPositionMatchingEngineImpl implements HierarchyPositionMat
                 }
                 return result;
             }
+        }
+
+        @Override
+        public Collection<OWLEntity> visit(NotSubClassOfCriteria notSubClassOfCriteria) {
+            var subClassOfCriteria = SubClassOfCriteria.get(notSubClassOfCriteria.getTarget(),
+                                   notSubClassOfCriteria.getFilterType());
+            var subClassOfMatches = visit(subClassOfCriteria);
+            return projectSignatureIndex.getSignature()
+                                 .filter(c -> !subClassOfMatches.contains(c))
+                                 .collect(toImmutableList());
         }
 
         @Override

@@ -13,4 +13,6 @@ public interface HierarchyPositionCriteriaVisitor<R> {
     R visit(SubClassOfCriteria subClassOfCriteria);
 
     R visit(InstanceOfCriteria instanceOfCriteria);
+
+    R visit(NotSubClassOfCriteria notSubClassOfCriteria);
 }

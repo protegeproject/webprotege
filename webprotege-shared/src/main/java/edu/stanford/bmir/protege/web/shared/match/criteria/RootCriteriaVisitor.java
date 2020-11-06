@@ -47,5 +47,11 @@ public interface RootCriteriaVisitor<R> {
 
     @Nonnull
     R visit(EntityIsCriteria entityIsCriteria);
+
+    @Nonnull
+    R visit(@Nonnull NotSubClassOfCriteria notSubClassOfCriteria);
+
+    @Nonnull
+    R visit(@Nonnull EntityIsNotCriteria entityIsNotCriteria);
 }
 

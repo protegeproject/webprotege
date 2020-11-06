@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.IndividualsByTypeIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,9 +42,14 @@ public class HierarchyPositionMatchingEngineImpl_TestCase {
     @Mock
     private OWLNamedIndividual indI;
 
+    @Mock
+    private ProjectSignatureIndex projectSignatureIndex;
+
     @Before
     public void setUp() throws Exception {
-        matchingEngine = new HierarchyPositionMatchingEngineImpl(classHierarchyProvider, individualsByTypeIndex);
+        matchingEngine = new HierarchyPositionMatchingEngineImpl(classHierarchyProvider,
+                                                                 individualsByTypeIndex,
+                                                                 projectSignatureIndex);
     }
 
     @Test
@@ -120,5 +125,15 @@ public class HierarchyPositionMatchingEngineImpl_TestCase {
                 SubClassOfCriteria.get(clsC, HierarchyFilterType.DIRECT)), MultiMatchType.ALL))
                                    .collect(toImmutableSet());
         assertThat(result, contains(clsD));
+    }
+
+    @Test
+    public void shouldReturnClassesThatAreNotSubClasses() {
+        when(classHierarchyProvider.getChildren(clsA)).thenReturn(ImmutableSet.of(clsB, clsD));
+        when(classHierarchyProvider.getChildren(clsC)).thenReturn(Collections.singleton(clsD));
+        when(projectSignatureIndex.getSignature()).thenAnswer(inv -> Stream.of(clsA, clsB, clsC, clsD));
+        var result = matchingEngine.getMatchingEntities(NotSubClassOfCriteria.get(clsC, HierarchyFilterType.ALL))
+                                   .collect(toImmutableSet());
+        assertThat(result, contains(clsA, clsB));
     }
 }

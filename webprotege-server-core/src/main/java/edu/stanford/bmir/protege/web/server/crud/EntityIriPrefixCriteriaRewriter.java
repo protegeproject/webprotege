@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.match.NotMatcher;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
@@ -64,6 +65,16 @@ public class EntityIriPrefixCriteriaRewriter {
                     instanceOfCriteria.getFilterType()
             );
             return subClassOfCriteria.accept(this);
+        }
+
+        @Override
+        public RootCriteria visit(NotSubClassOfCriteria notSubClassOfCriteria) {
+            var targetEntity = notSubClassOfCriteria.getTarget();
+            var entityIsNotCriteria = EntityIsNotCriteria.get(targetEntity);
+            var combinedCriteria = ImmutableList.<RootCriteria>of(entityIsNotCriteria,
+                                                                  notSubClassOfCriteria);
+            return CompositeRootCriteria.get(combinedCriteria,
+                                             MultiMatchType.ALL);
         }
     }
 }
