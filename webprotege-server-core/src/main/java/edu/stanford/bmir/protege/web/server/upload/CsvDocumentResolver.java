@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.upload;
 
 import edu.stanford.bmir.protege.web.server.inject.ImportDirectory;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -17,5 +18,5 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public interface CsvDocumentResolver {
 
-    Path resolve(@Nonnull ProjectId projectId);
+    Path resolve(@Nonnull OntologyDocumentId ontDocId);
 }

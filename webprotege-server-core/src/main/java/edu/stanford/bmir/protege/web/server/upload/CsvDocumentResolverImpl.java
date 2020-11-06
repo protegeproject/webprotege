@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.upload;
 
 import edu.stanford.bmir.protege.web.server.inject.ImportDirectory;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ public class CsvDocumentResolverImpl implements CsvDocumentResolver {
     }
 
     @Override
-    public Path resolve(@Nonnull ProjectId projectId) {
-        return importDirectory.toPath().resolve(projectId.getId());
+    public Path resolve(@Nonnull OntologyDocumentId ontDocId) {
+        return importDirectory.toPath().resolve(ontDocId.getId());
     }
 }
