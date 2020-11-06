@@ -13,6 +13,6 @@ public class BranchIdFactory {
 
   public static BranchId getFreshBranchId() {
     UUID uuid = UUID.randomUUID();
-    return BranchId.get(uuid.toString());
+    return BranchId.get(uuid.toString(), true);
   }
 }
