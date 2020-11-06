@@ -130,10 +130,12 @@ public class HierarchyPositionMatchingEngineImpl_TestCase {
     @Test
     public void shouldReturnClassesThatAreNotSubClasses() {
         when(classHierarchyProvider.getChildren(clsA)).thenReturn(ImmutableSet.of(clsB, clsD));
+        when(classHierarchyProvider.getDescendants(clsA)).thenReturn(ImmutableSet.of(clsB, clsD));
         when(classHierarchyProvider.getChildren(clsC)).thenReturn(Collections.singleton(clsD));
+        when(classHierarchyProvider.getDescendants(clsC)).thenReturn(Collections.singleton(clsD));
         when(projectSignatureIndex.getSignature()).thenAnswer(inv -> Stream.of(clsA, clsB, clsC, clsD));
         var result = matchingEngine.getMatchingEntities(NotSubClassOfCriteria.get(clsC, HierarchyFilterType.ALL))
                                    .collect(toImmutableSet());
-        assertThat(result, contains(clsA, clsB));
+        assertThat(result, contains(clsA, clsB, clsC));
     }
 }
