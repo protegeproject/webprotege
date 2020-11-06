@@ -35,7 +35,13 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
+import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchManager;
+import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchManagerModule;
+import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchOntologyDocumentManager;
+import edu.stanford.bmir.protege.web.server.project.Neo4jProjectBranchOntologyDocumentManagerModule;
 import edu.stanford.bmir.protege.web.server.project.OntologyDocumentIdDisplayNameProviderImpl;
+import edu.stanford.bmir.protege.web.server.project.ProjectBranchManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectBranchOntologyDocumentManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.*;
@@ -57,6 +63,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.BranchId;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
@@ -88,6 +95,8 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  */
 @Module(includes = {
+    Neo4jProjectBranchManagerModule.class,
+    Neo4jProjectBranchOntologyDocumentManagerModule.class,
     Neo4jIndexModule.class,
     Neo4jShortFormModule.class,
     ProjectActionHandlersModule.class,
@@ -103,8 +112,20 @@ public class Neo4jProjectModule {
 
   @Provides
   @ProjectSingleton
-  public BranchId provideBranchId() {
-    return BranchId.get("49b40337-06ff-4d94-a043-7d81733f10d3");
+  public ProjectId provideProjectId() {
+    return projectId;
+  }
+
+  @Provides
+  @ProjectSingleton
+  public BranchId provideDefaultBranchId(ProjectBranchManager manager) {
+    return manager.getDefaultBranchId();
+  }
+
+  @Provides
+  @ProjectSingleton
+  public OntologyDocumentId provideDefaultOntologyDocumentId(ProjectBranchOntologyDocumentManager manager) {
+    return manager.getDefaultOntologyDocumentId();
   }
 
   @Provides
@@ -123,12 +144,6 @@ public class Neo4jProjectModule {
   @ProjectSingleton
   public OWLEntityByTypeProvider provideOwlEntityByTypeProvider(OWLDataFactory dataFactory) {
     return dataFactory;
-  }
-
-  @Provides
-  @ProjectSingleton
-  public ProjectId provideProjectId() {
-    return projectId;
   }
 
   @Provides
