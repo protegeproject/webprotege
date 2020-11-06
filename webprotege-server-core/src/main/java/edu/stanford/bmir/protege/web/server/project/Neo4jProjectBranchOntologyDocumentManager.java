@@ -44,15 +44,6 @@ public class Neo4jProjectBranchOntologyDocumentManager implements ProjectBranchO
         .orElse(OntologyDocumentId.get(UUID.randomUUID().toString(), true));
   }
 
-  @Override
-  public void setDefaultOntologyDocumentId(@Nonnull OntologyDocumentId ontDocId) {
-    var success = projectAccessor.setDefaultOntologyDocumentId(projectId, branchId, ontDocId);
-    if (!success) {
-      throw new RuntimeException("Unable to se default ontology document id to project [" +
-          projectId.getId() + "] and branch [" + branchId.getId() + "]");
-    }
-  }
-
   @Nonnull
   @Override
   public Set<OntologyDocumentId> getOntologyDocumentIds() {

@@ -14,8 +14,6 @@ public interface ProjectBranchOntologyDocumentManager {
   @Nonnull
   OntologyDocumentId getDefaultOntologyDocumentId();
 
-  void setDefaultOntologyDocumentId(@Nonnull OntologyDocumentId ontDocId);
-
   @Nonnull
   Set<OntologyDocumentId> getOntologyDocumentIds();
 }
