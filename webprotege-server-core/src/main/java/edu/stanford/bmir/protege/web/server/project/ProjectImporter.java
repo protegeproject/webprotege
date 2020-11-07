@@ -23,12 +23,14 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.owl2lpg.exporter.csv.DaggerApocCsvExporterComponent;
 import edu.stanford.owl2lpg.exporter.csv.OntologyCsvExporter;
 import edu.stanford.owl2lpg.exporter.csv.writer.apoc.ApocCsvWriterModule;
+import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collection;
@@ -116,7 +118,7 @@ public class ProjectImporter {
             deleteCsvFiles(ontDocId);
         }
         restart(stopwatch);
-        logger.info("{} Indexing the ontologies", projectId);
+        logger.info("{} Building indexes", projectId);
         graphIndexer.run();
         logger.info("   ... Done indexing in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         logger.info("{} Writing change log", projectId);
@@ -163,11 +165,11 @@ public class ProjectImporter {
 
     private void deleteCsvFiles(OntologyDocumentId ontDocId) {
         var directoryName = ontDocId.getId();
-        var csvFilePath = csvDirectoryResolver.resolve(directoryName);
+        var csvDirectory = csvDirectoryResolver.resolve(directoryName);
         try {
-            Files.deleteIfExists(csvFilePath);
+            FileUtils.deleteDirectory(csvDirectory.toFile());
         } catch(IOException e) {
-            logger.info("Could not delete uploaded file: {} Cause: {}", csvFilePath, e.getMessage());
+            logger.warn("Could not delete the import directory: {} Cause: {}", csvDirectory, e.getMessage());
         }
     }
 
