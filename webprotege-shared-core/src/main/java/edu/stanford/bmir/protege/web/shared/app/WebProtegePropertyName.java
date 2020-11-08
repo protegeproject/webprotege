@@ -47,6 +47,9 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The password that WebProtégé should use to connect to MongoDB")
     MONGO_DB_AUTH_PASSWORD("mongodb.auth.password", PropertyValue.ofString("")),
 
+    @WebProtegePropertiesDocumentation(description = "The home directory that WebProtégé should use to access Neo4j")
+    NEO4J_HOME_DIR("neo4j.home", PropertyValue.ofString("/var/lib/neo4j")),
+
     @WebProtegePropertiesDocumentation(description = "The time in milliseconds after which a project becomes dormant and is purgable from memory", example = "180000")
     PROJECT_DORMANT_TIME("project.dormant.time", PropertyValue.ofInteger(180_000)),
 

@@ -136,6 +136,11 @@ public class WebProtegeProperties implements Serializable {
         return getOptionalString(MONGO_DB_AUTH_SOURCE);
     }
 
+    @Nonnull
+    public Optional<String> getNeo4jHomeDir() {
+        return getOptionalString(NEO4J_HOME_DIR);
+    }
+
     public Optional<Integer> getEntityGraphEdgeLimit() {
         return getOptionalString(WebProtegePropertyName.ENTITY_GRAPH_EDGE_LIMIT)
                 .map(edgeLimit -> {
