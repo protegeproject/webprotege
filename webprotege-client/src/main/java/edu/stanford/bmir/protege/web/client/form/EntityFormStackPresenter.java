@@ -110,11 +110,11 @@ public class EntityFormStackPresenter {
     }
 
     private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
-        updateFormsForCurrentEntity(ImmutableList.of());
+        updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     private void handleGridOrderByChanged() {
-        updateFormsForCurrentEntity(ImmutableList.of());
+        updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     public void setHasBusy(HasBusy hasBusy) {
@@ -123,7 +123,7 @@ public class EntityFormStackPresenter {
 
     private void handleLangTagFilterChanged() {
         stashLanguagesFilter();
-        updateFormsForCurrentEntity(ImmutableList.of());
+        updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     private void handlePageChange(FormRegionPageChangedEvent event) {
@@ -147,7 +147,7 @@ public class EntityFormStackPresenter {
 
     private void switchToEntity(@Nonnull OWLEntity entity) {
         this.currentEntity = Optional.of(entity);
-        updateFormsForCurrentEntity(ImmutableList.of());
+        updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     public void clear() {

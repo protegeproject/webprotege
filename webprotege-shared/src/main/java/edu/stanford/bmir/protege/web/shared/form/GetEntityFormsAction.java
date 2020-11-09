@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -100,4 +101,12 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
     public ImmutableSet<FormRegionFilter> getFilters() {
         return filters;
     }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(GetEntityFormsAction.class)
+                .add("forms", formFilter)
+                .toString();
+    }
 }
+
