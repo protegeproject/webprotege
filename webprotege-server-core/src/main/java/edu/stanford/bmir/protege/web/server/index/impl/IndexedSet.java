@@ -124,4 +124,9 @@ public class IndexedSet<T> implements Set<T> {
         delegate.clear();
         checkDelegate();
     }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
 }

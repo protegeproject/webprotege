@@ -168,6 +168,15 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     }
 
     public void dumpStats(PrintStream out) {
-        Stats.dump("AnnotationAxiomsByIriReferenceIndex", backingMap, out);
+        Stats.dump("Index", backingMap, out);
+    }
+
+    public boolean hasValues(V cls, OWLOntologyID ontologyId) {
+        return backingMap.containsKey(Key.get(ontologyId, cls));
+    }
+
+    @Override
+    public String toString() {
+        return backingMap.toString();
     }
 }
