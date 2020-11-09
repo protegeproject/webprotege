@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.DeprecatedEntitiesByEntityIndexImpl;
@@ -35,9 +37,6 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
     private ProjectOntologiesIndex projectOntologiesIndex;
 
     @Mock
-    private AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
 
     @Mock
@@ -51,23 +50,18 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        impl = new DeprecatedEntitiesByEntityIndexImpl(projectOntologiesIndex, annotationAssertionsIndex);
-
-        when(projectOntologiesIndex.getOntologyIds())
-                .thenReturn(Stream.of(ontologyId));
-
-        when(annotationAssertionsIndex.getAxiomsForSubject(any(), any()))
-                .thenReturn(Stream.empty());
-        when(annotationAssertionsIndex.getAxiomsForSubject(entityIri, ontologyId))
-                .thenReturn(Stream.of(annotationAssertion));
+        impl = new DeprecatedEntitiesByEntityIndexImpl(projectOntologiesIndex);
 
         when(entity.getIRI())
+                .thenReturn(entityIri);
+
+        when(annotationAssertion.getSubject())
                 .thenReturn(entityIri);
     }
 
     @Test
     public void shouldGetDependencies() {
-        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex, annotationAssertionsIndex));
+        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex));
     }
 
     @Test
@@ -80,6 +74,7 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
     public void shouldFindEntityToBeDeprecated() {
         when(annotationAssertion.isDeprecatedIRIAssertion())
                 .thenReturn(true);
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationAssertion)));
         var deprecated = impl.isDeprecated(entity);
         assertThat(deprecated, Matchers.is(true));
     }
