@@ -28,6 +28,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
         ActionHandlersModule.class,
         AuthenticationModule.class,
         DbModule.class,
+        Neo4jModule.class,
         ServerModule.class,
         ApiModule.class
 })

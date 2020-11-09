@@ -50,6 +50,18 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The home directory that WebProtégé should use to access Neo4j")
     NEO4J_HOME_DIR("neo4j.home", PropertyValue.ofString("/var/lib/neo4j")),
 
+    @WebProtegePropertiesDocumentation(description = "The host name of the Neo4j server")
+    NEO4J_HOST("neo4j.host", PropertyValue.ofString("localhost")),
+
+    @WebProtegePropertiesDocumentation(description = "The port number of the Neo4j server")
+    NEO4J_PORT("neo4j.port", PropertyValue.ofInteger(7688)),
+
+    @WebProtegePropertiesDocumentation(description = "The database password that WebProtégé should use to access Neo4j")
+    NEO4J_AUTH_USERNAME("neo4j.auth.username", PropertyValue.ofString("neo4j")),
+
+    @WebProtegePropertiesDocumentation(description = "The database password that WebProtégé should use to access Neo4j")
+    NEO4J_AUTH_PASSWORD("neo4j.auth.password", PropertyValue.ofString("neo4j")),
+
     @WebProtegePropertiesDocumentation(description = "The time in milliseconds after which a project becomes dormant and is purgable from memory", example = "180000")
     PROJECT_DORMANT_TIME("project.dormant.time", PropertyValue.ofInteger(180_000)),
 

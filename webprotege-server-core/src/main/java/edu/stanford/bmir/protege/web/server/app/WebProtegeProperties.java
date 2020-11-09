@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.app;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.shared.annotations.WebProtegePropertiesDocumentation;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.annotation.Nonnull;
@@ -139,6 +140,33 @@ public class WebProtegeProperties implements Serializable {
     @Nonnull
     public Optional<String> getNeo4jHomeDir() {
         return getOptionalString(NEO4J_HOME_DIR);
+    }
+
+    @Nonnull
+    public Optional<String> getNeo4jHost() {
+        return getOptionalString(NEO4J_HOST);
+    }
+
+    @Nonnull
+    public Optional<Integer> getNeo4jPort() {
+        return getOptionalString(NEO4J_PORT)
+            .map(portNumber -> {
+                try {
+                    return Integer.parseInt(portNumber);
+                } catch (NumberFormatException e) {
+                    return Integer.parseInt(NEO4J_PORT.getDefaultValue().orElseThrow());
+                }
+            });
+    }
+
+    @Nonnull
+    public Optional<String> getNeo4jUserName() {
+        return getOptionalString(NEO4J_AUTH_USERNAME);
+    }
+
+    @Nonnull
+    public Optional<String> getNeo4jPassword() {
+        return getOptionalString(NEO4J_AUTH_PASSWORD);
     }
 
     public Optional<Integer> getEntityGraphEdgeLimit() {

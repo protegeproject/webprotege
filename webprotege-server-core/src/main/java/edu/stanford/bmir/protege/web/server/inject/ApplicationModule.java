@@ -70,9 +70,6 @@ import edu.stanford.owl2lpg.client.bind.graph.Neo4jGraphIndexer;
 import edu.stanford.owl2lpg.client.bind.graph.Neo4jGraphManager;
 import edu.stanford.owl2lpg.client.bind.graph.Neo4jGraphManagerModule;
 import edu.stanford.owl2lpg.client.bind.graph.NodePropertyIndexBuilder;
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -95,13 +92,6 @@ public class ApplicationModule {
     private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
 
     private static final int INDEX_UPDATING_THREADS = 10;
-
-    @Provides
-    @ApplicationSingleton
-    public Driver providesDriver() {
-        return GraphDatabase.driver("bolt://localhost:7688",
-            AuthTokens.basic("neo4j", "redismyfavoritecolor"));
-    }
 
     @ApplicationSingleton
     @Provides
