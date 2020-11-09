@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;
 
+import static edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName.NEO4J_HOME_DIR;
+
 /**
  * @author Josef Hardi <josef.hardi@stanford.edu> <br>
  * Stanford Center for Biomedical Informatics Research
@@ -25,7 +27,7 @@ public class Neo4jImportDirectoryProvider implements Provider<File> {
     @Override
     public File get() {
         var properties = getWebProtegeProperties();
-        var homeDir = properties.getNeo4jHomeDir().orElse(WebProtegePropertyName.NEO4J_HOME_DIR.toString());
+        var homeDir = properties.getNeo4jHomeDir().orElse(NEO4J_HOME_DIR.getDefaultValue().get());
         return new File(homeDir, IMPORT_DIRECTORY_NAME);
     }
 
