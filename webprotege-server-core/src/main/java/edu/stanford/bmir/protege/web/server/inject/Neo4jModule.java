@@ -24,7 +24,7 @@ public class Neo4jModule {
   @Provides
   @Neo4jHost
   public String provideNeo4jHost(WebProtegeProperties webProtegeProperties) {
-    return webProtegeProperties.getNeo4jHomeDir().orElse(NEO4J_HOST.getDefaultValue().get());
+    return webProtegeProperties.getNeo4jHost().orElse(NEO4J_HOST.getDefaultValue().get());
   }
 
   @Provides
