@@ -120,8 +120,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public void setExpansionState(ExpansionState expansionState) {
         this.expansionState = expansionState;
         if(expansionState == ExpansionState.EXPANDED) {
-            beforeExpandRunner.run();
-            beforeExpandRunner = () -> {};
+            runBeforeExpand();
             view.expand();
         }
         else {
@@ -150,10 +149,17 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         if(stackPresenter == null) {
             return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), Page.emptyPage());
         }
+        runBeforeExpand();
         ImmutableList<FormControlData> formControlData = stackPresenter.getValue();
 
         Page<FormControlData> controlDataPage = new Page<>(1, 1, formControlData, formControlData.size());
         return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), controlDataPage);
+    }
+
+    private void runBeforeExpand() {
+        beforeExpandRunner.run();
+        beforeExpandRunner = () -> {
+        };
     }
 
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {
