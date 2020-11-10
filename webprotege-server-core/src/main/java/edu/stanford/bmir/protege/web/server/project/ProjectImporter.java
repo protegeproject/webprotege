@@ -106,21 +106,22 @@ public class ProjectImporter {
         logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
         var memoryMonitor = new MemoryMonitor(logger);
         memoryMonitor.logMemoryUsage();
-        logger.info("{} Storing ontologies to the Neo4j graph database", projectId);
-        for (var ontology : uploadedOntologies) {
-            var ontDocId = ontology.getOntologyDocumentId();
-            logger.info("   ... Processing ontology document {}", ontDocId);
-            restart(stopwatch);
-            convertOntologyToCsv(ontology, ontDocId);
-            loadCsvToNeo4j(ontDocId);
-            setDefaultOntologyDocument(ontDocId);
-            logger.info("   ... Stored ontology document in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-            deleteCsvFiles(ontDocId);
-        }
         restart(stopwatch);
-        logger.info("{} Building indexes", projectId);
+        logger.info("{} Storing ontologies to the Neo4j graph database", projectId);
+        logger.info("   ... Adding indexes");
         graphIndexer.run();
-        logger.info("   ... Done indexing in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        var defaultOntDocId = uploadedOntologies.stream().findFirst().get().getOntologyDocumentId();
+        var ontologyCsvExporter = createOntologyCsvExporter(defaultOntDocId);
+        for (var ontology : uploadedOntologies) {
+            logger.info("   ... Converting ontology document {} to CSV format", ontology.getOntologyDocumentId());
+            convertOntologyToCsv(ontology, ontologyCsvExporter);
+        }
+        logger.info("   ... Loading CSV to Neo4j server");
+        loadCsvToNeo4j(defaultOntDocId);
+        logger.info("   ... Using {} as the default", defaultOntDocId);
+        setDefaultOntologyDocument(defaultOntDocId);
+        logger.info("{} Stored ontology document in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        deleteCsvFiles(defaultOntDocId);
         logger.info("{} Writing change log", projectId);
         generateInitialChanges(owner, uploadedOntologies);
         deleteSourceFile(sourcesId);
@@ -134,15 +135,14 @@ public class ProjectImporter {
         stopwatch.start();
     }
 
-    private void convertOntologyToCsv(Ontology ontology, OntologyDocumentId ontDocId) {
-        var ontologyCsvExporter = createOntologyCsvExporter(ontDocId);
-        ontologyCsvExporter.export(ontology.getOntologyID(),
+    private void convertOntologyToCsv(Ontology ontology, OntologyCsvExporter exporter) {
+        exporter.export(ontology.getOntologyID(),
             ontology.getAnnotations(),
             ontology.getAxioms(),
             ontology.getImportsDeclarations(),
             projectId,
             branchId,
-            ontDocId);
+            ontology.getOntologyDocumentId());
     }
 
     private OntologyCsvExporter createOntologyCsvExporter(OntologyDocumentId ontDocId) {
