@@ -21,6 +21,8 @@ public interface FormFieldView extends IsWidget, HasRequestFocus {
 
     void expand();
 
+    boolean isExpanded();
+
     interface HeaderClickedHandler {
         void handleHeaderClicked();
     }

@@ -52,6 +52,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     private final FormControlStackPresenter stackPresenter;
 
     @Nonnull
+    private Runnable beforeExpandRunner = () -> {};
+
+    @Nonnull
     private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
 
     public FormFieldPresenter(@Nonnull FormFieldView view,
@@ -117,6 +120,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public void setExpansionState(ExpansionState expansionState) {
         this.expansionState = expansionState;
         if(expansionState == ExpansionState.EXPANDED) {
+            beforeExpandRunner.run();
+            beforeExpandRunner = () -> {};
             view.expand();
         }
         else {
@@ -154,21 +159,25 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {
         checkNotNull(formFieldData);
         if(currentValue.equals(Optional.of(formFieldData))) {
-            GWT.log("[FormFieldPresenter] (setValue) "+formFieldData.getFormFieldDescriptor().getId()+" Skipping setValue because current data is the same");
             return;
-        }
-        else {
-            GWT.log("[FormFieldPresenter] (setValue) "+formFieldData.getFormFieldDescriptor().getId()+" Value is new");
         }
         currentValue = Optional.of(formFieldData);
         if(!formFieldData.getFormFieldDescriptor().equals(formFieldDescriptor)) {
             throw new RuntimeException("FormFieldDescriptor mismatch for field: " + formFieldDescriptor.getId());
         }
-        Page<FormControlDataDto> page = formFieldData.getFormControlData();
-        stackPresenter.setValue(page);
-        stackPresenter.setPageCount(page.getPageCount());
-        stackPresenter.setPageNumber(page.getPageNumber());
-        updateRequiredValuePresent();
+        Runnable setValuesRunnable = () -> {
+            Page<FormControlDataDto> page = formFieldData.getFormControlData();
+            stackPresenter.setValue(page);
+            stackPresenter.setPageCount(page.getPageCount());
+            stackPresenter.setPageNumber(page.getPageNumber());
+            updateRequiredValuePresent();
+        };
+        if(view.isExpanded()) {
+            setValuesRunnable.run();
+        }
+        else {
+            beforeExpandRunner = setValuesRunnable;
+        }
     }
 
     public void clearValue() {
