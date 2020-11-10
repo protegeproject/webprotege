@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdCompletionsActionHandler;
@@ -20,11 +21,14 @@ import edu.stanford.bmir.protege.web.server.mail.GetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.GetProjectPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.RebuildPermissionsActionHandler;
+import edu.stanford.bmir.protege.web.server.perspective.GetPerspectivesActionHandler;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetAvailableProjectsWithPermissionActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.CreateUserAccountActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
+import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesAction;
+import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesResult;
 
 /**
  * Matthew Horridge
@@ -159,6 +163,12 @@ public class ActionHandlersModule {
 
     @Provides @IntoSet
     public ApplicationActionHandler providesGetAvailableProjectsWithPermissionActionHandler(GetAvailableProjectsWithPermissionActionHandler handler) {
+        return handler;
+    }
+
+
+    @Provides @IntoSet
+    public ApplicationActionHandler provideGetPerspectivesActionHandler(GetPerspectivesActionHandler handler) {
         return handler;
     }
 }

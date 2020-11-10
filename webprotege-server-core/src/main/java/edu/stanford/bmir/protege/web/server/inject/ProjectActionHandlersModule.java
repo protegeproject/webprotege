@@ -333,11 +333,6 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler provideGetPerspectivesActionHandler(GetPerspectivesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
     public ProjectActionHandler provideSetPerspectivesActionHandler(SetPerspectivesActionHandler handler) {
         return handler;
     }
