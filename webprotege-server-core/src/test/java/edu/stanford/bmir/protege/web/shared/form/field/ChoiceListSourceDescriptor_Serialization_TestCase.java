@@ -6,7 +6,9 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlData;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.EntityType;
@@ -42,7 +44,12 @@ public class ChoiceListSourceDescriptor_Serialization_TestCase {
     @Test
     public void shouldSerialize_DynamicList() throws IOException {
         testSerialization(
-                DynamicChoiceListSourceDescriptor.get(EntityTypeIsOneOfCriteria.get(ImmutableSet.of(EntityType.CLASS)))
+                DynamicChoiceListSourceDescriptor.get(
+                        CompositeRootCriteria.get(
+                                ImmutableList.of(EntityTypeIsOneOfCriteria.get(ImmutableSet.of(EntityType.CLASS))),
+                                MultiMatchType.ALL
+                        )
+                )
         );
     }
 

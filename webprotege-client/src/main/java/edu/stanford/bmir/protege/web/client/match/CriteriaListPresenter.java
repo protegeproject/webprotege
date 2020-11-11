@@ -62,7 +62,6 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         if (displayAtLeastOneCriteria && criteriaPresenters.isEmpty()) {
             addCriteriaPresenter();
         }
-        view.setMultiMatchType(defaultMatchType);
         view.setAddCriteriaHandler(this::handleAddCriteria);
     }
 
