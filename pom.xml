@@ -444,6 +444,16 @@
                 </application.analytics>
             </properties>
         </profile>
+        <profile>
+            <id>dev-sc</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <data.directory>${project.basedir}/../.devdata</data.directory>
+            </properties>
+
+        </profile>
     </profiles>
 
     <modules>

@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ontology.attestation;
 
-import ch.unifr.digits.webprotege.attestation.AttestationService;
-import ch.unifr.digits.webprotege.attestation.contract.VerifyContractReturn;
-import ch.unifr.digits.webprotege.attestation.contract.VerifyResult;
+import ch.unifr.digits.webprotege.attestation.client.ClientAttestationService;
+import ch.unifr.digits.webprotege.attestation.shared.VerifyResult;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -27,31 +26,32 @@ public class AttestationViewImpl extends Composite implements AttestationView, H
     private static AttestationViewImplUiBinder ourUiBinder = GWT.create(AttestationViewImplUiBinder.class);
 
     private final ProjectId projectId;
+    private final AttestationPresenter presenter;
 
     @UiField
     protected TextBoxBase ontologyIRIField;
     @UiField
     protected TextBoxBase versionIRIField;
     @UiField
-    protected TextBox name;
+    protected Button fileSignButton;
     @UiField
-    protected TextBox address;
+    protected Label fileSignResult;
     @UiField
-    protected Button signButton;
+    protected Button fileVerifyButton;
     @UiField
-    protected Label signResult;
+    protected Label fileVerifyResult;
     @UiField
-    protected Button verifyButton;
+    protected Button owlSignButton;
     @UiField
-    protected Label verifyResult;
+    protected Label owlSignResult;
+    @UiField
+    protected Button owlVerifyButton;
+    @UiField
+    protected Label owlVerifyResult;
 
-
+    private String name = "John Doe";
+    private String address = "";
     private boolean dirty = false;
-
-    @Override
-    public Widget getWidget() {
-        return this;
-    }
 
     @UiHandler("ontologyIRIField")
     protected void handleOntologyIRIChanged(ValueChangeEvent<String> event) {
@@ -65,74 +65,101 @@ public class AttestationViewImpl extends Composite implements AttestationView, H
         ValueChangeEvent.fire(this, getValue());
     }
 
-    @UiHandler("name")
-    protected void handleNameChanged(ValueChangeEvent<String> event) {
-        dirty = true;
-        ValueChangeEvent.fire(this, getValue());
-    }
-
-    @UiHandler("address")
-    protected void handleAddressChanged(ValueChangeEvent<String> event) {
-        dirty = true;
-        ValueChangeEvent.fire(this, getValue());
-    }
-
-    public AttestationViewImpl(ProjectId projectId) {
+    public AttestationViewImpl(ProjectId projectId, AttestationPresenter presenter) {
         this.projectId = projectId;
+        this.presenter = presenter;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
-        name.getElement().setPropertyString("placeholder", "Enter your name");
 
-        RevisionNumber head = RevisionNumber.getHeadRevisionNumber();
-
-        Callback<Boolean, Object> signCallback = new Callback<Boolean, Object>() {
+        Callback<Boolean, Object> fileSignCallback = new Callback<Boolean, Object>() {
             @Override
             public void onFailure(Object reason) {
                 GWT.log(reason.toString());
-                signResult.setText("Error while attesting ontology!");
+                fileSignResult.setText("Error while attesting ontology!");
             }
 
             @Override
             public void onSuccess(Boolean result) {
                 GWT.log("Attestation result: " + result.toString());
                 if (result) {
-                    signResult.setText("Successfully attested ontology!");
+                    fileSignResult.setText("Successfully attested ontology!");
                 } else {
-                    signResult.setText("Failed to attested ontology!");
+                    fileSignResult.setText("Failed to attested ontology!");
                 }
             }
         };
 
-        Callback<VerifyResult, Object> verifyCallback = new Callback<VerifyResult, Object>() {
+        Callback<VerifyResult, Object> fileVerifyCallback = new Callback<VerifyResult, Object>() {
             @Override
             public void onFailure(Object reason) {
                 GWT.log(reason.toString());
-                verifyResult.setText("Error while verifying ontology!");
+                fileVerifyResult.setText("Error while verifying ontology!");
             }
 
             @Override
             public void onSuccess(VerifyResult result) {
                 if (!result.isValid()) {
-                    verifyResult.setText("Ontology was not attested!");
+                    fileVerifyResult.setText("Ontology was not attested!");
                 } else {
-//                    String text = "Signer name: " + result.getSignerName() + "\n"
-//                            + "Signer address: " + result.getSigner() + "\n"
-//                            + "Timestamp: " + result.getTimestamp();
-                    verifyResult.setText(result.toString());
+                    fileVerifyResult.setText("Ontology attested by " + result.getSignerName());
                 }
             }
         };
 
-        signButton.addClickHandler((event -> {
-            AttestationService.signOntology(projectId, head, ontologyIRIField.getValue(), versionIRIField.getValue(),
-                    name.getValue(), address.getValue(), signCallback);
+        Callback<Boolean, Object> owlSignCallback = new Callback<Boolean, Object>() {
+            @Override
+            public void onFailure(Object reason) {
+                GWT.log(reason.toString());
+                owlSignResult.setText("Error while attesting ontology!");
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                GWT.log("Attestation result: " + result.toString());
+                if (result) {
+                    owlSignResult.setText("Successfully attested ontology!");
+                } else {
+                    owlSignResult.setText("Failed to attested ontology!");
+                }
+            }
+        };
+
+        Callback<VerifyResult, Object> owlVerifyCallback = new Callback<VerifyResult, Object>() {
+            @Override
+            public void onFailure(Object reason) {
+                GWT.log(reason.toString());
+                owlVerifyResult.setText("Error while verifying ontology!");
+            }
+
+            @Override
+            public void onSuccess(VerifyResult result) {
+                if (!result.isValid()) {
+                    owlVerifyResult.setText("Ontology was not attested!");
+                } else {
+                    owlVerifyResult.setText(result.toString());
+                }
+            }
+        };
+
+        fileSignButton.addClickHandler((event -> {
+            presenter.fileSign(ontologyIRIField.getValue(), versionIRIField.getValue(), fileSignCallback);
         }));
-        verifyButton.addClickHandler((event -> {
-            AttestationService.verifyOntology(projectId, head, ontologyIRIField.getValue(), versionIRIField.getValue(),
-                    address.getValue(), verifyCallback);
+        fileVerifyButton.addClickHandler((event -> {
+            presenter.fileVerify(ontologyIRIField.getValue(), versionIRIField.getValue(), fileVerifyCallback);
         }));
+        owlSignButton.addClickHandler((event -> {
+            presenter.owlSign(ontologyIRIField.getValue(), versionIRIField.getValue(), owlSignCallback);
+        }));
+        owlVerifyButton.addClickHandler((event -> {
+            presenter.owlVerify(ontologyIRIField.getValue(), versionIRIField.getValue(), owlVerifyCallback);
+        }));
+
         initWidget(rootElement);
     }
 
+    @Override
+    public Widget getWidget() {
+        return this;
+    }
 
     @Override
     public void clearValue() {

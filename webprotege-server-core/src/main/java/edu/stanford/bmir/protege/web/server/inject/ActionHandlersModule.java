@@ -5,6 +5,7 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.app.GetApplicationSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.app.SetApplicationSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.attestation.AttestationSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
@@ -159,6 +160,11 @@ public class ActionHandlersModule {
 
     @Provides @IntoSet
     public ApplicationActionHandler providesGetAvailableProjectsWithPermissionActionHandler(GetAvailableProjectsWithPermissionActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ApplicationActionHandler providesAttestationSettingsActionHandler(AttestationSettingsActionHandler handler) {
         return handler;
     }
 }

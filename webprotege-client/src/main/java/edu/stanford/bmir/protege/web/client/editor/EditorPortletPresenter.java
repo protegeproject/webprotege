@@ -7,13 +7,13 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
+import edu.stanford.bmir.protege.web.client.ontology.attestation.EditorPaneAttestationPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.VizPanePresenter;
-import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -67,7 +67,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull VizPanePresenter vizPresenter,
             @Nonnull Provider<ForbiddenView> forbiddenViewProvider,
-            @Nonnull DispatchServiceManager dispatch) {
+            @Nonnull DispatchServiceManager dispatch,
+            @Nonnull EditorPaneAttestationPresenter attestationPortletPresenter) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
@@ -76,7 +77,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         panePresenters = ImmutableList.of(
                 checkNotNull(editorPresenter),
                 checkNotNull(vizPresenter),
-                checkNotNull(changesPresenter)
+                checkNotNull(changesPresenter),
+                checkNotNull(attestationPortletPresenter)
         );
         displayedTypes.addAll(Arrays.asList(
                 CLASS,

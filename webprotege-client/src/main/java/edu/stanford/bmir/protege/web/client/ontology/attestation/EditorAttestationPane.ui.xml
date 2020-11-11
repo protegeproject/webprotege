@@ -1,0 +1,40 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+
+    <ui:style>
+        .attest::before {
+            padding-right: 10px;
+        }
+        .attest[data-attest=true] {
+            color: green;
+        }
+        .attest[data-attest=true]::before {
+            content: '\2713';
+        }
+        .attest[data-attest=false] {
+            color: red;
+        }
+        .attest[data-attest=false]::before {
+            content: '\292C';
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+
+        <div class="{wp.style.formGroup}">
+            <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label ui:field="iriField" width="100%" addStyleNames="{wp.style.formIriField}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label ui:field="attest" text="Not attested" addStyleNames="{wp.style.formLabel} {style.attest}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label ui:field="signer" text="" addStyleNames="{wp.style.formLabel}"/>
+        </div>
+
+
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import edu.stanford.bmir.protege.web.server.attestation.AttestationVerifyActionHandler;
+import edu.stanford.bmir.protege.web.server.attestation.OntologyHashActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.EditAnnotationValuesActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.MoveToParentActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.SetAnnotationValueActionHandler;
@@ -58,7 +60,6 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
-import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
@@ -665,6 +666,16 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetProjectLangTagsActionHandler(GetProjectLangTagsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideAttestationActionHandler(AttestationVerifyActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideOntologyHashActionHandler(OntologyHashActionHandler handler) {
         return handler;
     }
 }
