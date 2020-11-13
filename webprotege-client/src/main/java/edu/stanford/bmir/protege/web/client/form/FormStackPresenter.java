@@ -94,6 +94,10 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
         getFormPresenters().forEach(formPresenter -> formPresenter.setEnabled(enabled));
     }
 
+    public void setSelectedFormChangedHandler(@Nonnull SelectedFormChangedHandler selectedFormChangedHandler) {
+        this.formTabBarPresenter.setSelectedFormChangedHandler(selectedFormChangedHandler);
+    }
+
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
         this.regionPageChangedHandler = checkNotNull(handler);
         getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));

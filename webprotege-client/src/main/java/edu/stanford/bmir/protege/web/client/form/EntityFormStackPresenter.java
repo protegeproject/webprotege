@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.DeprecateEntityModal;
@@ -27,6 +28,8 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.util.Map.*;
 
 /**
  * Matthew Horridge
@@ -38,6 +41,8 @@ public class EntityFormStackPresenter {
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
     private final Map<FormId, FormData> pristineFormData = new HashMap<>();
+
+    private final Map<FormId, OWLEntity> displayedSubjectsByFormId = new HashMap<>();
 
     private HasBusy hasBusy = (busy) -> {
     };
@@ -98,6 +103,7 @@ public class EntityFormStackPresenter {
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
         formStackPresenter.setFormRegionOrderingChangedHandler(this::handleGridOrderByChanged);
         formStackPresenter.setFormRegionFilterChangedHandler(this::handleFormRegionFilterChanged);
+        formStackPresenter.setSelectedFormChangedHandler(this::handleSelectedFormChanged);
         langTagFilterPresenter.start(view.getLangTagFilterContainer());
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
@@ -107,6 +113,16 @@ public class EntityFormStackPresenter {
 
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, view::setEditButtonVisible);
         setMode(FormMode.READ_ONLY_MODE);
+    }
+
+    private void handleSelectedFormChanged() {
+        ImmutableList<FormId> selectedForms = formStackPresenter.getSelectedForms();
+        boolean allUpToDate = selectedForms.stream().allMatch(displayedSubjectsByFormId::containsKey);
+        if (allUpToDate) {
+            return;
+        }
+        GWT.log("[EntityFormStackPresenter] Updating forms: " + selectedForms);
+        updateFormsForCurrentEntity(selectedForms);
     }
 
     private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
@@ -147,11 +163,13 @@ public class EntityFormStackPresenter {
 
     private void switchToEntity(@Nonnull OWLEntity entity) {
         this.currentEntity = Optional.of(entity);
+        displayedSubjectsByFormId.clear();
         updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     public void clear() {
         this.currentEntity = Optional.empty();
+        displayedSubjectsByFormId.clear();
         updateFormsForCurrentEntity(ImmutableList.of());
     }
 
@@ -191,9 +209,11 @@ public class EntityFormStackPresenter {
         boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
         if (replaceAllForms) {
             pristineFormData.clear();
+            displayedSubjectsByFormId.clear();
         }
         for (FormDataDto formDataDto : result.getFormData()) {
             pristineFormData.put(formDataDto.getFormId(), formDataDto.toFormData());
+            currentEntity.ifPresent(entity -> displayedSubjectsByFormId.put(formDataDto.getFormId(), entity));
         }
         if (replaceAllForms) {
             formStackPresenter.setForms(formData, FormStackPresenter.FormUpdate.REPLACE);
@@ -223,11 +243,10 @@ public class EntityFormStackPresenter {
     }
 
     private void handleDeprecateEntity() {
-        currentEntity.ifPresent(entity -> deprecateEntityModal.showModal(
-                entity,
-                () -> view.setDeprecateButtonVisible(false),
-                () -> {}
-        ));
+        currentEntity.ifPresent(entity -> deprecateEntityModal.showModal(entity,
+                                                                         () -> view.setDeprecateButtonVisible(false),
+                                                                         () -> {
+                                                                         }));
     }
 
     private void handleCancelEdits() {
@@ -251,8 +270,20 @@ public class EntityFormStackPresenter {
     }
 
     private void commitEdits(@Nonnull OWLEntity entity) {
-        ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms();
-        ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData);
+        ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms()
+                                                                          .entrySet()
+                .stream()
+                .filter(e -> displayedSubjectsByFormId.containsKey(e.getValue().getFormId()))
+                .collect(toImmutableMap(Entry::getKey, Entry::getValue));
+        if(editedFormData.isEmpty()) {
+            return;
+        }
+        GWT.log("[EntityFormStackPresenter] Committing edits for " + editedFormData.keySet());
+        ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData)
+                .entrySet()
+                .stream()
+                .filter(e -> displayedSubjectsByFormId.containsKey(e.getKey()))
+                .collect(toImmutableMap(Entry::getKey, Entry::getValue));
         dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
                          // Refresh the pristine data to what was committed
                          result -> updateFormsForCurrentEntity(ImmutableList.of()));

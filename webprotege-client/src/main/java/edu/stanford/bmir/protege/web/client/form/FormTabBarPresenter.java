@@ -27,6 +27,8 @@ public class FormTabBarPresenter {
 
     private final FormTabPresenterFactory tabPresenterFactory;
 
+    private SelectedFormChangedHandler selectedFormChangedHandler = () -> {};
+
     @Nonnull
     private Optional<SelectedFormIdStash> selectedFormIdStash = Optional.empty();
 
@@ -40,6 +42,10 @@ public class FormTabBarPresenter {
         itemPresenters.clear();
         view.clear();
         view.setVisible(false);
+    }
+
+    public void setSelectedFormChangedHandler(@Nonnull SelectedFormChangedHandler selectedFormChangedHandler) {
+        this.selectedFormChangedHandler = checkNotNull(selectedFormChangedHandler);
     }
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash selectedFormIdStash) {
@@ -69,6 +75,7 @@ public class FormTabBarPresenter {
     public void selectFormAndStashId(@Nonnull FormId formId) {
         setSelected(formId);
         selectedFormIdStash.ifPresent(stash -> stash.stashSelectedForm(formId));
+        selectedFormChangedHandler.handleSelectedFormChanged();
     }
 
     private void setSelected(FormId formId) {
