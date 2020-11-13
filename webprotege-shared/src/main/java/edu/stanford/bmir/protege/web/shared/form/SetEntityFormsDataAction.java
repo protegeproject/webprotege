@@ -36,8 +36,8 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
         this.entity = checkNotNull(entity);
         this.pristineFormsData = checkNotNull(pristineFormsData);
         this.editedFormsData = checkNotNull(editedFormsData);
-        checkArgument(pristineFormsData.size() == editedFormsData.size(),
-                      "Pristine forms data size != edited forms data size");
+        checkArgument(editedFormsData.keySet().stream().allMatch(pristineFormsData::containsKey),
+                      "Missing pristine forms data");
     }
 
     @GwtSerializationConstructor

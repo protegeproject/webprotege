@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Map.*;
 
@@ -40,9 +41,7 @@ public class EntityFormStackPresenter {
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
-    private final Map<FormId, FormData> pristineFormData = new HashMap<>();
-
-    private final Map<FormId, OWLEntity> displayedSubjectsByFormId = new HashMap<>();
+    private PristineFormDataManager pristineDataManager = new PristineFormDataManager();
 
     private HasBusy hasBusy = (busy) -> {
     };
@@ -117,12 +116,14 @@ public class EntityFormStackPresenter {
 
     private void handleSelectedFormChanged() {
         ImmutableList<FormId> selectedForms = formStackPresenter.getSelectedForms();
-        boolean allUpToDate = selectedForms.stream().allMatch(displayedSubjectsByFormId::containsKey);
-        if (allUpToDate) {
+        ImmutableList<FormId> selectedFormsToUpdate = selectedForms.stream()
+                                           .filter(formId -> !pristineDataManager.containsPristineFormData(formId))
+                                           .collect(toImmutableList());
+        if (selectedFormsToUpdate.isEmpty()) {
             return;
         }
         GWT.log("[EntityFormStackPresenter] Updating forms: " + selectedForms);
-        updateFormsForCurrentEntity(selectedForms);
+        updateFormsForCurrentEntity(selectedFormsToUpdate);
     }
 
     private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
@@ -148,29 +149,33 @@ public class EntityFormStackPresenter {
 
     public void setEntity(@Nonnull OWLEntity entity) {
         if (mode.equals(FormMode.EDIT_MODE)) {
-            view.displayApplyOutstandingEditsConfirmation(() -> {
-                currentEntity.ifPresent(this::applyEdits);
-                switchToEntity(entity);
-            }, () -> {
-                handleCancelEdits();
-                switchToEntity(entity);
-            });
+            handleOutstandingEditsAndSwitchToEntity(entity);
         }
         else {
             switchToEntity(entity);
         }
     }
 
+    private void handleOutstandingEditsAndSwitchToEntity(@Nonnull OWLEntity entity) {
+        view.displayApplyOutstandingEditsConfirmation(() -> {
+            currentEntity.ifPresent(this::applyEdits);
+            switchToEntity(entity);
+        }, () -> {
+            handleCancelEdits();
+            switchToEntity(entity);
+        });
+    }
+
     private void switchToEntity(@Nonnull OWLEntity entity) {
         this.currentEntity = Optional.of(entity);
-        displayedSubjectsByFormId.clear();
+        pristineDataManager.resetCurrentEntity(entity);
         updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     public void clear() {
         this.currentEntity = Optional.empty();
-        displayedSubjectsByFormId.clear();
-        updateFormsForCurrentEntity(ImmutableList.of());
+        pristineDataManager.clearCurrentEntity();
+        updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     public void expandAllFields() {
@@ -205,16 +210,11 @@ public class EntityFormStackPresenter {
         entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
         view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
         ImmutableList<FormDataDto> formData = result.getFormData();
-        // If we have a subset of the forms then just replace the ones that we have
-        boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
-        if (replaceAllForms) {
-            pristineFormData.clear();
-            displayedSubjectsByFormId.clear();
-        }
         for (FormDataDto formDataDto : result.getFormData()) {
-            pristineFormData.put(formDataDto.getFormId(), formDataDto.toFormData());
-            currentEntity.ifPresent(entity -> displayedSubjectsByFormId.put(formDataDto.getFormId(), entity));
+            pristineDataManager.updatePristineFormData(formDataDto.toFormData());
         }
+        boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
+        // If we have a subset of the forms then just replace the ones that we have
         if (replaceAllForms) {
             formStackPresenter.setForms(formData, FormStackPresenter.FormUpdate.REPLACE);
         }
@@ -273,24 +273,23 @@ public class EntityFormStackPresenter {
         ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms()
                                                                           .entrySet()
                 .stream()
-                .filter(e -> displayedSubjectsByFormId.containsKey(e.getValue().getFormId()))
+                .filter(e -> pristineDataManager.containsPristineFormData(e.getValue().getFormId()))
                 .collect(toImmutableMap(Entry::getKey, Entry::getValue));
         if(editedFormData.isEmpty()) {
             return;
         }
-        GWT.log("[EntityFormStackPresenter] Committing edits for " + editedFormData.keySet());
-        ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData)
-                .entrySet()
-                .stream()
-                .filter(e -> displayedSubjectsByFormId.containsKey(e.getKey()))
-                .collect(toImmutableMap(Entry::getKey, Entry::getValue));
+        ImmutableSet<FormId> editedFormIds = editedFormData.keySet();
+        GWT.log("[EntityFormStackPresenter] Committing edits for " + editedFormIds);
+        ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
         dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
                          // Refresh the pristine data to what was committed
-                         result -> updateFormsForCurrentEntity(ImmutableList.of()));
+                         result -> updateFormsForCurrentEntity(ImmutableList.copyOf(editedFormIds)));
     }
 
     private void dropEdits() {
-        updateFormsForCurrentEntity(ImmutableList.of());
+        currentEntity.ifPresent(e -> pristineDataManager.resetCurrentEntity(e));
+        // Back to pristine data for the selected forms
+        updateFormsForCurrentEntity(formStackPresenter.getSelectedForms());
     }
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
