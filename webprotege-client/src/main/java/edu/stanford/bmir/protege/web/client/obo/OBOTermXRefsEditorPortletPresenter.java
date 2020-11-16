@@ -47,7 +47,7 @@ public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPr
                                               @Nonnull DispatchServiceManager dispatch,
                                               @Nonnull XRefListEditor editor,
                                               @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
         this.editorHolder = new SimplePanel(editor);

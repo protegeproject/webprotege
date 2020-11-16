@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.crud;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.io.Serializable;
@@ -86,4 +87,6 @@ public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> imple
                 .add("displayName", displayName)
                 .toString();
     }
+
+    public abstract GeneratedAnnotationsSettings getDefaultGeneratedAnnotationsSettings();
 }

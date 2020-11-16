@@ -133,7 +133,7 @@ public class CommentedEntitiesPresenter {
         placeController.goTo(nextPlaceBuilder.build());
     }
 
-    private void reload() {
+    public void reload() {
         GWT.log("[CommentedEntitiesPresenter] Reloading list data");
         dispatchServiceManager.execute(new GetCommentedEntitiesAction(projectId,
                                                                       "",

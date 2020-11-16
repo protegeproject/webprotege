@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.watches;
 import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.change.ChangeListPresenter;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -47,8 +48,10 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
                                            LoggedInUserProjectPermissionChecker permissionChecker,
                                            SelectionModel selectionModel,
                                            ProjectId projectId,
-                                           LoggedInUserProvider loggedInUserProvider, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                           LoggedInUserProvider loggedInUserProvider,
+                                           DisplayNameRenderer displayNameRenderer,
+                                           DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
@@ -75,6 +78,11 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
 
         // TODO: Check this
 
+        onRefresh();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
         onRefresh();
     }
 

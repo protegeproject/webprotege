@@ -25,6 +25,9 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
 
     @Nonnull
+    private final NotSubClassOfMatcherFactory notSubClassOfMatcherFactory;
+
+    @Nonnull
     private final InstanceOfMatcherFactory instanceOfMatcherFactory;
 
     @Nonnull
@@ -49,6 +52,7 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
 
     @Inject
     public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
+                          @Nonnull NotSubClassOfMatcherFactory notSubClassOfMatcherFactory,
                           @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory,
                           @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
                           @Nonnull EntityIsDeprecatedMatcherFactory entityIsDeprecatedMatcherFactory,
@@ -58,6 +62,7 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
                           @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory,
                           @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
+        this.notSubClassOfMatcherFactory = checkNotNull(notSubClassOfMatcherFactory);
         this.instanceOfMatcherFactory = checkNotNull(instanceOfMatcherFactory);
         this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
         this.entityIsDeprecatedMatcherFactory = checkNotNull(entityIsDeprecatedMatcherFactory);
@@ -77,6 +82,12 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
                                                                      .map(c -> c.accept(this))
                                                                      .collect(toImmutableList());
                 return getMultiMatchMatcher(matchers, criteria.getMatchType());
+            }
+
+            @Override
+            public Matcher<OWLEntity> visit(NotSubClassOfCriteria notSubClassOfCriteria) {
+                return notSubClassOfMatcherFactory.create(notSubClassOfCriteria.getTarget(),
+                                                          notSubClassOfCriteria.getFilterType());
             }
 
             @Override
@@ -208,6 +219,19 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
             @Override
             public Matcher<OWLEntity> visit(EntityIsCriteria entityIsCriteria) {
                 return entity -> entity.equals(entityIsCriteria.getEntity());
+            }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(@Nonnull EntityIsNotCriteria entityIsNotCriteria) {
+                return entity -> !entity.equals(entityIsNotCriteria.getEntity());
+            }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(@Nonnull NotSubClassOfCriteria notSubClassOfCriteria) {
+                return notSubClassOfMatcherFactory.create(notSubClassOfCriteria.getTarget(),
+                                                          notSubClassOfCriteria.getFilterType());
             }
         });
     }

@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
-import edu.stanford.bmir.protege.web.client.match.RootCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.field.DynamicChoiceListSourceDescriptor;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,27 +25,30 @@ public class DynamicChoiceListSourceDescriptorPresenter {
     private final DynamicChoiceListSourceDescriptorView view;
 
     @Nonnull
-    private final RootCriteriaPresenter rootCriteriaPresenter;
+    private final EntityCriteriaPresenter criteriaPresenter;
 
     @Inject
     public DynamicChoiceListSourceDescriptorPresenter(@Nonnull DynamicChoiceListSourceDescriptorView view,
-                                                      @Nonnull RootCriteriaPresenter rootCriteriaPresenter) {
+                                                      @Nonnull EntityCriteriaPresenter criteriaPresenter) {
         this.view = checkNotNull(view);
-        this.rootCriteriaPresenter = checkNotNull(rootCriteriaPresenter);
+        this.criteriaPresenter = checkNotNull(criteriaPresenter);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        rootCriteriaPresenter.start(view.getCriteriaContainer());
+        criteriaPresenter.start(view.getCriteriaContainer());
     }
 
     public void setDescriptor(@Nonnull DynamicChoiceListSourceDescriptor descriptor) {
-        rootCriteriaPresenter.setCriteria(descriptor.getCriteria());
+        criteriaPresenter.setCriteria(descriptor.getCriteria().asCompositeRootCriteria());
     }
 
     public DynamicChoiceListSourceDescriptor getDescriptor() {
-        return rootCriteriaPresenter.getCriteria()
-                             .map(DynamicChoiceListSourceDescriptor::get)
-                             .orElse(DynamicChoiceListSourceDescriptor.get(EntityIsCriteria.get(DataFactory.getOWLThing())));
+        return criteriaPresenter.getCriteria()
+                                .map(DynamicChoiceListSourceDescriptor::get)
+                                .orElse(DynamicChoiceListSourceDescriptor.get(
+                                        CompositeRootCriteria.get(ImmutableList.of(),
+                                                                  MultiMatchType.ANY)
+                                ));
     }
 }

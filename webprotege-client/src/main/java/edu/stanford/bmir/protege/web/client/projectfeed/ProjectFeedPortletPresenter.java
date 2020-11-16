@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectfeed;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -42,8 +43,8 @@ public class ProjectFeedPortletPresenter extends AbstractWebProtegePortletPresen
                                        SelectionModel selectionModel,
                                        ProjectId projectId,
                                        LoggedInUserProvider loggedInUserManager,
-                                       DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                       DisplayNameRenderer displayNameRenderer, DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.loggedInUserProvider = loggedInUserManager;
         this.presenter = presenter;
         this.filterView = filterView;
@@ -59,6 +60,11 @@ public class ProjectFeedPortletPresenter extends AbstractWebProtegePortletPresen
         presenter.start(eventBus);
         portletUi.setWidget(presenter.getView());
         portletUi.setFilterView(filterView);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+
     }
 
     private void applyFilters(FilterSet filterSet) {

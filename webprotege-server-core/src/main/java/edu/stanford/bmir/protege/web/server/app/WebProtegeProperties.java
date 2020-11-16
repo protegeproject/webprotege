@@ -116,6 +116,11 @@ public class WebProtegeProperties implements Serializable {
         return getOptionalString(MONGO_DB_HOST);
     }
 
+    @Nonnull
+    public Optional<String> getDbUri() {
+        return getOptionalString(MONGO_DB_URI);
+    }
+
     public long getProjectDormantTime() {
         try {
             return Long.parseLong(getRequiredString(PROJECT_DORMANT_TIME));

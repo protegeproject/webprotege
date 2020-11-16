@@ -75,4 +75,9 @@ public class VizPanePresenter implements EditorPanePresenter {
     public boolean isActive() {
         return false;
     }
+
+    @Override
+    public void reload() {
+        presenter.reload();
+    }
 }

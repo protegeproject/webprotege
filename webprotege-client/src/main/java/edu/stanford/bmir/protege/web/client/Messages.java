@@ -1010,6 +1010,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
+    @DefaultMessage("Merge Ontologies")
+    @Key("uploadAndMergeAdditions")
+    String uploadAndMergeAdditions();
+
     
     @DefaultMessage("Upload Project")
     @Key("uploadProject")
@@ -1364,4 +1368,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Are you sure that you want to reset the tabs to the default set of tabs?  This cannot be undone.")
     @Key("perspective.resetConfirmation.message")
     String perspective_resetConfirmation_message();
+
+    @DefaultMessage("Entity Deprecation Settings")
+    @Key("entityDeprecationSettings.title")
+    String entityDeprecationSettings_title();
 }

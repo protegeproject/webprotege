@@ -173,4 +173,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         return delegate.isDisplayStringHTML();
     }
 
+    public void clearCriteria() {
+        delegate.clearCriteria();
+    }
 }

@@ -39,7 +39,7 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
                                                        DispatchServiceManager dsm,
                                                        ProjectId projectId,
                                                        DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+        super(selectionModel, projectId, displayNameRenderer, dsm);
         this.dsm = dsm;
         html = new HTML();
     }
@@ -70,6 +70,11 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
                                                                                    owlEntity),
                                                   this,
                                                   this::handleRenderingResult));
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     private void handleRenderingResult(GetEntityHtmlRenderingResult result) {

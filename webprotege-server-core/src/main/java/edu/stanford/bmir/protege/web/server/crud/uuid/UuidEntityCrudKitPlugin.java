@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 
@@ -42,7 +43,7 @@ public class UuidEntityCrudKitPlugin implements EntityCrudKitPlugin<UuidEntityCr
 
     @Override
     public UuidEntityCrudKitHandler getEntityCrudKitHandler() {
-        return factory.create(EntityCrudKitPrefixSettings.get(), UuidSuffixSettings.get());
+        return factory.create(EntityCrudKitPrefixSettings.get(), UuidSuffixSettings.get(), GeneratedAnnotationsSettings.empty());
     }
 
     @Override
@@ -52,7 +53,7 @@ public class UuidEntityCrudKitPlugin implements EntityCrudKitPlugin<UuidEntityCr
 
     @Override
     public UuidEntityCrudKitHandler getEntityCrudKitHandler(EntityCrudKitSettings<UuidSuffixSettings> settings) {
-        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
+        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings(), settings.getGeneratedAnnotationsSettings());
     }
 }
 

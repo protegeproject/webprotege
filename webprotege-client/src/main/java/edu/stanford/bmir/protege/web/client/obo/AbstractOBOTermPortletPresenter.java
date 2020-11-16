@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,8 +21,9 @@ public abstract class AbstractOBOTermPortletPresenter extends AbstractWebProtege
 
     protected AbstractOBOTermPortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
-                                              @Nonnull DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                              @Nonnull DisplayNameRenderer displayNameRenderer,
+                                              DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
     }
 
     @Override
@@ -43,6 +45,11 @@ public abstract class AbstractOBOTermPortletPresenter extends AbstractWebProtege
 //            clearDisplay();
         }
         updateTitle();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+
     }
 
     /**

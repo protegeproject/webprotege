@@ -207,6 +207,9 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     private void handleDelete(ValueEditor<O> editor) {
         Optional<O> value = editor.getValue();
         if(!value.isPresent()) {
+            if(newRowMode.equals(NewRowMode.MANUAL)) {
+                removeEditor(editor);
+            }
             return;
         }
         deleteConfirmationPrompt.shouldDeleteValue(value.get(), delete -> {

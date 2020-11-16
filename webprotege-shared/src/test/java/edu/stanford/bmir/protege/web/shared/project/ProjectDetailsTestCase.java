@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -48,6 +49,9 @@ public class ProjectDetailsTestCase {
 
     private ProjectDetails projectDetails;
 
+    @Mock
+    private EntityDeprecationSettings entityDeprecationSettings;
+
     @Before
     public void setUp() throws Exception {
         displayName = "DisplayName";
@@ -60,7 +64,8 @@ public class ProjectDetailsTestCase {
                                             createdAt,
                                             createdBy,
                                             modifiedAt,
-                                            modifiedBy);
+                                            modifiedBy,
+                                            entityDeprecationSettings);
     }
 
     @Test

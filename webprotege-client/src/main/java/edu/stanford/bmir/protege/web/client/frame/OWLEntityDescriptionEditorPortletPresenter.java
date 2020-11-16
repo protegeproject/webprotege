@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -26,8 +26,13 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
     private final ManchesterSyntaxFrameEditorPresenter presenter;
 
     @Inject
-    public OWLEntityDescriptionEditorPortletPresenter(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+    public OWLEntityDescriptionEditorPortletPresenter(SelectionModel selectionModel,
+                                                      EventBus eventBus,
+                                                      ProjectId projectId,
+                                                      ManchesterSyntaxFrameEditorPresenter presenter,
+                                                      DisplayNameRenderer displayNameRenderer,
+                                                      DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.presenter = presenter;
     }
 
@@ -51,5 +56,10 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
             setNothingSelectedVisible(true);
             presenter.clearSubject();
         }
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        handleAfterSetEntity(getSelectedEntity());
     }
 }

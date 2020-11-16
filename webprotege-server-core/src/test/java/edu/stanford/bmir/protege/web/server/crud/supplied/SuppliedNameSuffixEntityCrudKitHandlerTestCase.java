@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.i18n.client.Messages;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixResolver;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -79,6 +79,8 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     @Mock
     private EntityIriPrefixResolver entityIriPrefixResolver;
 
+    private GeneratedAnnotationsSettings generatedAnnotationsDescriptor = GeneratedAnnotationsSettings.empty();
+
     @Before
     public void setUp() throws Exception {
         OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
@@ -88,7 +90,9 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("");
         when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of())).thenReturn(PREFIX);
-        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory,
+        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings,
+                                                             generatedAnnotationsDescriptor,
+                                                             dataFactory,
                                                              entityIriPrefixResolver);
     }
 

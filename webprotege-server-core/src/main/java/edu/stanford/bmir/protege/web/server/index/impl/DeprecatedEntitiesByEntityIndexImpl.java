@@ -1,16 +1,25 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.server.change.AxiomChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,33 +29,46 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-15
  */
 @ProjectSingleton
-public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesByEntityIndex, DependentIndex {
+public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesByEntityIndex, DependentIndex, UpdatableIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
+    private final Multimap<OWLAnnotationSubject, OWLAnnotationAssertionAxiom> map;
 
     @Inject
-    public DeprecatedEntitiesByEntityIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                               @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
+    public DeprecatedEntitiesByEntityIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
-        this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
+        this.map = HashMultimap.create();
     }
 
+    @Override
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
+        changes.stream()
+               .filter(OntologyChange::isAxiomChange)
+               .map(chg -> (AxiomChange) chg)
+               .filter(chg -> chg.getAxiom() instanceof OWLAnnotationAssertionAxiom)
+               .filter(chg -> ((OWLAnnotationAssertionAxiom) chg.getAxiom()).isDeprecatedIRIAssertion())
+               .forEach(chg -> {
+                   var ax = (OWLAnnotationAssertionAxiom) chg.getAxiom();
+                   if(chg.isAddAxiom()) {
+                       map.put(ax.getSubject(), ax);
+                   }
+                   else {
+                       map.remove(ax.getSubject(), ax);
+                   }
+               });
+    }
 
     @Nonnull
     @Override
     public Collection<Index> getDependencies() {
-        return List.of(projectOntologiesIndex, annotationAssertionsIndex);
+        return List.of(projectOntologiesIndex);
     }
 
     @Override
     public boolean isDeprecated(@Nonnull OWLEntity entity) {
-        return projectOntologiesIndex
-                .getOntologyIds()
-                .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(entity.getIRI(), ontId))
-                .anyMatch(OWLAnnotationAssertionAxiom::isDeprecatedIRIAssertion);
+        return map.containsKey(entity.getIRI());
     }
 }

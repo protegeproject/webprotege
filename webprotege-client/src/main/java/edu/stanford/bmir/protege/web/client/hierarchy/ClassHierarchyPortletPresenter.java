@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -12,8 +13,6 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
@@ -113,8 +112,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
                                           @Nonnull DisplayNameRenderer displayNameRenderer,
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
-                                          @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                          @Nonnull TreeWidgetUpdaterFactory updaterFactory,
+                                          @Nonnull DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.searchModal = searchModal;
         this.messages = checkNotNull(messages);
         this.hierarchyModel = checkNotNull(hierarchyModel);
@@ -148,6 +148,13 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         setSelectionInTree(entityData);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
+        treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel, EntityNode::getEntity));
+        firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
     }
 
     @Override

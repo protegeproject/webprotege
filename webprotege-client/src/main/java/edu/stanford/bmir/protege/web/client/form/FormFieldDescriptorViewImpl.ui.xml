@@ -43,17 +43,6 @@
                     </g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                            <g:Label text="Read-only" addStyleNames="{wp.style.formLabel}"/>
-                            <g:CheckBox ui:field="readOnlyCheckBox" text="Read-only"/>
-                        </g:HTMLPanel>
-                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                            <g:Label text="Initial state" addStyleNames="{wp.style.formLabel}"/>
-                            <g:RadioButton name="initial-expansion-state-{counter.getValue}" text="Expanded" ui:field="initialExpansionStateExpanded"/>
-                            <g:RadioButton name="initial-expansion-state-{counter.getValue}" text="Collapsed" ui:field="initialExpansionStateCollapsed"/>
-                        </g:HTMLPanel>
-                    </g:HTMLPanel>
-                    <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
-                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
                             <g:RadioButton name="optionality-{counter.getValue}" text="Required" ui:field="requiredRadio"/>
                             <g:RadioButton name="optionality-{counter.getValue}" text="Optional" ui:field="optionalRadio"/>
@@ -61,6 +50,22 @@
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
                             <form:RepeatabilityViewImpl ui:field="repeatabilityView"/>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}" ui:field="deprecationStrategyView">
+                        <g:Label text="Deprecation strategy" addStyleNames="{wp.style.formLabel}"/>
+                        <g:RadioButton name="deprecation-strategy-{counter.getValue}" ui:field="deprecationStrategyLeaveValuesIntactRadio" value="true" text="Leave values intact"/>
+                        <g:RadioButton name="deprecation-strategy-{counter.getValue}" ui:field="deprecationStrategyDeleteValuesRadio" text="Delete values"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Read-only" addStyleNames="{wp.style.formLabel}"/>
+                            <g:CheckBox ui:field="readOnlyCheckBox" text="Read-only"/>
+                        </g:HTMLPanel>
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Initial state" addStyleNames="{wp.style.formLabel}"/>
+                            <g:RadioButton name="initial-expansion-state-{counter.getValue}" text="Expanded" ui:field="initialExpansionStateExpanded"/>
+                            <g:RadioButton name="initial-expansion-state-{counter.getValue}" text="Collapsed" ui:field="initialExpansionStateCollapsed"/>
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Flow" addStyleNames="{wp.style.formLabel}"/>

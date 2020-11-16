@@ -30,6 +30,9 @@ public class EntityCrudKitSettingsViewImpl extends Composite implements EntityCr
     @UiField
     SimplePanel suffixSettingsViewContainer;
 
+    @UiField
+    SimplePanel generatedAnnotationsViewContainer;
+
     @Inject
     public EntityCrudKitSettingsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -45,5 +48,11 @@ public class EntityCrudKitSettingsViewImpl extends Composite implements EntityCr
     @Override
     public AcceptsOneWidget getSuffixSettingsViewContainer() {
         return suffixSettingsViewContainer;
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getGeneratedAnnotationsViewContainer() {
+        return generatedAnnotationsViewContainer;
     }
 }

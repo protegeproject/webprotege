@@ -42,15 +42,13 @@ public class MongoCredentialProvider implements Provider<Optional<MongoCredentia
     @Override
     public Optional<MongoCredential> get() {
         if(dbUserName.isEmpty()) {
-            logger.info("No username has been supplied for the MongoDB client connection.  Authentication will not be used.");
             return Optional.empty();
         }
         if(dbPassword.length == 0) {
-            logger.info("No password has been supplied for the MongoDB client connection.  Authentication will not be used.");
             return Optional.empty();
         }
         if(authenticationDatabase.isEmpty()) {
-            logger.info("No authentication source (database) has been supplied for the MongoDB client connection.  Authentication will not be used.");
+            logger.info("No authentication source (database) has been supplied for the MongoDB client connection.  Will attempt to connect without authentication.");
             return Optional.empty();
         }
         logger.info("A username, password and authentication source database name have been supplied for MongoDB client connection authentication.");

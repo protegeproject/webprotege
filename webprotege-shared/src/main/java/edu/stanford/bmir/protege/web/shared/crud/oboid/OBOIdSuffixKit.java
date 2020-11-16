@@ -5,6 +5,7 @@ import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -64,5 +65,10 @@ public class OBOIdSuffixKit extends EntityCrudKit<OboIdSuffixSettings> {
         }
         sb.append("1");
         return IRI.create(URL.encode(prefixSettings.getIRIPrefix()), sb.toString());
+    }
+
+    @Override
+    public GeneratedAnnotationsSettings getDefaultGeneratedAnnotationsSettings() {
+        return GeneratedAnnotationsSettings.empty();
     }
 }

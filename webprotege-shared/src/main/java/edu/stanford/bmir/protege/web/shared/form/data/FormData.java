@@ -56,4 +56,9 @@ public abstract class FormData implements FormControlData {
     public abstract FormDescriptor getFormDescriptor();
 
     public abstract ImmutableList<FormFieldData> getFormFieldData();
+
+    @Nonnull
+    public FormId getFormId() {
+        return getFormDescriptor().getFormId();
+    }
 }

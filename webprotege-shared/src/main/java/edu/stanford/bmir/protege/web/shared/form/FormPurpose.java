@@ -9,5 +9,7 @@ public enum FormPurpose {
 
     ENTITY_CREATION,
 
-    ENTITY_EDITING
+    ENTITY_EDITING,
+
+    ENTITY_DEPRECATION
 }

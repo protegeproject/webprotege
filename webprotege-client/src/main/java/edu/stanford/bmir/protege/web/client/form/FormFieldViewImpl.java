@@ -155,6 +155,11 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
+    public boolean isExpanded() {
+        return content.isVisible();
+    }
+
+    @Override
     public void setHeaderClickedHandler(@Nonnull HeaderClickedHandler headerClickedHandler) {
         this.headerClickedHandler = checkNotNull(headerClickedHandler);
     }

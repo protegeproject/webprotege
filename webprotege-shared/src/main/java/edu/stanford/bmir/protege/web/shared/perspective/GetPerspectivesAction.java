@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -11,7 +12,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 18/02/16
  */
-public class GetPerspectivesAction implements ProjectAction<GetPerspectivesResult> {
+public class GetPerspectivesAction implements Action<GetPerspectivesResult> {
 
     private ProjectId projectId;
 

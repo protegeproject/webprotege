@@ -30,7 +30,7 @@ public class EventTranslatorManager {
         }
     }
 
-    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> appliedChanges, List<HighLevelProjectEventProxy> projectEventList) {
         for(EventTranslator eventTranslator : eventTranslators) {
             eventTranslator.translateOntologyChanges(revision, appliedChanges, projectEventList);
         }

@@ -8,12 +8,14 @@ import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.crud.gen.GeneratedAnnotationsGenerator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
-import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProviderImpl;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
-import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
-import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.events.HighLevelProjectEventProxy;
+import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
@@ -106,16 +108,16 @@ public class ChangeManager implements HasApplyChanges {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final ClassHierarchyProviderImpl classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
-    private final ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider;
+    private final ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
 
     @Nonnull
-    private final DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider;
+    private final DataPropertyHierarchyProvider dataPropertyHierarchyProvider;
 
     @Nonnull
-    private final AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider;
+    private final AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
     @Nonnull
     private final UserInSessionFactory userInSessionFactory;
@@ -147,6 +149,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final IriReplacerFactory iriReplacerFactory;
 
+    @Nonnull
+    private final GeneratedAnnotationsGenerator generatedAnnotationsGenerator;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLDataFactory dataFactory,
@@ -162,17 +167,18 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull RevisionManager changeManager,
                          @Nonnull RootIndex rootIndex,
                          @Nonnull DictionaryManager dictionaryManager,
-                         @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
-                         @Nonnull ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider,
-                         @Nonnull DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider,
-                         @Nonnull AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider,
+                         @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                         @Nonnull ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
+                         @Nonnull DataPropertyHierarchyProvider dataPropertyHierarchyProvider,
+                         @Nonnull AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
                          @Nonnull RenameMapFactory renameMapFactory,
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
                          @Nonnull IndexUpdater indexUpdater,
                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                         @Nonnull IriReplacerFactory iriReplacerFactory) {
+                         @Nonnull IriReplacerFactory iriReplacerFactory,
+                         @Nonnull GeneratedAnnotationsGenerator generatedAnnotationsGenerator) {
         this.projectId = projectId;
         this.dataFactory = dataFactory;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -198,6 +204,7 @@ public class ChangeManager implements HasApplyChanges {
         this.indexUpdater = indexUpdater;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.iriReplacerFactory = iriReplacerFactory;
+        this.generatedAnnotationsGenerator = generatedAnnotationsGenerator;
     }
 
     /**
@@ -429,6 +436,11 @@ public class ChangeManager implements HasApplyChanges {
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler = getEntityCrudKitHandler();
         handler.createChangeSetSession();
         E ent = handler.create(session, entityType, EntityShortForm.get(shortName), langTag, parents, context, builder);
+        // Generate changes to apply annotations
+        generatedAnnotationsGenerator.generateAnnotations(ent,
+                                                          parents,
+                                                          getEntityCrudKitHandler().getSettings(),
+                                                          builder);
         return new OWLEntityCreator<>(ent,
                                       builder.build(ent)
                                              .getChanges());
@@ -510,6 +522,7 @@ public class ChangeManager implements HasApplyChanges {
         objectPropertyHierarchyProvider.handleChanges(changes);
         dataPropertyHierarchyProvider.handleChanges(changes);
         annotationPropertyHierarchyProvider.handleChanges(changes);
+
         return revision;
     }
 
@@ -522,12 +535,12 @@ public class ChangeManager implements HasApplyChanges {
             return;
         }
         revision.ifPresent(rev -> {
-            var highLevelEvents = new ArrayList<ProjectEvent<?>>();
+            var highLevelEvents = new ArrayList<HighLevelProjectEventProxy>();
             eventTranslatorManager.translateOntologyChanges(rev, finalResult, highLevelEvents);
             if(changeListGenerator instanceof HasHighLevelEvents) {
                 highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
             }
-            projectEventManager.postEvents(highLevelEvents);
+            projectEventManager.postHighLevelEvents(highLevelEvents);
             projectChangedWebhookInvoker.invoke(userId, rev.getRevisionNumber(), rev.getTimestamp());
         });
     }

@@ -101,4 +101,8 @@ public class EntitySuggestOracle extends SuggestOracle {
     public boolean isDisplayStringHTML() {
         return true;
     }
+
+    public void clearCriteria() {
+        this.entityMatchCriteria = null;
+    }
 }

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 
@@ -41,12 +42,13 @@ public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOId
 
     @Override
     public EntityCrudKitHandler<OboIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler() {
-        return factory.create(EntityCrudKitPrefixSettings.get(), OboIdSuffixSettings.get());
+        return factory.create(EntityCrudKitPrefixSettings.get(), OboIdSuffixSettings.get(), GeneratedAnnotationsSettings
+                .empty());
     }
 
     @Override
     public EntityCrudKitHandler<OboIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler(EntityCrudKitSettings<OboIdSuffixSettings> settings) {
-        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
+        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings(), settings.getGeneratedAnnotationsSettings());
     }
 
     @Override

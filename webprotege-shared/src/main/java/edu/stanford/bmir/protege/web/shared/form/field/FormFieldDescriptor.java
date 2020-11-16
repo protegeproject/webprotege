@@ -40,6 +40,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     public static final String READ_ONLY = "readOnly";
     public static final String INITIAL_EXPANSIONS_STATE = "initialExpansionState";
     public static final String HELP = "help";
+    public static final String DEPRECATION_STRATEGY = "deprecationStrategy";
 
     @JsonCreator
     @Nonnull
@@ -47,6 +48,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                           @JsonProperty(OWL_BINDING) @Nullable OwlBinding owlBinding,
                                           @JsonProperty(LABEL) @Nullable LanguageMap formLabel,
                                           @JsonProperty(FIELD_RUN) @Nullable FieldRun fieldRun,
+                                          @JsonProperty(DEPRECATION_STRATEGY) @Nullable FormFieldDeprecationStrategy deprecationStrategy,
                                           @JsonProperty(FORM_CONTROL_DESCRIPTOR) @Nonnull FormControlDescriptor fieldDescriptor,
                                           @JsonProperty(REPEATABILITY) @Nullable Repeatability repeatability,
                                           @JsonProperty(OPTIONALITY) @Nullable Optionality optionality,
@@ -60,6 +62,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                                  fieldDescriptor,
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
+                                                 deprecationStrategy == null ? FormFieldDeprecationStrategy.DELETE_VALUES : deprecationStrategy,
                                                  readOnly,
                                                  expansionState == null ? ExpansionState.EXPANDED : expansionState,
                                                  help == null ? LanguageMap.empty() : help);
@@ -95,6 +98,10 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
 
     @Nonnull
     public abstract Repeatability getRepeatability();
+
+    @JsonProperty(DEPRECATION_STRATEGY)
+    @Nonnull
+    public abstract FormFieldDeprecationStrategy getDeprecationStrategy();
 
     public abstract boolean isReadOnly();
 

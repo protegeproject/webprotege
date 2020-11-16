@@ -7,6 +7,10 @@ import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedValueDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
@@ -27,10 +31,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
@@ -129,6 +130,8 @@ public class RpcWhiteList implements Action, Result {
     PropertyValueDescriptor propertyValueDescriptor;
 
     PropertyValue propertyValue;
+
+    EntityDeprecationSettings entityDeprecationSettings;
 
     DisplayNameSettings displayNameSettings;
 
@@ -266,11 +269,19 @@ public class RpcWhiteList implements Action, Result {
 
     public FormRegionOrdering gridControlOrdering;
 
+    public GeneratedAnnotationsSettings generatedAnnotationsSettings;
+
+    public GeneratedAnnotationDescriptor generatedAnnotationDescriptor;
+
+    public GeneratedValueDescriptor generatedValueDescriptor;
+
     public FormRegionOrderingDirection formRegionOrderingDirection;
 
     public FormPageRequest.SourceType getSource() {
         return source;
     }
+
+    public ProjectSearchSettings searchSettings;
 
     public void setSource(FormPageRequest.SourceType source) {
         this.source = source;
@@ -303,6 +314,8 @@ public class RpcWhiteList implements Action, Result {
     NodeProperties nodeProperties;
 
     FreshEntityIri freshEntityIri;
+
+    FormFieldDeprecationStrategy deprecationStrategy;
 
     public PrimitiveFormControlDataDto getPrimitiveFormControlDataDto() {
         return primitiveFormControlDataDto;
@@ -519,6 +532,8 @@ public class RpcWhiteList implements Action, Result {
     private Color color;
 
     private Criteria criteria;
+
+    private WhiteSpaceTreatment whiteSpaceTreatment;
 
     private CompositeRelationshipValueCriteria compositeRelationshipValueCriteria;
 
@@ -1118,5 +1133,11 @@ public class RpcWhiteList implements Action, Result {
         this.compositeRelationshipValueCriteria = compositeRelationshipValueCriteria;
     }
 
+    public WhiteSpaceTreatment getWhiteSpaceTreatment() {
+        return whiteSpaceTreatment;
+    }
 
+    public void setWhiteSpaceTreatment(WhiteSpaceTreatment whiteSpaceTreatment) {
+        this.whiteSpaceTreatment = whiteSpaceTreatment;
+    }
 }

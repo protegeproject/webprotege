@@ -110,6 +110,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    UploadAndMergeAdditionsHandler provideUploadAndMergeAdditionsHandler(UploadAndMergeAdditionsHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
     LoggedInUserProjectPermissionChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectPermissionCheckerImpl checker) {
         return checker;
     }
@@ -909,6 +914,32 @@ public class ClientProjectModule {
 
     @Provides
     SimilarEntitiesView provideSimilarEntitiesView(SimilarEntitiesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitGeneratedAnnotationsSettingsView provideCrudKitGeneratedAnnotationsSettingsView(
+            EntityCrudKitGeneratedAnnotationsSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DeprecateEntityView provideDeprecateEntityView(DeprecateEntityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GeneratedAnnotationDescriptorView provideGeneratedAnnotationDescriptorView(GeneratedAnnotationDescriptorViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    IncrementingPatternDescriptorView provideIncrementingPatternDescriptorView(IncrementingPatternDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
         return impl;
     }
 }

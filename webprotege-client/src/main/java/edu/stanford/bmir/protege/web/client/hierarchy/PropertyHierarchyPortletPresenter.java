@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -13,9 +14,6 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -132,8 +130,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull FilterView filterView,
                                              @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
                                              @Nonnull DisplayNameRenderer displayNameRenderer,
-                                             @Nonnull SearchModal searchModal, @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                             @Nonnull SearchModal searchModal,
+                                             @Nonnull TreeWidgetUpdaterFactory updaterFactory,
+                                             DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = view;
         this.messages = messages;
         this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property wp-btn-g--create", this::handleCreate);
@@ -274,6 +274,13 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         setSelectionInTree(entity);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        objectPropertyTree.reload();
+        dataPropertyTree.reload();
+        annotationPropertyTree.reload();
     }
 
     private void setSelectionInTree(Optional<OWLEntity> entity) {
