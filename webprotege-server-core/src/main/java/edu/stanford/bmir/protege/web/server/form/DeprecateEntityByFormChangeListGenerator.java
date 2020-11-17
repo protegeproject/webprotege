@@ -285,7 +285,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         // Map this data to the replacement entity so that we can remove it from the replacement entity
         var formDataOnReplacementToRemove = formDataOnDeprecatedEntity.values()
                                                                       .stream()
-                                                                      .map(formData -> FormData.get(Optional.<FormSubject>of(
+                                                                      .map(formData -> FormData.get(Optional.<FormEntitySubject>of(
                                                                               FormEntitySubject.get(replacementEntity.get())),
                                                                                                     formData.getFormDescriptor(),
                                                                                                     formData.getFormFieldData()))
@@ -446,7 +446,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
     private FormDataDto getFormData(FormDescriptor formDescriptor, OWLEntity subject) {
         return projectComponent.getEntityFrameFormDataComponentBuilder(new EntityFrameFormDataModule())
                                .formDataBuilder()
-                               .toFormData(subject, formDescriptor);
+                               .toFormData(Optional.of(FormSubject.get(subject)), formDescriptor);
     }
 
     @Override
