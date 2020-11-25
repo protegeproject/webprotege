@@ -87,8 +87,8 @@
     box-sizing: border-box;
 }
 
-.wp-form-group__row > .wp-form-group + .wp-form-group {
-    margin-left: 4em;
+.wp-form-group__row > .wp-form-group {
+    margin-right: 2em;
 }
 
 .wp-form-group--multi-col {
