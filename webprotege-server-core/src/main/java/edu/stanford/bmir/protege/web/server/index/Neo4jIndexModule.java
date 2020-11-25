@@ -9,17 +9,9 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.owl2lpg.client.bind.change.Neo4jOntologyChangeHandlerModule;
 import edu.stanford.owl2lpg.client.bind.change.Neo4jUpdater;
 import edu.stanford.owl2lpg.client.bind.index.*;
-import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.AxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
-import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
-import edu.stanford.owl2lpg.client.read.ontology.OntologyDocumentAccessorModule;
-import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
-import edu.stanford.owl2lpg.client.write.changes.handlers.OntologyChangeHandlerModule;
 
 import javax.annotation.Nonnull;
 
@@ -29,15 +21,8 @@ import javax.annotation.Nonnull;
  * 2019-09-10
  */
 @Module(includes = {
-    ProjectAccessorModule.class,
-    OntologyDocumentAccessorModule.class,
-    OntologyAnnotationsAccessorModule.class,
-    EntityAccessorModule.class,
-    NamedIndividualAccessorModule.class,
-    AxiomAccessorModule.class,
-    AssertionAxiomAccessorModule.class,
-    CharacteristicsAxiomAccessorModule.class,
-    OntologyChangeHandlerModule.class
+    Neo4jOntologyObjectAccessorModule.class,
+    Neo4jOntologyChangeHandlerModule.class
 })
 public class Neo4jIndexModule {
 
