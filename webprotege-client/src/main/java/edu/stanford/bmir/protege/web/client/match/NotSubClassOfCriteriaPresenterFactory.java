@@ -24,7 +24,7 @@ public class NotSubClassOfCriteriaPresenterFactory implements CriteriaPresenterF
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Is not SubClassOf";
+        return "Is not a subclass of";
     }
 
     @Nonnull
