@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -57,7 +58,7 @@ public class HierarchyPositionMatchingEngineImpl implements HierarchyPositionMat
         @Override
         public Collection<OWLEntity> visit(CompositeHierarchyPositionCriteria criteria) {
             ImmutableList<HierarchyPositionCriteria> subCriteria = criteria.getCriteria();
-            if(criteria.getMatchType().equals(MultiMatchType.ALL)) {
+            if (criteria.getMatchType().equals(MultiMatchType.ALL)) {
                 return getMatchIntersection(subCriteria);
 
             }
@@ -67,30 +68,34 @@ public class HierarchyPositionMatchingEngineImpl implements HierarchyPositionMat
             }
         }
 
+        @Override
+        public Collection<OWLEntity> visit(IsLeafClassCriteria isALeafClassCriteria) {
+            return projectSignatureIndex.getSignature()
+                                        .filter(OWLEntity::isOWLClass)
+                                        .map(OWLEntity::asOWLClass)
+                                        .filter(cls -> !cls.isOWLNothing())
+                                        .filter(classHierarchyProvider::isLeaf)
+                                        .collect(Collectors.toSet());
+        }
+
         private Collection<OWLEntity> getMatchUnion(ImmutableList<HierarchyPositionCriteria> subCriteria) {
             // Union of collections
-            return subCriteria
-                           .stream()
-                           .flatMap(sc -> sc.accept(this).stream())
-                           .collect(toImmutableSet());
+            return subCriteria.stream().flatMap(sc -> sc.accept(this).stream()).collect(toImmutableSet());
         }
 
         private Collection<OWLEntity> getMatchIntersection(ImmutableList<HierarchyPositionCriteria> subCriteria) {
             // Intersection of collections
-            var subMatches = subCriteria
-                                     .stream()
-                                     .map(sc -> sc.accept(this))
-                                     // Sort by size, with smallest first, so that we do the fewest
-                                     // checks that we have to do
-                                     .sorted(Comparator.comparing(Collection::size))
-                                     .collect(toImmutableList());
-            if(subMatches.isEmpty()) {
+            var subMatches = subCriteria.stream().map(sc -> sc.accept(this))
+                                        // Sort by size, with smallest first, so that we do the fewest
+                                        // checks that we have to do
+                                        .sorted(Comparator.comparing(Collection::size)).collect(toImmutableList());
+            if (subMatches.isEmpty()) {
                 return Collections.emptySet();
             }
             else {
                 // Start off with the smallest result
                 var result = new ArrayList<>(subMatches.get(0));
-                for(int i = 1; i < subMatches.size(); i++) {
+                for (int i = 1; i < subMatches.size(); i++) {
                     // Only retain the matches that are also in all other results
                     var nextMatch = subMatches.get(i);
                     result.retainAll(nextMatch);
@@ -102,17 +107,17 @@ public class HierarchyPositionMatchingEngineImpl implements HierarchyPositionMat
         @Override
         public Collection<OWLEntity> visit(NotSubClassOfCriteria notSubClassOfCriteria) {
             var subClassOfCriteria = SubClassOfCriteria.get(notSubClassOfCriteria.getTarget(),
-                                   notSubClassOfCriteria.getFilterType());
+                                                            notSubClassOfCriteria.getFilterType());
             var subClassOfMatches = visit(subClassOfCriteria);
             return projectSignatureIndex.getSignature()
-                                 .filter(c -> !subClassOfMatches.contains(c))
-                                 .collect(toImmutableList());
+                                        .filter(c -> !subClassOfMatches.contains(c))
+                                        .collect(toImmutableList());
         }
 
         @Override
         public Collection<OWLEntity> visit(SubClassOfCriteria subClassOfCriteria) {
             OWLClass cls = subClassOfCriteria.getTarget();
-            if(subClassOfCriteria.getFilterType().equals(HierarchyFilterType.DIRECT)) {
+            if (subClassOfCriteria.getFilterType().equals(HierarchyFilterType.DIRECT)) {
                 return ImmutableSet.copyOf(classHierarchyProvider.getChildren(cls));
             }
             else {
@@ -123,15 +128,13 @@ public class HierarchyPositionMatchingEngineImpl implements HierarchyPositionMat
         @Override
         public Collection<OWLEntity> visit(InstanceOfCriteria instanceOfCriteria) {
             OWLClass typeCls = instanceOfCriteria.getTarget();
-            if(instanceOfCriteria.getFilterType().equals(HierarchyFilterType.DIRECT)) {
-                return individualsByTypeIndex.getIndividualsByType(typeCls,
-                                                                   InstanceRetrievalMode.DIRECT_INSTANCES)
-                        .collect(toImmutableSet());
+            if (instanceOfCriteria.getFilterType().equals(HierarchyFilterType.DIRECT)) {
+                return individualsByTypeIndex.getIndividualsByType(typeCls, InstanceRetrievalMode.DIRECT_INSTANCES)
+                                             .collect(toImmutableSet());
             }
             else {
-                return individualsByTypeIndex.getIndividualsByType(typeCls,
-                                                                   InstanceRetrievalMode.ALL_INSTANCES)
-                        .collect(toImmutableSet());
+                return individualsByTypeIndex.getIndividualsByType(typeCls, InstanceRetrievalMode.ALL_INSTANCES)
+                                             .collect(toImmutableSet());
             }
         }
     }

@@ -25,6 +25,9 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
 
     @Nonnull
+    private final LeafClassMatcherFactory leafClassMatcherFactory;
+
+    @Nonnull
     private final NotSubClassOfMatcherFactory notSubClassOfMatcherFactory;
 
     @Nonnull
@@ -52,6 +55,7 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
 
     @Inject
     public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
+                          @Nonnull LeafClassMatcherFactory leafClassMatcherFactory,
                           @Nonnull NotSubClassOfMatcherFactory notSubClassOfMatcherFactory,
                           @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory,
                           @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
@@ -62,6 +66,7 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
                           @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory,
                           @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
+        this.leafClassMatcherFactory = checkNotNull(leafClassMatcherFactory);
         this.notSubClassOfMatcherFactory = checkNotNull(notSubClassOfMatcherFactory);
         this.instanceOfMatcherFactory = checkNotNull(instanceOfMatcherFactory);
         this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
@@ -100,6 +105,11 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
             public Matcher<OWLEntity> visit(InstanceOfCriteria instanceOfCriteria) {
                 return instanceOfMatcherFactory.create(instanceOfCriteria.getTarget(),
                                                        instanceOfCriteria.getFilterType());
+            }
+
+            @Override
+            public Matcher<OWLEntity> visit(IsLeafClassCriteria isALeafClassCriteria) {
+                return leafClassMatcherFactory.create();
             }
         });
     }
@@ -225,6 +235,12 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityIsNotCriteria entityIsNotCriteria) {
                 return entity -> !entity.equals(entityIsNotCriteria.getEntity());
+            }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(@Nonnull IsLeafClassCriteria isALeafClassCriteria) {
+                return leafClassMatcherFactory.create();
             }
 
             @Nonnull

@@ -63,6 +63,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     private EntityIsCriteriaPresenterFactory entityIsFactory;
 
     @Nonnull
+    private final IsLeafClassCriteriaPresenterFactory isLeafClassCriteriaPresenterFactory;
+
+    @Nonnull
     private final EntityIsNotCriteriaPresenterFactory entityIsNotFactory;
 
     @Inject
@@ -83,6 +86,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
                                  @Nonnull EntityRelationshipAbsentPresenterFactory entityRelationshipAbsentPresenterFactory,
                                  @Nonnull EntityHasMoreThanOneRelationshipCriteriaPresenterFactory hasAtMostOneRelationshipFactory,
                                  @Nonnull EntityIsCriteriaPresenterFactory entityIsFactory,
+                                 @Nonnull IsLeafClassCriteriaPresenterFactory isLeafClassCriteriaPresenterFactory,
                                  @Nonnull EntityIsNotCriteriaPresenterFactory entityIsNotFactory) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
@@ -101,6 +105,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         this.entityRelationshipAbsentFactory = checkNotNull(entityRelationshipAbsentPresenterFactory);
         this.hasAtMostOneRelationshipFactory = checkNotNull(hasAtMostOneRelationshipFactory);
         this.entityIsFactory = checkNotNull(entityIsFactory);
+        this.isLeafClassCriteriaPresenterFactory = isLeafClassCriteriaPresenterFactory;
         this.entityIsNotFactory = checkNotNull(entityIsNotFactory);
     }
 
@@ -122,7 +127,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(notDisjointFactory);
         factoryRegistry.addPresenter(subClassOfFactory);
         factoryRegistry.addPresenter(notSubClassOfFactory);
+        factoryRegistry.addPresenter(isLeafClassCriteriaPresenterFactory);
         factoryRegistry.addPresenter(instanceOfFactory);
+
     }
 
     @Nonnull
@@ -236,6 +243,12 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
             @Override
             public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityIsNotCriteria entityIsNotCriteria) {
                 return entityIsNotFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull IsLeafClassCriteria isALeafClassCriteria) {
+                return isLeafClassCriteriaPresenterFactory;
             }
         });
     }

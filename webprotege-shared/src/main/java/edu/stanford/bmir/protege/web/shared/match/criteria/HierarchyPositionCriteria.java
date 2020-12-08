@@ -13,7 +13,8 @@ import javax.annotation.Nonnull;
 @JsonSubTypes({
         @JsonSubTypes.Type(SubClassOfCriteria.class),
         @JsonSubTypes.Type(InstanceOfCriteria.class),
-        @JsonSubTypes.Type(CompositeHierarchyPositionCriteria.class)
+        @JsonSubTypes.Type(CompositeHierarchyPositionCriteria.class),
+        @JsonSubTypes.Type(IsLeafClassCriteria.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property="match")
 public interface HierarchyPositionCriteria extends Criteria {
