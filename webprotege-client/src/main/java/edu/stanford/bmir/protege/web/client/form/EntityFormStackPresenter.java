@@ -213,7 +213,7 @@ public class EntityFormStackPresenter {
         for (FormDataDto formDataDto : result.getFormData()) {
             pristineDataManager.updatePristineFormData(formDataDto.toFormData());
         }
-        boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
+        boolean replaceAllForms = result.getFilteredFormIds().isEmpty() || result.getFormData().isEmpty();
         // If we have a subset of the forms then just replace the ones that we have
         if (replaceAllForms) {
             formStackPresenter.setForms(formData, FormStackPresenter.FormUpdate.REPLACE);
