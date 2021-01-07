@@ -49,8 +49,6 @@ public class AttestationViewImpl extends Composite implements AttestationView, H
     @UiField
     protected Label owlVerifyResult;
 
-    private String name = "John Doe";
-    private String address = "";
     private boolean dirty = false;
 
     @UiHandler("ontologyIRIField")
@@ -100,7 +98,7 @@ public class AttestationViewImpl extends Composite implements AttestationView, H
                 if (!result.isValid()) {
                     fileVerifyResult.setText("Ontology was not attested!");
                 } else {
-                    fileVerifyResult.setText("Ontology attested by " + result.getSignerName());
+                    fileVerifyResult.setText(result.toString());
                 }
             }
         };

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -77,6 +78,8 @@ public class EditorPaneAttestationPresenter implements EditorPanePresenter {
     public void setEntity(@Nonnull OWLEntity entity) {
         editorPresenter.setEditorContext(Optional.of(new OWLEntityContext(projectId, entity)));
         GetClassFrameAction action = new GetClassFrameAction(entity.asOWLClass(), projectId);
+        GetRootOntologyIdAction ontologyIdAction = new GetRootOntologyIdAction(projectId);
+        dispatchServiceManager.execute(ontologyIdAction, (r) -> view.setOntologyID(r.getObject()));
         dispatchServiceManager.execute(action, (r) -> view.setValue(r.getFrame()));
     }
 

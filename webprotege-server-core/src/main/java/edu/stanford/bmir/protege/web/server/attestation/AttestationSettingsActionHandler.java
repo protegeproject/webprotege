@@ -36,6 +36,6 @@ public class AttestationSettingsActionHandler implements ApplicationActionHandle
     @Nonnull
     @Override
     public GetAttestationSettingsActionResult execute(@Nonnull GetAttestationSettingsAction action, @Nonnull ExecutionContext executionContext) {
-        return new GetAttestationSettingsActionResult(SettingsManager.ADDRESS_FILE, SettingsManager.ADDRESS_ONTOLOGY);
+        return new GetAttestationSettingsActionResult(SettingsManager.ADDRESS_CHANGETRACKING, SettingsManager.ADDRESS_ATTESTATION);
     }
 }

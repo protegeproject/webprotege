@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.attestation;
 
-import ch.unifr.digits.webprotege.attestation.server.AttestationService;
+import ch.unifr.digits.webprotege.attestation.server.ChangeTrackingAttestationService;
 import ch.unifr.digits.webprotege.attestation.shared.VerifyAction;
 import ch.unifr.digits.webprotege.attestation.shared.VerifyResult;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 public class AttestationVerifyActionHandler implements ProjectActionHandler<VerifyAction, VerifyResult> {
 
     private static final Logger log = LoggerFactory.getLogger(AttestationVerifyActionHandler.class);
-
+    private final ChangeTrackingAttestationService service = new ChangeTrackingAttestationService();
 
     @Inject
     public AttestationVerifyActionHandler() {}
@@ -44,8 +44,14 @@ public class AttestationVerifyActionHandler implements ProjectActionHandler<Veri
     @Override
     public VerifyResult execute(@Nonnull VerifyAction action, @Nonnull ExecutionContext executionContext) {
         try {
-            VerifyResult result = AttestationService.verifyEntity(action.getIri(), action.getVersionIri(),
-                    Integer.parseInt(action.getHash()));
+            VerifyResult result;
+            if (VerifyAction.Mode.ENTITY.equals(action.getMode())) {
+                result = service.verifyEntity(action.getIri(), action.getVersionIri(),
+                        action.getHash());
+            } else {
+                result = service.verify(action.getIri(), action.getVersionIri(),
+                        action.getHash(), null);
+            }
             return result;
         } catch (Exception e) {
             log.error(e.getMessage(), e);

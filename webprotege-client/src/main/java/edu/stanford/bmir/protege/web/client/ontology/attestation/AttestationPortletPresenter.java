@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,12 +19,6 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import javax.inject.Inject;
 import java.util.function.Consumer;
 
-/**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 05/07/2013
- */
 @Portlet(id = "portlets.OntologyAttestation", title = "Ontology Attestation")
 public class AttestationPortletPresenter extends AbstractWebProtegePortletPresenter implements HasFixedPrimaryAxisSize,
         AttestationPresenter {
@@ -31,15 +26,17 @@ public class AttestationPortletPresenter extends AbstractWebProtegePortletPresen
     private final DispatchServiceManager dispatchServiceManager;
 
     private AttestationView editor;
+    private final LoggedInUser loggedInUser;
     private final ProjectId projectId;
-    private String name = "John Doe";
     private GetAttestationSettingsActionResult attestationSettings;
 
     @Inject
-    public AttestationPortletPresenter(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, DisplayNameRenderer displayNameRenderer) {
+    public AttestationPortletPresenter(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager,
+                                       ProjectId projectId, DisplayNameRenderer displayNameRenderer, LoggedInUser loggedInUser) {
         super(selectionModel, projectId, displayNameRenderer);
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
+        this.loggedInUser = loggedInUser;
         editor = new AttestationViewImpl(projectId, this);
         editor.setEnabled(false);
     }
@@ -62,21 +59,21 @@ public class AttestationPortletPresenter extends AbstractWebProtegePortletPresen
     public void fileSign(String ontologyIri, String versionIri, Callback<Boolean, Object> callback) {
         RevisionNumber head = RevisionNumber.getHeadRevisionNumber();
         ClientAttestationService.signProjectFile(projectId, head, ontologyIri, versionIri,
-                name, attestationSettings.getAddressFileContract(), callback);
+                getUserName(), attestationSettings.getAddressOntologyContract(), callback);
     }
 
     @Override
     public void fileVerify(String ontologyIri, String versionIri, Callback<VerifyResult, Object> callback) {
         RevisionNumber head = RevisionNumber.getHeadRevisionNumber();
         ClientAttestationService.verifyProjectFile(projectId, head, ontologyIri, versionIri,
-                attestationSettings.getAddressFileContract(), callback);
+                attestationSettings.getAddressOntologyContract(), callback);
     }
 
     @Override
     public void owlSign(String ontologyIri, String versionIri, Callback<Boolean, Object>  callback) {
         Consumer<OntologyHashResult> consumer = (OntologyHashResult result) -> {
-            ClientAttestationService.signOntology(ontologyIri, versionIri, name, attestationSettings.getAddressOntologyContract(),
-                    result.getHash(), result.getClassHashes(), callback);
+            ClientAttestationService.signOntology(ontologyIri, versionIri, getUserName(), attestationSettings.getAddressOntologyContract(),
+                    result.getHash(), callback);
         };
         dispatchServiceManager.execute(new OntologyHashAction(projectId, ontologyIri), consumer);
     }
@@ -88,5 +85,27 @@ public class AttestationPortletPresenter extends AbstractWebProtegePortletPresen
                     result.getHash(), callback);
         };
         dispatchServiceManager.execute(new OntologyHashAction(projectId, ontologyIri), consumer);
+    }
+
+    @Override
+    public void changetrackingSign(String ontologyIri, String versionIri, Callback<Boolean, Object>  callback) {
+        Consumer<OntologyHashResult> consumer = (OntologyHashResult result) -> {
+            ClientAttestationService.signChangeTracking(ontologyIri, versionIri, getUserName(), attestationSettings.getAddressChangeContract(),
+                    result.getHash(), result.getClassHashes(), callback);
+        };
+        dispatchServiceManager.execute(new OntologyHashAction(projectId, ontologyIri), consumer);
+    }
+
+    @Override
+    public void changetrackingVerify(String ontologyIri, String versionIri, Callback<VerifyResult, Object> callback) {
+        Consumer<OntologyHashResult> consumer = (OntologyHashResult result) -> {
+            ClientAttestationService.verifyChangeTracking(ontologyIri, versionIri, attestationSettings.getAddressChangeContract(),
+                    result.getHash(), callback);
+        };
+        dispatchServiceManager.execute(new OntologyHashAction(projectId, ontologyIri), consumer);
+    }
+
+    private String getUserName() {
+        return loggedInUser.getCurrentUserId().getUserName();
     }
 }

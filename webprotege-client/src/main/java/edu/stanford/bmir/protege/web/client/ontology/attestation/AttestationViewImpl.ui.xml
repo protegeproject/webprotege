@@ -3,87 +3,42 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <g:HTMLPanel>
-
-        <table width="95%">
-            <col width="100px" align="right"/>
-            <tr>
-                <td align="right">
-                    <g:Label text="Ontology IRI" styleName="{wp.style.formLabel}" addStyleNames="web-protege-form-layout-editor-input"/>
-                </td>
-                <td valign="top">
-                    <g:TextBox ui:field="ontologyIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">
-                    <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
-                </td>
-                <td valign="top">
-                    <g:TextBox ui:field="versionIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
-                </td>
-            </tr>
-        </table>
-        <hr></hr>
-        <h2>File-based Project Attestation</h2>
-        <div>
-            <h3>Verify</h3>
+        <div style="padding: 0 1em;">
             <table>
                 <col width="100px" align="right"/>
                 <tr>
-                    <td valign="top">
-                        <g:Button ui:field="fileVerifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
+                    <td align="right">
+                        <g:Label text="Ontology IRI" styleName="{wp.style.formLabel}" addStyleNames="web-protege-form-layout-editor-input"/>
                     </td>
-                    <tr>
-                        <td align="right">
-                            <g:Label ui:field="fileVerifyResult" addStyleNames="{wp.style.formLabel}"/>
-                        </td>
-                    </tr>
-                </tr>
-            </table>
-            <h3>Sign</h3>
-            <table>
-                <tr>
                     <td valign="top">
-                        <g:Button ui:field="fileSignButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
+                        <g:TextBox ui:field="ontologyIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
                     </td>
                 </tr>
                 <tr>
                     <td align="right">
-                        <g:Label ui:field="fileSignResult" addStyleNames="{wp.style.formLabel}"/>
+                        <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
                     </td>
-                </tr>
-            </table>
-        </div>
-        <hr></hr>
-        <h2>OWL ontology attestation</h2>
-        <div>
-            <h3>Verify</h3>
-            <table>
-                <col width="100px" align="right"/>
-                <tr>
                     <td valign="top">
-                        <g:Button ui:field="owlVerifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
-                    </td>
-                    <tr>
-                        <td align="right">
-                            <g:Label ui:field="owlVerifyResult" addStyleNames="{wp.style.formLabel}"/>
-                        </td>
-                    </tr>
-                </tr>
-            </table>
-            <h3>Sign</h3>
-            <table>
-                <tr>
-                    <td valign="top">
-                        <g:Button ui:field="owlSignButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">
-                        <g:Label ui:field="owlSignResult" addStyleNames="{wp.style.formLabel}"/>
+                        <g:TextBox ui:field="versionIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
                     </td>
                 </tr>
             </table>
+            <hr></hr>
+            <h2>File-based Project Attestation</h2>
+            <div style="max-width: 200px;">
+                <g:Button ui:field="fileVerifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
+                <g:Label ui:field="fileVerifyResult" addStyleNames="{wp.style.formLabel}"/>
+                <g:Button ui:field="fileSignButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
+                <g:Label ui:field="fileSignResult" addStyleNames="{wp.style.formLabel}"/>
+            </div>
+            <hr></hr>
+            <h2>OWL ontology attestation</h2>
+            <div style="max-width: 200px;">
+                <g:Button ui:field="owlVerifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
+                <g:Label ui:field="owlVerifyResult" addStyleNames="{wp.style.formLabel}"/>
+                <g:Button ui:field="owlSignButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
+                <g:Label ui:field="owlSignResult" addStyleNames="{wp.style.formLabel}"/>
+            </div>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

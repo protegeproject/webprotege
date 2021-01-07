@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -26,6 +27,7 @@ import static org.hamcrest.Matchers.is;
  * Stanford Center for Biomedical Informatics Research
  * 15 Mar 2018
  */
+@Ignore
 public class EntityTagsRepositoryImpl_TestCase {
 
     private static final String UUID = "12345678-1234-1234-1234-123456789abc";

@@ -8,4 +8,6 @@ public interface AttestationPresenter {
     void fileVerify(String iri, String versionIri, Callback<VerifyResult, Object> callback);
     void owlSign(String iri, String versionIri, Callback<Boolean, Object>  callback);
     void owlVerify(String iri, String versionIri, Callback<VerifyResult, Object> callback);
+    void changetrackingSign(String iri, String versionIri, Callback<Boolean, Object>  callback);
+    void changetrackingVerify(String iri, String versionIri, Callback<VerifyResult, Object> callback);
 }

@@ -21,7 +21,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -49,6 +51,7 @@ public class EditorAttestationPane extends SimplePanel implements EditorPaneAtte
     private ClassFrame currentFrame;
 
     private EntityDisplay entityDisplay = entityData -> {};
+    private OWLOntologyID ontologyID;
 
     interface EditorAttestationPane2UiBinder extends UiBinder<HTMLPanel, EditorAttestationPane> {
     }
@@ -121,22 +124,27 @@ public class EditorAttestationPane extends SimplePanel implements EditorPaneAtte
         return this;
     }
 
+
+    public void setOntologyID(OWLOntologyID object) {
+        this.ontologyID = object;
+    }
+
     private void dispatch() {
-        Set<String> set = collectIris();
-        String string = constructIRIString(set);
-        String hash = ClientAttestationService.hashData(string.getBytes());
+        int hashEntity = ClientAttestationService.hashEntity(currentSubject.getEntity());
+        String ontologyIri = ontologyID.getOntologyIRI().or(IRI.create("")).toString();
+        String versionIri = ontologyID.getVersionIRI().or(IRI.create("")).toString();
 
         GWT.log("[attestation] verify " + iriField.getText());
-        GWT.log("[attestation] hash " + hash);
-        VerifyAction action = new VerifyAction(projectId, iriField.getText(), "", hash, currentSubject.getEntity(),
-                VerifyAction.Mode.ONTOLOGY);
+        GWT.log("[attestation] hash " + hashEntity);
+        VerifyAction action = new VerifyAction(projectId, ontologyIri, versionIri, String.valueOf(hashEntity), currentSubject.getEntity(),
+                VerifyAction.Mode.ENTITY);
         Consumer<VerifyResult> consumer = res -> {
             if (res == null) GWT.log("oh no");
             boolean resultBool = Objects.requireNonNull(res).isValid();
             if (resultBool) {
                 attest.setText("Attested");
                 attest.getElement().setAttribute("data-attest", "true");
-                signer.setText("Signed by " + res.getSigner());
+                signer.setText("Signed by " + res.getSignerName() + " (" + res.getSigner() +")");
             } else {
                 attest.setText("Not attested");
                 attest.getElement().setAttribute("data-attest", "false");
@@ -144,18 +152,5 @@ public class EditorAttestationPane extends SimplePanel implements EditorPaneAtte
             }
         };
         dispatchServiceManager.execute(action, consumer);
-    }
-
-    private Set<String> collectIris() {
-        Set<String> iris = new HashSet<>();
-        Set<OWLEntity> signature = currentFrame.getPropertyValueList().getSignature();
-        signature.add(currentFrame.getSubject().getEntity());
-        signature.forEach(s -> iris.add(URL.decode(s.getIRI().toString())));
-        return iris;
-    }
-
-    private String constructIRIString(Set<String> iris) {
-        Optional<String> reduce = iris.stream().sorted().reduce((s1, s2) -> s1 + ":" + s2);
-        return reduce.get();
     }
 }
