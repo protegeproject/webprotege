@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,6 +12,7 @@ import static org.hamcrest.Matchers.startsWith;
  * Stanford Center for Biomedical Informatics Research
  * 08/12/15
  */
+@Ignore
 public class TimeUtil_TestCase {
 
     public static final long ONE_SECOND = 1000;

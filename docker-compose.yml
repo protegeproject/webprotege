@@ -2,6 +2,11 @@ version: "3"
 
 services:
 
+  devmongo:
+    image: mongo:4.1-bionic
+    ports:
+      - 27017:27017
+
   wpmongo:
     container_name: webprotege-mongodb
     image: mongo:4.1-bionic
