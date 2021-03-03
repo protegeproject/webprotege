@@ -116,8 +116,31 @@ public class IndexModule {
         return impl;
     }
 
+    @ProjectSingleton
     @Provides
-    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesByEntityIndex(DeprecatedEntitiesByEntityIndexLuceneImpl impl) {
+    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesByEntityIndex(DeprecatedEntitiesByEntityIndexImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    ClassHierarchyChildrenAxiomsIndex provideClassHierarchyChildrenAxiomsIndex(ClassHierarchyChildrenAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    @IntoSet
+    UpdatableIndex provideClassHierarchyChildrenAxiomsIndexIntoSet(ClassHierarchyChildrenAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+
+
+    @ProjectSingleton
+    @Provides
+    @IntoSet
+    UpdatableIndex provideDeprecatedEntitiesByEntityIndexIntoSet(DeprecatedEntitiesByEntityIndexImpl impl) {
         return impl;
     }
 

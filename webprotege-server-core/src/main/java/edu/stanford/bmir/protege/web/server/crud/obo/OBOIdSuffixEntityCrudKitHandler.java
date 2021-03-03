@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
@@ -68,9 +69,13 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
     @Nonnull
     private final EntityIriPrefixResolver entityIriPrefixResolver;
 
+    @Nonnull
+    private final GeneratedAnnotationsSettings generatedAnnotationsSettings;
+
     @AutoFactory
     public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                            @Nonnull OboIdSuffixSettings suffixSettings,
+                                           @Nonnull GeneratedAnnotationsSettings generatedAnnotationsSettings,
                                            @Provided @Nonnull OWLDataFactory dataFactory,
                                            @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex,
                                            @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
@@ -79,6 +84,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
         this.dataFactory = dataFactory;
         this.projectSignatureIndex = projectSignatureIndex;
         this.entityIriPrefixResolver = entityIriPrefixResolver;
+        this.generatedAnnotationsSettings = checkNotNull(generatedAnnotationsSettings);
 
         ImmutableMap.Builder<UserId, UserIdRange> builder = ImmutableMap.builder();
         for(UserIdRange range : suffixSettings.getUserIdRanges()) {
@@ -111,7 +117,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
 
     @Override
     public EntityCrudKitSettings<OboIdSuffixSettings> getSettings() {
-        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings, generatedAnnotationsSettings);
     }
 
     @Override

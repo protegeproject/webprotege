@@ -97,6 +97,10 @@ public class DispatchServiceManager {
             // Still in an outer batch
             return;
         }
+        if(pendingActionExecutions.isEmpty()) {
+            // Nothing to execute
+            return;
+        }
         ImmutableList<PendingActionExecution<?, ?>> pending = ImmutableList.copyOf(pendingActionExecutions);
         pendingActionExecutions.clear();
         ImmutableList.Builder<Action<?>> builder = ImmutableList.builder();
@@ -154,7 +158,7 @@ public class DispatchServiceManager {
             GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName() + "(" + ((BatchAction) action).getActions().size() + " actions)");
         }
         else {
-            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
+            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action);
         }
     }
 

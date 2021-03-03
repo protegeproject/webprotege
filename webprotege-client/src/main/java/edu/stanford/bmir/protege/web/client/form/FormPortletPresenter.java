@@ -1,24 +1,12 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.project.ProjectView;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
-import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -28,7 +16,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent.CLASS_FRAME_CHANGED;
 
 /**
  * Matthew Horridge
@@ -49,8 +36,9 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     public FormPortletPresenter(@Nonnull SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
                                 @Nonnull DisplayNameRenderer displayNameRenderer,
-                                @Nonnull EntityFormStackPresenter entityFormStackPresenter) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                @Nonnull EntityFormStackPresenter entityFormStackPresenter,
+                                DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.projectId = checkNotNull(projectId);
         this.entityFormStackPresenter = checkNotNull(entityFormStackPresenter);
     }
@@ -94,5 +82,10 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     public void dispose() {
         super.dispose();
 
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        updateForms();
     }
 }

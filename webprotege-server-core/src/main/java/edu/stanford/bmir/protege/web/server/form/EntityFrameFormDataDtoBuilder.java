@@ -1,18 +1,24 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
+import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
@@ -74,7 +80,8 @@ public class EntityFrameFormDataDtoBuilder {
                                          @Nonnull SubFormControlValuesBuilder subFormControlValuesBuilder,
                                          @Nonnull LangTagFilter langTagFilter,
                                          @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                         @Nonnull FormRegionFilterIndex formRegionFilterIndex, @Nonnull FormDescriptorDtoTranslator formDataDtoTranslator) {
+                                         @Nonnull FormRegionFilterIndex formRegionFilterIndex,
+                                         @Nonnull FormDescriptorDtoTranslator formDataDtoTranslator) {
         this.sessionRenderer = sessionRenderer;
         this.textControlValuesBuilder = textControlValuesBuilder;
         this.numberControlValuesBuilder = numberControlValuesBuilder;
@@ -91,7 +98,7 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
     @Nonnull
-    protected ImmutableList<FormControlDataDto> toFormControlValues(@Nonnull OWLEntityData subject,
+    protected ImmutableList<FormControlDataDto> toFormControlValues(@Nonnull Optional<FormEntitySubject> subject,
                                                                     @Nonnull FormRegionId formFieldId,
                                                                     @Nonnull BoundControlDescriptor descriptor,
                                                                     int depth) {
@@ -106,21 +113,25 @@ public class EntityFrameFormDataDtoBuilder {
             public ImmutableList<FormControlDataDto> visit(TextControlDescriptor textControlDescriptor) {
                 return textControlValuesBuilder.getTextControlDataDtoValues(textControlDescriptor,
                                                                             subject,
-                                                                            theBinding, depth);
+                                                                            theBinding,
+                                                                            depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(NumberControlDescriptor numberControlDescriptor) {
                 return numberControlValuesBuilder.getNumberControlDataDtoValues(numberControlDescriptor,
                                                                                 subject,
-                                                                                theBinding, depth);
+                                                                                theBinding,
+                                                                                depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
-                return SingleChoiceControlValuesBuilder.getSingleChoiceControlDataDtoValues(singleChoiceControlDescriptor,
-                                                                                            subject,
-                                                                                            theBinding, depth);
+                return SingleChoiceControlValuesBuilder.getSingleChoiceControlDataDtoValues(
+                        singleChoiceControlDescriptor,
+                        subject,
+                        theBinding,
+                        depth);
             }
 
             @Override
@@ -135,14 +146,16 @@ public class EntityFrameFormDataDtoBuilder {
             public ImmutableList<FormControlDataDto> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
                 return entityNameControlValuesBuilder.getEntityNameControlDataDtoValues(entityNameControlDescriptor,
                                                                                         subject,
-                                                                                        theBinding, depth);
+                                                                                        theBinding,
+                                                                                        depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(ImageControlDescriptor imageControlDescriptor) {
                 return imageControlValuesBuilder.getImageControlDataDtoValues(imageControlDescriptor,
                                                                               subject,
-                                                                              theBinding, depth);
+                                                                              theBinding,
+                                                                              depth);
             }
 
             @Override
@@ -150,7 +163,8 @@ public class EntityFrameFormDataDtoBuilder {
                 return gridControlValuesBuilder.getGridControlDataDtoValues(gridControlDescriptor,
                                                                             subject,
                                                                             theBinding,
-                                                                            formFieldId, depth);
+                                                                            formFieldId,
+                                                                            depth);
             }
 
             @Override
@@ -164,39 +178,37 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
 
-    public FormDataDto toFormData(@Nonnull OWLEntity subject,
-                                  @Nonnull FormDescriptor formDescriptor) {
+    public FormDataDto toFormData(@Nonnull Optional<FormEntitySubject> subject, @Nonnull FormDescriptor formDescriptor) {
         int depth = 0;
         return getFormDataDto(subject, formDescriptor, depth);
     }
 
-    protected FormDataDto getFormDataDto(@Nonnull OWLEntity subject,
-                                         @Nonnull FormDescriptor formDescriptor, int depth) {
-        var subjectData = sessionRenderer.getEntityRendering(subject);
-        var formSubject = FormSubjectDto.getFormSubject(subjectData);
-        var fieldData = formDescriptor.getFields()
-                                      .stream()
-                                      .map(field -> {
-                                          var formControlValues = toFormControlValues(subjectData,
-                                                                                      field.getId(),
-                                                                                      field,
-                                                                                      depth);
-                                          var controlValuesStream = formControlValues
-                                                  .stream()
-                                                  .filter(this::isIncluded);
-                                          var pageRequest = formPageRequestIndex.getPageRequest(formSubject.toFormSubject(),
-                                                                                                field.getId(),
-                                                                                                FormPageRequest.SourceType.CONTROL_STACK);
-                                          var controlValuesPage = controlValuesStream.collect(PageCollector.toPage(
-                                                  pageRequest.getPageNumber(),
-                                                  pageRequest.getPageSize()
-                                          )).orElse(Page.emptyPage());
-                                          var fieldDescriptorDto = formDataDtoTranslator.toFormFieldDescriptorDto(field);
-                                          return FormFieldDataDto.get(fieldDescriptorDto, controlValuesPage);
-                                      })
-                                      .collect(toImmutableList());
+    protected FormDataDto getFormDataDto(@Nonnull Optional<FormEntitySubject> subject,
+                                         @Nonnull FormDescriptor formDescriptor,
+                                         int depth) {
+        var formSubject = subject.map(s -> {
+            var renderedSubject = sessionRenderer.getEntityRendering(s.getEntity());
+            return FormSubjectDto.getFormSubject(renderedSubject);
+        });
+        var fieldData = formDescriptor.getFields().stream().map(field -> {
+            var formControlValues = toFormControlValues(formSubject.map(FormSubjectDto::toFormSubject),
+                                                        field.getId(),
+                                                        field,
+                                                        depth);
+            var controlValuesStream = formControlValues.stream().filter(this::isIncluded);
+            var pageRequest = subject.map(s -> formPageRequestIndex.getPageRequest(s,
+                                                                                   field.getId(),
+                                                                                   FormPageRequest.SourceType.CONTROL_STACK))
+                                     .orElseGet(PageRequest::requestFirstPage);
+            var controlValuesPage = controlValuesStream.collect(PageCollector.toPage(pageRequest.getPageNumber(),
+                                                                                     pageRequest.getPageSize()))
+                                                       .orElse(Page.emptyPage());
+            var fieldDescriptorDto = formDataDtoTranslator.toFormFieldDescriptorDto(field);
+            return FormFieldDataDto.get(fieldDescriptorDto, controlValuesPage);
+        }).collect(toImmutableList());
         var formDescriptorDto = formDataDtoTranslator.toFormDescriptorDto(formDescriptor);
-        return FormDataDto.get(formSubject, formDescriptorDto, fieldData, depth);
+        return formSubject.map(s -> FormDataDto.get(s, formDescriptorDto, fieldData, depth))
+                          .orElseGet(() -> FormDataDto.get(formDescriptorDto, fieldData, depth));
     }
 
     private boolean isIncluded(@Nonnull FormControlDataDto formControlData) {

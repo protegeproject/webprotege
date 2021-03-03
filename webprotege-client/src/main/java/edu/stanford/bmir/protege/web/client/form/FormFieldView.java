@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
@@ -19,6 +20,8 @@ public interface FormFieldView extends IsWidget, HasRequestFocus {
     void collapse();
 
     void expand();
+
+    boolean isExpanded();
 
     interface HeaderClickedHandler {
         void handleHeaderClicked();

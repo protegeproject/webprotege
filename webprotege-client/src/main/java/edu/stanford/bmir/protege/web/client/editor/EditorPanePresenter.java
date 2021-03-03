@@ -39,4 +39,6 @@ public interface EditorPanePresenter extends HasDispose {
     void dispose();
 
     boolean isActive();
+
+    void reload();
 }

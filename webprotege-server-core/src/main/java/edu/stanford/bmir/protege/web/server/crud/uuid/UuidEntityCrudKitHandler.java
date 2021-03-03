@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.util.IdUtil;
 import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
@@ -34,6 +35,8 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
 
     private final UuidSuffixSettings suffixSettings;
 
+    private final GeneratedAnnotationsSettings generatedAnnotationsSettings;
+
     @Nonnull
     private final OWLDataFactory dataFactory;
 
@@ -47,11 +50,13 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
     @Inject
     public UuidEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                     @Nonnull UuidSuffixSettings uuidSuffixKitSettings,
+                                    GeneratedAnnotationsSettings generatedAnnotationsSettings,
                                     @Provided OWLDataFactory dataFactory,
                                     @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature,
                                     @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(uuidSuffixKitSettings);
+        this.generatedAnnotationsSettings = checkNotNull(generatedAnnotationsSettings);
         this.dataFactory = checkNotNull(dataFactory);
         this.entitiesInSignature = checkNotNull(entitiesInSignature);
         this.entityIriPrefixResolver = checkNotNull(entityIriPrefixResolver);
@@ -79,7 +84,7 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
 
     @Override
     public EntityCrudKitSettings<UuidSuffixSettings> getSettings() {
-        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings, generatedAnnotationsSettings);
     }
 
     @Override

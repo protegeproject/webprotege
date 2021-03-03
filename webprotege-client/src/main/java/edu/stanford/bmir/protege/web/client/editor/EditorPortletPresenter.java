@@ -68,7 +68,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull VizPanePresenter vizPresenter,
             @Nonnull Provider<ForbiddenView> forbiddenViewProvider,
             @Nonnull DispatchServiceManager dispatch) {
-        super(selectionModel, projectId, displayNameRenderer);
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
         this.permissionChecker = permissionChecker;
@@ -205,6 +205,11 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             panePresenter.dispose();
         }
         super.dispose();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        panePresenters.forEach(EditorPanePresenter::reload);
     }
 
     private boolean isActive(IsWidget widget) {

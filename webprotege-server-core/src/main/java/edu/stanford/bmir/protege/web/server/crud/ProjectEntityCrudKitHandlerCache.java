@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -76,7 +77,7 @@ public class ProjectEntityCrudKitHandlerCache {
      * @return The default settings.  Not {@code null}.
      */
     private static EntityCrudKitSettings<?> getDefaultSettings() {
-        return EntityCrudKitSettings.get(getDefaultPrefixSettings(), getDefaultSuffixSettings());
+        return EntityCrudKitSettings.get(getDefaultPrefixSettings(), getDefaultSuffixSettings(), getDefaultGeneratedAnnotationsSettings());
     }
 
     private static EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
@@ -85,5 +86,9 @@ public class ProjectEntityCrudKitHandlerCache {
 
     private static EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
         return UuidSuffixSettings.get();
+    }
+
+    private static GeneratedAnnotationsSettings getDefaultGeneratedAnnotationsSettings() {
+        return GeneratedAnnotationsSettings.empty();
     }
 }

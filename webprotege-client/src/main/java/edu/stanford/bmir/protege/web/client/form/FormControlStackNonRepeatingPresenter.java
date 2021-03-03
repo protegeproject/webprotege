@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.gargoylesoftware.htmlunit.javascript.host.Console;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -62,7 +63,7 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
             formControl.clearValue();
         }
         else {
-            throw new RuntimeException("Too many values set (" + value.size() + ") in Non-Repeating Form Control");
+            formControl.setValue(value.get(0));
         }
     }
 

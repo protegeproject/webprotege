@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.server.events;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
-import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
@@ -37,24 +35,24 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
     }
 
     @Override
-    protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLDataProperty child, OWLDataProperty parent) {
+    protected Collection<HighLevelProjectEventProxy> createRemovedEvents(OWLDataProperty child, OWLDataProperty parent) {
         RemoveEdge<EntityNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
                 new GraphNode<>(renderer.render(parent)),
                 new GraphNode<>(renderer.render(child))
         ));
         return Collections.singletonList(
-                new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge)))
+                SimpleHighLevelProjectEventProxy.wrap(new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))))
         );
     }
 
     @Override
-    protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLDataProperty child, OWLDataProperty parent) {
+    protected Collection<HighLevelProjectEventProxy> createAddedEvents(OWLDataProperty child, OWLDataProperty parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
                 new GraphNode<>(renderer.render(parent), hierarchyProvider.isLeaf(parent)),
                 new GraphNode<>(renderer.render(child), hierarchyProvider.isLeaf(child))
         ));
         return Collections.singletonList(
-                new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
+                SimpleHighLevelProjectEventProxy.wrap(new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge))))
         );
     }
 }

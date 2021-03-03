@@ -333,11 +333,6 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler provideGetPerspectivesActionHandler(GetPerspectivesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
     public ProjectActionHandler provideSetPerspectivesActionHandler(SetPerspectivesActionHandler handler) {
         return handler;
     }
@@ -715,6 +710,16 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideCreateEntityFromFormDataActionHandler(CreateEntityFromFormDataActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityDeprecationFormsActionHandler(GetEntityDeprecationFormsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideDeprecateEntityByFormActionHandler(DeprecateEntityByFormActionHandler handler) {
         return handler;
     }
 

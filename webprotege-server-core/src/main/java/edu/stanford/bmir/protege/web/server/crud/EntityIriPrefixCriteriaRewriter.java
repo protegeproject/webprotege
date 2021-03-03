@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -64,6 +66,22 @@ public class EntityIriPrefixCriteriaRewriter {
                     instanceOfCriteria.getFilterType()
             );
             return subClassOfCriteria.accept(this);
+        }
+
+        @Override
+        public RootCriteria visit(NotSubClassOfCriteria notSubClassOfCriteria) {
+            var targetEntity = notSubClassOfCriteria.getTarget();
+            var entityIsNotCriteria = EntityIsNotCriteria.get(targetEntity);
+            var combinedCriteria = ImmutableList.<RootCriteria>of(entityIsNotCriteria,
+                                                                  notSubClassOfCriteria);
+            return CompositeRootCriteria.get(combinedCriteria,
+                                             MultiMatchType.ALL);
+        }
+
+        @Override
+        public RootCriteria visit(IsLeafClassCriteria isALeafClassCriteria) {
+            // New entities are leaves?
+            return EntityTypeIsOneOfCriteria.get(ImmutableSet.of(EntityType.CLASS));
         }
     }
 }

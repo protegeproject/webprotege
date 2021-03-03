@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -22,14 +23,17 @@ public class EventManagerProvider implements Provider<EventManager<ProjectEvent<
 
     private final ProjectDisposablesManager projectDisposablesManager;
 
+    private final ProjectId projectId;
+
     @Inject
-    public EventManagerProvider(ProjectDisposablesManager projectDisposablesManager) {
+    public EventManagerProvider(ProjectDisposablesManager projectDisposablesManager, ProjectId projectId) {
         this.projectDisposablesManager = checkNotNull(projectDisposablesManager);
+        this.projectId = projectId;
     }
 
     @Override
     public EventManager<ProjectEvent<?>> get() {
-        EventManager<ProjectEvent<?>> projectEventEventManager = new EventManager<>(PROJECT_EVENT_LIFE_TIME);
+        EventManager<ProjectEvent<?>> projectEventEventManager = new EventManager<>(PROJECT_EVENT_LIFE_TIME, projectId);
         projectDisposablesManager.register(projectEventEventManager);
         return projectEventEventManager;
     }

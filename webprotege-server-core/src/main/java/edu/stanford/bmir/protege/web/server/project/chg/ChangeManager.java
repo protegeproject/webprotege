@@ -8,8 +8,10 @@ import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.crud.gen.GeneratedAnnotationsGenerator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
+import edu.stanford.bmir.protege.web.server.events.HighLevelProjectEventProxy;
 import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
@@ -147,6 +149,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final IriReplacerFactory iriReplacerFactory;
 
+    @Nonnull
+    private final GeneratedAnnotationsGenerator generatedAnnotationsGenerator;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLDataFactory dataFactory,
@@ -172,7 +177,8 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
                          @Nonnull IndexUpdater indexUpdater,
                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                         @Nonnull IriReplacerFactory iriReplacerFactory) {
+                         @Nonnull IriReplacerFactory iriReplacerFactory,
+                         @Nonnull GeneratedAnnotationsGenerator generatedAnnotationsGenerator) {
         this.projectId = projectId;
         this.dataFactory = dataFactory;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -198,6 +204,7 @@ public class ChangeManager implements HasApplyChanges {
         this.indexUpdater = indexUpdater;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.iriReplacerFactory = iriReplacerFactory;
+        this.generatedAnnotationsGenerator = generatedAnnotationsGenerator;
     }
 
     /**
@@ -429,6 +436,11 @@ public class ChangeManager implements HasApplyChanges {
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler = getEntityCrudKitHandler();
         handler.createChangeSetSession();
         E ent = handler.create(session, entityType, EntityShortForm.get(shortName), langTag, parents, context, builder);
+        // Generate changes to apply annotations
+        generatedAnnotationsGenerator.generateAnnotations(ent,
+                                                          parents,
+                                                          getEntityCrudKitHandler().getSettings(),
+                                                          builder);
         return new OWLEntityCreator<>(ent,
                                       builder.build(ent)
                                              .getChanges());
@@ -523,12 +535,12 @@ public class ChangeManager implements HasApplyChanges {
             return;
         }
         revision.ifPresent(rev -> {
-            var highLevelEvents = new ArrayList<ProjectEvent<?>>();
+            var highLevelEvents = new ArrayList<HighLevelProjectEventProxy>();
             eventTranslatorManager.translateOntologyChanges(rev, finalResult, highLevelEvents);
             if(changeListGenerator instanceof HasHighLevelEvents) {
                 highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
             }
-            projectEventManager.postEvents(highLevelEvents);
+            projectEventManager.postHighLevelEvents(highLevelEvents);
             projectChangedWebhookInvoker.invoke(userId, rev.getRevisionNumber(), rev.getTimestamp());
         });
     }

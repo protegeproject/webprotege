@@ -92,15 +92,16 @@ public class WebProtegeCli {
     public static MongoClient getMongoClient() {
         try {
             WebProtegeProperties properties = getWebProtegeProperties();
-            String dbHost = properties.getDBHost().orElse("localhost");
-            int dbPort = Integer.parseInt(properties.getDBPort().orElse(WebProtegePropertyName.MONGO_DB_PORT.toString()));
+            var dbHost = properties.getDBHost();
+            var dbPort = properties.getDBPort().map(Integer::parseInt);
+            var dbUri = properties.getDbUri();
             MongoCredentialProvider mongoCredentialProvider = new MongoCredentialProvider(
                     properties.getDBUserName().orElse(""),
                     properties.getDBAuthenticationSource().orElse(""),
                     properties.getDBPassword().map(String::toCharArray).orElse(new char [0])
             );
             var credential = mongoCredentialProvider.get();
-            return new MongoClientProvider(dbHost, dbPort, credential, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
+            return new MongoClientProvider(dbHost, dbPort, dbUri, credential, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
         } catch(IOException e) {
             System.out.printf("A problem occurred when trying to access MongoDB: %s\n", e.getMessage());
             throw new RuntimeException(e);

@@ -40,8 +40,14 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
     private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
     @Inject
-    public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+    public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView,
+                                               SelectionModel selectionModel,
+                                               DispatchServiceManager dispatchServiceManager,
+                                               ProjectId projectId,
+                                               LoggedInUserProjectPermissionChecker permissionChecker,
+                                               DisplayNameRenderer displayNameRenderer,
+                                               DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
@@ -63,6 +69,11 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         });
     }
 
+
+    @Override
+    protected void handleReloadRequest() {
+
+    }
 
     private void updateState() {
         annotationsView.setEnabled(false);

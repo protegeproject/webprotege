@@ -5,6 +5,8 @@ import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
@@ -13,6 +15,7 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -48,6 +51,9 @@ public class BindingValuesExtractor {
     @Nonnull
     private final ClassFrameProvider classFrameProvider;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     @Inject
     public BindingValuesExtractor(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                   @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex,
@@ -56,7 +62,7 @@ public class BindingValuesExtractor {
                                   @Nonnull DataPropertyAssertionAxiomsBySubjectIndex dataPropertyAssertionAxiomsBySubjectIndex,
                                   @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex,
                                   @Nonnull ClassAssertionAxiomsByClassIndex classAssertionAxiomsByClassIndex,
-                                  @Nonnull ClassFrameProvider classFrameProvider) {
+                                  @Nonnull ClassFrameProvider classFrameProvider, @Nonnull OWLDataFactory dataFactory) {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.classAssertionAxiomsByIndividualIndex = classAssertionAxiomsByIndividualIndex;
         this.classHierarchyProvider = classHierarchyProvider;
@@ -65,10 +71,18 @@ public class BindingValuesExtractor {
         this.annotationAssertionAxiomsBySubjectIndex = annotationAssertionAxiomsBySubjectIndex;
         this.classAssertionAxiomsByClassIndex = classAssertionAxiomsByClassIndex;
         this.classFrameProvider = classFrameProvider;
+        this.dataFactory = dataFactory;
     }
 
     @Nonnull
-    public ImmutableList<OWLPrimitive> getBindingValues(@Nonnull OWLEntity formSubject, @Nonnull OwlBinding binding) {
+    public ImmutableList<OWLPrimitive> getBindingValues(@Nonnull Optional<FormEntitySubject> formSubject,
+                                                        @Nonnull OwlBinding binding) {
+        return formSubject.map(s -> getBindingValues(s, binding)).orElseGet(ImmutableList::of);
+    }
+
+
+    private ImmutableList<OWLPrimitive> getBindingValues(@Nonnull FormEntitySubject subject,
+                                                         @Nonnull OwlBinding binding) {
         OWLEntityVisitorEx<ImmutableList<OWLPrimitive>> subjectVisitor = new OWLEntityVisitorEx<>() {
             @Nonnull
             @Override
@@ -106,7 +120,7 @@ public class BindingValuesExtractor {
                 return ImmutableList.of();
             }
         };
-        return formSubject.accept(subjectVisitor);
+        return subject.getEntity().accept(subjectVisitor);
     }
 
     @Nonnull

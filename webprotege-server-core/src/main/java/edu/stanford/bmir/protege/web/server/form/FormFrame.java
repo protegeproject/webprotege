@@ -1,26 +1,13 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -34,7 +21,7 @@ import java.util.Optional;
 public abstract class FormFrame {
 
     @Nonnull
-    public static FormFrame get(@Nonnull FormSubject formSubject,
+    public static FormFrame get(@Nonnull FormEntitySubject formSubject,
                                 @Nonnull ImmutableSet<OWLClass> parents,
                                 @Nonnull ImmutableSet<OWLClass> subClasses,
                                 @Nonnull ImmutableSet<OWLNamedIndividual> instances,
@@ -44,7 +31,7 @@ public abstract class FormFrame {
     }
 
     @Nonnull
-    public static FormFrame get(@Nonnull FormSubject formSubject) {
+    public static FormFrame get(@Nonnull FormEntitySubject formSubject) {
         return get(formSubject,
                    ImmutableSet.of(),
                    ImmutableSet.of(),
@@ -54,7 +41,7 @@ public abstract class FormFrame {
     }
 
     @Nonnull
-    public abstract FormSubject getSubject();
+    public abstract FormEntitySubject getSubject();
 
     @Nonnull
     public abstract ImmutableSet<OWLClass> getClasses();

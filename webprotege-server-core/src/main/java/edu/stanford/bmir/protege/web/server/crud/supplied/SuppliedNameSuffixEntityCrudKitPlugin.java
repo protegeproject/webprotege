@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 
@@ -42,12 +43,14 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
 
     @Override
     public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler() {
-        return factory.create(EntityCrudKitPrefixSettings.get(), SuppliedNameSuffixSettings.get());
+        return factory.create(EntityCrudKitPrefixSettings.get(), SuppliedNameSuffixSettings.get(), GeneratedAnnotationsSettings
+                .empty());
     }
 
     @Override
     public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler(EntityCrudKitSettings<SuppliedNameSuffixSettings> settings) {
-        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
+        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings(),
+                              settings.getGeneratedAnnotationsSettings());
     }
 
     @Override

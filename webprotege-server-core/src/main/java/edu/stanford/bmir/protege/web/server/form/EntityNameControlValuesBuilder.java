@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.EntityNameControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import org.semanticweb.owlapi.model.IRI;
@@ -13,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @FormDataBuilderSession
@@ -43,10 +46,10 @@ public class EntityNameControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getEntityNameControlDataDtoValues(@Nonnull EntityNameControlDescriptor entityNameControlDescriptor,
-                                                                               @Nonnull OWLEntityData subject,
+                                                                               @Nonnull Optional<FormEntitySubject> subject,
                                                                                @Nonnull OwlBinding theBinding,
                                                                                int depth) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()
                      // Allow IRIs which correspond to entities
                      .filter(p -> p instanceof OWLEntity || p instanceof IRI)

@@ -14,6 +14,12 @@ public interface EntityFormStackView extends IsWidget {
 
     void displayApplyOutstandingEditsConfirmation(ApplyEditsHandler applyEditsHandler, CancelEditsHandler cancelEditsHandler);
 
+    void setDeprecateEntityHandler(DeprecateEntityHandler handler);
+
+    interface DeprecateEntityHandler {
+        void handleDeprecateEntity();
+    }
+
     interface EnterEditModeHandler {
         void handleEnterEditMode();
     }
@@ -43,5 +49,7 @@ public interface EntityFormStackView extends IsWidget {
     void setApplyEditsButtonVisible(boolean visible);
 
     void setCancelEditsButtonVisible(boolean visible);
+
+    void setDeprecateButtonVisible(boolean visible);
 
 }

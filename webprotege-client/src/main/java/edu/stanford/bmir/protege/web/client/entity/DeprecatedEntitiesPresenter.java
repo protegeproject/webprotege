@@ -54,8 +54,10 @@ public class DeprecatedEntitiesPresenter extends AbstractWebProtegePortletPresen
     public DeprecatedEntitiesPresenter(@Nonnull SelectionModel selectionModel,
                                        @Nonnull ProjectId projectId,
                                        @Nonnull DeprecatedEntitiesView view,
-                                       @Nonnull DispatchServiceManager dispatchServiceManager, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                       @Nonnull DispatchServiceManager dispatchServiceManager,
+                                       DisplayNameRenderer displayNameRenderer,
+                                       DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.view = checkNotNull(view);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
@@ -71,6 +73,11 @@ public class DeprecatedEntitiesPresenter extends AbstractWebProtegePortletPresen
         view.setSelectionChangedHandler(event -> {
             getSelectionModel().setSelection(event.getSelectedItem().getEntity());
         });
+        refillView();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
         refillView();
     }
 

@@ -19,17 +19,17 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class GridRowData implements Comparable<GridRowData> {
 
-    public static GridRowData get(@Nullable FormSubject subject,
+    public static GridRowData get(@Nullable FormEntitySubject subject,
                                   @Nonnull ImmutableList<GridCellData> cellData) {
         return new AutoValue_GridRowData(subject, cellData);
     }
 
 
     @Nullable
-    protected abstract FormSubject getSubjectInternal();
+    protected abstract FormEntitySubject getSubjectInternal();
 
     @Nonnull
-    public Optional<FormSubject> getSubject() {
+    public Optional<FormEntitySubject> getSubject() {
         return Optional.ofNullable(getSubjectInternal());
     }
 

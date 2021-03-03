@@ -6,9 +6,10 @@ import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.events.EventTranslator;
+import edu.stanford.bmir.protege.web.server.events.HighLevelProjectEventProxy;
+import edu.stanford.bmir.protege.web.server.events.SimpleHighLevelProjectEventProxy;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -67,7 +68,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     @SuppressWarnings("unchecked")
     @Override
-    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> result, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> result, List<HighLevelProjectEventProxy> projectEventList) {
         Set<T> changeSignature = new HashSet<>();
         for (OntologyChange change : result.getChangeList()) {
             for (OWLEntity child : change.getSignature()) {
@@ -103,7 +104,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                 EntityHierarchyChangedEvent event = new EntityHierarchyChangedEvent(projectId,
                                                                                     hierarchyId,
                                                                                     new GraphModelChangedEvent<>(changes));
-                projectEventList.add(event);
+                projectEventList.add(SimpleHighLevelProjectEventProxy.wrap(event));
             }
         }
         for (T rootBefore : roots) {
@@ -113,14 +114,14 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                 EntityHierarchyChangedEvent event = new EntityHierarchyChangedEvent(projectId,
                                                                                     hierarchyId,
                                                                                     new GraphModelChangedEvent<>(changes));
-                projectEventList.add(event);
+                projectEventList.add(SimpleHighLevelProjectEventProxy.wrap(event));
             }
         }
     }
 
 
-    protected abstract Collection<? extends ProjectEvent<?>> createRemovedEvents(T child, T parent);
+    protected abstract Collection<HighLevelProjectEventProxy> createRemovedEvents(T child, T parent);
 
-    protected abstract Collection<? extends ProjectEvent<?>> createAddedEvents(T child, T parent);
+    protected abstract Collection<HighLevelProjectEventProxy> createAddedEvents(T child, T parent);
 
 }

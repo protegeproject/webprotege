@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -43,8 +44,10 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull ProjectId projectId,
                                              @Nonnull CommentedEntitiesPresenter presenter,
                                              @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                                             @Nonnull Messages messages, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                             @Nonnull Messages messages,
+                                             DisplayNameRenderer displayNameRenderer,
+                                             DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.messages = messages;
@@ -68,5 +71,10 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
                                         event -> permissionChecker.hasPermission(VIEW_OBJECT_COMMENT,
                                                                                  canView -> portletUi.setForbiddenVisible(!canView)));
         presenter.setHasBusy(portletUi);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        presenter.reload();
     }
 }

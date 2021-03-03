@@ -46,8 +46,10 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
                                  @Nonnull ProjectId projectId,
                                  @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
-                                 @Nonnull QueryPortletView view, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                 @Nonnull QueryPortletView view,
+                                 DisplayNameRenderer displayNameRenderer,
+                                 DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.presenter = checkNotNull(presenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view = checkNotNull(view);
@@ -60,6 +62,11 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
         portletUi.setWidget(view);
         presenter.start(view.getCriteriaContainer());
         eventBus.addApplicationEventHandler(ON_PROJECT_SETTINGS_CHANGED, this::handleProjectSettingsChanged);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+
     }
 
     private void handleProjectSettingsChanged(@Nonnull ProjectSettingsChangedEvent event) {

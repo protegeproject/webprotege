@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.change;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -36,8 +37,10 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 	public EntityChangesPortletPresenter(SelectionModel selectionModel,
                                          LoggedInUserProjectPermissionChecker permissionChecker,
                                          ProjectId projectId,
-                                         ChangeListPresenter presenter, DisplayNameRenderer displayNameRenderer) {
-		super(selectionModel, projectId, displayNameRenderer);
+                                         ChangeListPresenter presenter,
+                                         DisplayNameRenderer displayNameRenderer,
+                                         DispatchServiceManager dispatch) {
+		super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
 	}
@@ -68,6 +71,11 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        updateDisplayForSelectedEntity();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
         updateDisplayForSelectedEntity();
     }
 

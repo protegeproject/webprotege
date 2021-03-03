@@ -3,21 +3,14 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
-import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -75,6 +68,15 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     RadioButton initialExpansionStateExpanded;
     @UiField
     RadioButton initialExpansionStateCollapsed;
+
+    @UiField
+    RadioButton deprecationStrategyLeaveValuesIntactRadio;
+
+    @UiField
+    RadioButton deprecationStrategyDeleteValuesRadio;
+
+    @UiField
+    HTMLPanel deprecationStrategyView;
 
     @Inject
     public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
@@ -209,6 +211,38 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
         }
         else {
             initialExpansionStateCollapsed.setValue(true);
+        }
+    }
+
+    @Override
+    public void setDeprecationStrategyVisible(boolean visible) {
+        deprecationStrategyView.setVisible(visible);
+    }
+
+    @Override
+    public void setDeprecationStrategy(@Nonnull FormFieldDeprecationStrategy deprecationStrategy) {
+        switch (deprecationStrategy) {
+            case LEAVE_VALUES_INTACT:
+                deprecationStrategyLeaveValuesIntactRadio.setValue(true);
+                deprecationStrategyDeleteValuesRadio.setValue(false);
+                break;
+            case DELETE_VALUES:
+                deprecationStrategyLeaveValuesIntactRadio.setValue(false);
+                deprecationStrategyDeleteValuesRadio.setValue(true);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public FormFieldDeprecationStrategy getDeprecationStrategy() {
+        if(!deprecationStrategyView.isVisible()) {
+            return FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT;
+        }
+        if(deprecationStrategyDeleteValuesRadio.getValue()) {
+            return FormFieldDeprecationStrategy.DELETE_VALUES;
+        }
+        else {
+            return FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT;
         }
     }
 }

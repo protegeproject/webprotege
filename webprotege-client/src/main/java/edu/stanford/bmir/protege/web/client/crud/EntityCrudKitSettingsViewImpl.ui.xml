@@ -14,5 +14,9 @@
             <g:Label text="IRI Suffix Settings" addStyleNames="{wp.style.formLabel}"/>
             <g:SimplePanel ui:field="suffixSettingsViewContainer" addStyleNames="{style.container}"/>
         </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Generated annotations" addStyleNames="{wp.settings.title}"/>
+            <g:SimplePanel ui:field="generatedAnnotationsViewContainer" addStyleNames="{style.container}"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

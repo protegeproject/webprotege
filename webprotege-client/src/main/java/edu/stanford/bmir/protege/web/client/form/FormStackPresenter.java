@@ -28,6 +28,13 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
 
+    @Nonnull
+    public ImmutableList<FormId> getSelectedForms() {
+        return formTabBarPresenter.getSelectedForm()
+                .map(ImmutableList::of)
+                .orElse(ImmutableList.of());
+    }
+
     public enum FormUpdate {
         REPLACE,
         PATCH
@@ -72,6 +79,10 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
         this.formPresenterProvider = checkNotNull(formPresenterProvider);
     }
 
+    public Optional<FormId> getSelectedForm() {
+        return formTabBarPresenter.getSelectedForm();
+    }
+
     public void clearForms() {
         formPresenters.clear();
         formTabBarPresenter.clear();
@@ -81,6 +92,10 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         getFormPresenters().forEach(formPresenter -> formPresenter.setEnabled(enabled));
+    }
+
+    public void setSelectedFormChangedHandler(@Nonnull SelectedFormChangedHandler selectedFormChangedHandler) {
+        this.formTabBarPresenter.setSelectedFormChangedHandler(selectedFormChangedHandler);
     }
 
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {

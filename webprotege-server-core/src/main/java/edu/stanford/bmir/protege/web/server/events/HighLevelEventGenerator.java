@@ -63,7 +63,7 @@ public class HighLevelEventGenerator implements EventTranslator {
     @Override
     public void translateOntologyChanges(Revision revision,
                                          ChangeApplicationResult<?> changes,
-                                         final List<ProjectEvent<?>> projectEventList) {
+                                         final List<HighLevelProjectEventProxy> projectEventList) {
         var changedEntities = new HashSet<OWLEntity>();
         var changedOntologies = new HashSet<OntologyDocumentId>();
         changes.getChangeList()
@@ -114,7 +114,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                            return;
                        }
                        var event = new OntologyFrameChangedEvent(ontologyId, projectId);
-                       projectEventList.add(event);
+                       projectEventList.add(SimpleHighLevelProjectEventProxy.wrap(event));
                    }
                }));
 
@@ -145,7 +145,7 @@ public class HighLevelEventGenerator implements EventTranslator {
         var revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
         if(revisionSummary.isPresent()) {
             var event = new ProjectChangedEvent(projectId, revisionSummary.get(), changedEntitiesData);
-            projectEventList.add(event);
+            projectEventList.add(SimpleHighLevelProjectEventProxy.wrap(event));
         }
     }
 
@@ -165,8 +165,8 @@ public class HighLevelEventGenerator implements EventTranslator {
         return entities;
     }
 
-    private ProjectEvent<?> toFrameChangedEvent(OWLEntity e, Revision revision) {
-        return e.accept(new OWLEntityVisitorEx<>() {
+    private HighLevelProjectEventProxy toFrameChangedEvent(OWLEntity e, Revision revision) {
+        var event = e.accept(new OWLEntityVisitorEx<ProjectEvent<?>>() {
             @Nonnull
             @Override
             public ProjectEvent<?> visit(@Nonnull OWLClass cls) {
@@ -211,5 +211,6 @@ public class HighLevelEventGenerator implements EventTranslator {
                                                                revision.getUserId());
             }
         });
+        return SimpleHighLevelProjectEventProxy.wrap(event);
     }
 }

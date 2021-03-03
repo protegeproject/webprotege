@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -38,7 +39,13 @@ public abstract class OWLEntityData extends OWLPrimitiveData {
 
     @Override
     public String getBrowserText() {
-        return getFirstShortForm(() -> getEntity().getIRI().toQuotedString());
+        IRI iri = getEntity().getIRI();
+        if(FreshEntityIri.isFreshEntityIri(iri)) {
+            return FreshEntityIri.parse(iri.toString()).getSuppliedName();
+        }
+        else {
+            return getFirstShortForm(iri::toQuotedString);
+        }
     }
 
     public int compareToIgnoreCase(OWLEntityData other) {

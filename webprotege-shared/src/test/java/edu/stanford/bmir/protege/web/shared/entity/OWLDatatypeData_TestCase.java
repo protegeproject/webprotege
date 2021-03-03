@@ -10,12 +10,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDatatype;
 
 import static edu.stanford.bmir.protege.web.shared.PrimitiveType.DATA_TYPE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.Mockito.when;
 
 @RunWith(value = org.mockito.runners.MockitoJUnitRunner.class)
 public class OWLDatatypeData_TestCase {
@@ -33,6 +35,7 @@ public class OWLDatatypeData_TestCase {
     public void setUp()
         throws Exception {
         shortForms = ImmutableMap.of(LocalNameDictionaryLanguage.get(), browserText);
+        when(entity.getIRI()).thenReturn(IRI.create("http://example.org/x"));
         data = OWLDatatypeData.get(entity, shortForms);
     }
 

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
@@ -50,8 +51,10 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
                                            @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                            @Nonnull FilterView filterView,
                                            @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
-                                           @Nonnull Messages messages, @Nonnull SearchModal searchModal) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                           @Nonnull Messages messages,
+                                           @Nonnull SearchModal searchModal,
+                                           DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.presenter = checkNotNull(presenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.filterView = checkNotNull(filterView);
@@ -76,6 +79,11 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         Optional<OWLNamedIndividual> sel = entity.filter(OWLEntity::isOWLNamedIndividual)
                 .map(e -> (OWLNamedIndividual) e);
         sel.ifPresent(presenter::setDisplayedIndividual);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     private void handleSearch() {

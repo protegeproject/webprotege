@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixResolver;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
@@ -79,6 +80,8 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     @Mock
     private EntityIriPrefixResolver entityIriPrefixResolver;
 
+    private GeneratedAnnotationsSettings generatedAnnotationsDescriptor = GeneratedAnnotationsSettings.empty();
+
     @Before
     public void setUp() throws Exception {
         OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
@@ -88,7 +91,9 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("");
         when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of())).thenReturn(PREFIX);
-        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory,
+        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings,
+                                                             generatedAnnotationsDescriptor,
+                                                             dataFactory,
                                                              entityIriPrefixResolver);
     }
 

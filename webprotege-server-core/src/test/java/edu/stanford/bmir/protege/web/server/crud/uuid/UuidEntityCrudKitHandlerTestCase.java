@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
@@ -87,6 +88,8 @@ public class UuidEntityCrudKitHandlerTestCase {
     @Mock
     private EntityIriPrefixResolver entityIriPrefixResolver;
 
+    private GeneratedAnnotationsSettings generatedAnnotationsSettings = GeneratedAnnotationsSettings.empty();
+
     @Before
     public void setUp() throws Exception {
         dictionaryLanguage = AnnotationAssertionDictionaryLanguage.get(annotationPropertyIri, "en");
@@ -95,7 +98,9 @@ public class UuidEntityCrudKitHandlerTestCase {
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of()))
                 .thenReturn(PREFIX);
-        handler = new UuidEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature,
+        handler = new UuidEntityCrudKitHandler(prefixSettings, suffixSettings,
+                                               generatedAnnotationsSettings,
+                                               dataFactory, entitiesInSignature,
                                                entityIriPrefixResolver);
         when(entitiesInSignature.getEntitiesInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());

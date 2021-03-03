@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -43,7 +42,7 @@ public class FormFrameBuilder {
     private final Map<FormFrameBuilder, OwlBinding> nestedFrames = new HashMap<>();
 
     @Nullable
-    private FormSubject subject = null;
+    private FormEntitySubject subject = null;
 
     @Nullable
     private FormSubjectFactoryDescriptor subjectFactoryDescriptor = null;
@@ -118,11 +117,11 @@ public class FormFrameBuilder {
     }
 
     @Nonnull
-    public Optional<FormSubject> getSubject() {
+    public Optional<FormEntitySubject> getSubject() {
         return Optional.ofNullable(subject);
     }
 
-    public void setSubject(@Nonnull FormSubject subject) {
+    public void setSubject(@Nonnull FormEntitySubject subject) {
         this.subject = subject;
     }
 
@@ -162,18 +161,8 @@ public class FormFrameBuilder {
 
 
 
-    private void add(OwlBinding binding, FormSubject value) {
-        value.accept(new FormSubject.FormDataSubjectVisitor() {
-            @Override
-            public void visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                addEntityValue(binding, formDataEntitySubject.getEntity());
-            }
-
-            @Override
-            public void visit(@Nonnull FormIriSubject formDataIriSubject) {
-                addIriValue(binding, formDataIriSubject.getIri());
-            }
-        });
+    private void add(OwlBinding binding, FormEntitySubject value) {
+        addEntityValue(binding, value.getEntity());
     }
 
     private void addClass(@Nonnull OWLClass value) {

@@ -39,15 +39,18 @@ public class ProjectSettings_TestCase {
     @Mock
     private WebhookSettings webhookSettings;
 
+    @Mock
+    private EntityDeprecationSettings entityDeprecationSettings;
+
     @Before
     public void setUp() {
-        projectSettings = ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings);
+        projectSettings = ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        ProjectSettings.get(null, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings);
+        ProjectSettings.get(null, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings);
     }
 
     @Test
@@ -58,7 +61,7 @@ public class ProjectSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectDisplayName_IsNull() {
-        ProjectSettings.get(projectId, null, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings);
+        ProjectSettings.get(projectId, null, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings);
     }
 
     @Test
@@ -69,7 +72,7 @@ public class ProjectSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectDescription_IsNull() {
-        ProjectSettings.get(projectId, projectDisplayName, null, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings);
+        ProjectSettings.get(projectId, projectDisplayName, null, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings);
     }
 
     @Test
@@ -80,7 +83,7 @@ public class ProjectSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_slackIntegrationSettings_IsNull() {
-        ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, null, webhookSettings);
+        ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, null, webhookSettings, entityDeprecationSettings);
     }
 
     @Test
@@ -91,7 +94,7 @@ public class ProjectSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_webhookSettings_IsNull() {
-        ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, null);
+        ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, null, entityDeprecationSettings);
     }
 
     @Test
@@ -112,37 +115,37 @@ public class ProjectSettings_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(projectSettings, is(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings)));
+        assertThat(projectSettings, is(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(projectSettings, is(not(ProjectSettings.get(mock(ProjectId.class), projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings))));
+        assertThat(projectSettings, is(not(ProjectSettings.get(mock(ProjectId.class), projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectDisplayName() {
-        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, "String-e2778d26-1625-44d5-95be-360157916c2a", projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings))));
+        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, "String-e2778d26-1625-44d5-95be-360157916c2a", projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectDescription() {
-        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, projectDisplayName, "String-47556e3c-b862-44dc-a859-df860d6a2b59", defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings))));
+        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, projectDisplayName, "String-47556e3c-b862-44dc-a859-df860d6a2b59", defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_slackIntegrationSettings() {
-        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, mock(SlackIntegrationSettings.class), webhookSettings))));
+        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, mock(SlackIntegrationSettings.class), webhookSettings, entityDeprecationSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_webhookSettings() {
-        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, mock(WebhookSettings.class)))));
+        assertThat(projectSettings, is(not(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, mock(WebhookSettings.class), entityDeprecationSettings))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(projectSettings.hashCode(), is(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings).hashCode()));
+        assertThat(projectSettings.hashCode(), is(ProjectSettings.get(projectId, projectDisplayName, projectDescription, defaultLanguage, defaultDisplayNameSettings, slackIntegrationSettings, webhookSettings, entityDeprecationSettings).hashCode()));
     }
 
     @Test

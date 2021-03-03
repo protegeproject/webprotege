@@ -1,11 +1,18 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormFieldDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -194,6 +201,13 @@ public class FormControlFactory {
         return () -> {
             SubFormControl subFormControl = subFormControlProvider.get();
             subFormControl.start();
+            ImmutableList<FormFieldDataDto> fieldDtos = subFormControlDescriptor.getDescriptor()
+                                    .getFields()
+                                    .stream()
+                                    .map(f -> FormFieldDataDto.get(f, Page.emptyPage()))
+                                    .collect(toImmutableList());
+
+            subFormControl.setValue(FormDataDto.get(subFormControlDescriptor.getDescriptor(), fieldDtos, 1));
             return subFormControl;
         };
     }

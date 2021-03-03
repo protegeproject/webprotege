@@ -21,12 +21,9 @@ public interface AnnotationAssertionAxiomsByValueIndex extends Index {
 
     /**
      * Gets the annotation assertion axioms by values, where the value is either an {@link IRI}
-     * or an {@link OWLAnonymousIndividual}
-     * @param value The value.  The index only indexes against values that are {@link IRI} or
-     *              {@link OWLAnonymousIndividual} values.  {@link OWLLiteral} values will return
-     *              an empty stream.
+     * or an {@link OWLAnonymousIndividual} or an {@link OWLLiteral}.
+     * @param value The value
      * @param ontologyId The ontology context.
-     * @return
      */
     @Nonnull
     Stream<OWLAnnotationAssertionAxiom> getAxiomsByValue(@Nonnull OWLAnnotationValue value,

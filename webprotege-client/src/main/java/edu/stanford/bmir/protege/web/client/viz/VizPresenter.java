@@ -122,4 +122,8 @@ public class VizPresenter {
         this.currentEntity = Optional.of(entity);
         displayGraphView();
     }
+
+    public void reload() {
+        displayGraphView();
+    }
 }

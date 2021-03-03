@@ -91,18 +91,18 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     @Override
     public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
         var allChanges = new ArrayList<OntologyChangeList<OWLEntity>>();
-        for(FormId formId : pristineFormsData.keySet()) {
+        for (FormId formId : pristineFormsData.keySet()) {
             var pristineFormData = pristineFormsData.get(formId);
             var editedFormData = editedFormsData.get(formId);
-            if(pristineFormData == null) {
+            if (pristineFormData == null) {
                 throw new RuntimeException("Pristine form data not found for form " + formId);
             }
             var editedFormFrame = formDataProcessor.convert(editedFormData);
-            if(editedFormFrame == null) {
+            if (editedFormFrame == null) {
                 throw new RuntimeException("Edited form data not found for form " + formId);
             }
             var pristineFormFrame = formDataProcessor.convert(pristineFormData);
-            if(!pristineFormFrame.equals(editedFormFrame)) {
+            if (!pristineFormFrame.equals(editedFormFrame)) {
                 var pristineFramesBySubject = getFormFrameClosureBySubject(pristineFormFrame);
                 var editedFramesBySubject = getFormFrameClosureBySubject(editedFormFrame);
                 var changes = generateChangesForFormFrames(pristineFramesBySubject, editedFramesBySubject, context);
@@ -110,7 +110,7 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
             }
         }
 
-        if(allChanges.isEmpty()) {
+        if (allChanges.isEmpty()) {
             return emptyChangeList();
         }
         else {
@@ -124,6 +124,7 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
 
     /**
      * Combines a list of change lists
+     *
      * @param changes the list of changes lists
      * @return the combined list with the subject equal to the subject of the first change in the list
      */
@@ -135,64 +136,59 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                      .flatMap(List::stream)
                                      .collect(toImmutableList());
 
-        return OntologyChangeList.<OWLEntity>builder()/**/
-                .addAll(combinedChanges)
-                .build(firstChangeList.getResult());
+        return OntologyChangeList.<OWLEntity>builder()/**/.addAll(combinedChanges).build(firstChangeList.getResult());
     }
 
-    private static ImmutableMap<OWLEntity, FormFrame> getFormFrameClosureBySubject(FormFrame formFrame) {
+    private static ImmutableMap<FormEntitySubject, FormFrame> getFormFrameClosureBySubject(FormFrame formFrame) {
 
         var flattener = new FormFrameFlattener();
         var flattenedFormFrames = flattener.flattenAndMerge(formFrame);
         return flattenedFormFrames.stream()
-                                  .filter(f -> f.getSubject() instanceof FormEntitySubject)
-                           .collect(toImmutableMap(f -> ((FormEntitySubject) f.getSubject()).getEntity(), f -> f));
+                                  .collect(toImmutableMap(FormFrame::getSubject,
+                                                          f -> f));
     }
 
-    private List<OntologyChangeList<OWLEntity>> generateChangesForFormFrames(ImmutableMap<OWLEntity, FormFrame> pristineFramesBySubject,
-                                                                                 ImmutableMap<OWLEntity, FormFrame> editedFramesBySubject,
-                                                                                 ChangeGenerationContext context) {
+    private List<OntologyChangeList<OWLEntity>> generateChangesForFormFrames(ImmutableMap<FormEntitySubject, FormFrame> pristineFramesBySubject,
+                                                                             ImmutableMap<FormEntitySubject, FormFrame> editedFramesBySubject,
+                                                                             ChangeGenerationContext context) {
 
         var resultBuilder = ImmutableList.<OntologyChangeList<OWLEntity>>builder();
-        for(OWLEntity entity : pristineFramesBySubject.keySet()) {
-            var pristineFrame = pristineFramesBySubject.get(entity);
-            var editedFrame = editedFramesBySubject.get(entity);
+        for (FormEntitySubject subject : pristineFramesBySubject.keySet()) {
+            var pristineFrame = pristineFramesBySubject.get(subject);
+            var editedFrame = editedFramesBySubject.get(subject);
 
-            var pristineEntityFrame = formFrameConverter.toEntityFrame(pristineFrame)
-                                                        .orElseThrow();
+            var pristineEntityFrame = formFrameConverter.toEntityFrame(pristineFrame).orElseThrow();
 
-            if(editedFrame == null) {
+            if (editedFrame == null) {
                 // Deleted
-                var emptyEditedFrame = emptyEntityFrameFactory.getEmptyEntityFrame(entity);
+                var emptyEditedFrame = emptyEntityFrameFactory.getEmptyEntityFrame(subject.getEntity());
                 var changes = generateChangeListForFrames(pristineEntityFrame, emptyEditedFrame, context);
                 resultBuilder.add(changes);
-                var emptyFormFrame = FormFrame.get(FormSubject.get(entity));
-                generateChangesForInstances(entity, pristineFrame, emptyFormFrame, resultBuilder);
+                var emptyFormFrame = FormFrame.get(FormSubject.get(subject.getEntity()));
+                generateChangesForInstances(subject.getEntity(), pristineFrame, emptyFormFrame, resultBuilder);
             }
             else {
                 // Edited, possibly
-                var editedEntityFrame = formFrameConverter.toEntityFrame(editedFrame)
-                                                          .orElseThrow();
+                var editedEntityFrame = formFrameConverter.toEntityFrame(editedFrame).orElseThrow();
                 var changes = generateChangeListForFrames(pristineEntityFrame, editedEntityFrame, context);
                 resultBuilder.add(changes);
                 // Compute diff of class assertions
-                generateChangesForInstances(entity, pristineFrame, editedFrame, resultBuilder);
+                generateChangesForInstances(subject.getEntity(), pristineFrame, editedFrame, resultBuilder);
             }
         }
 
-        for(OWLEntity entity : editedFramesBySubject.keySet()) {
-            var pristineFrame = pristineFramesBySubject.get(entity);
-            if(pristineFrame == null) {
+        for (FormEntitySubject subject : editedFramesBySubject.keySet()) {
+            var pristineFrame = pristineFramesBySubject.get(subject);
+            if (pristineFrame == null) {
                 // Added
-                var emptyPristineFrame = emptyEntityFrameFactory.getEmptyEntityFrame(entity);
-                var addedFormFrame = editedFramesBySubject.get(entity);
-                var addedEntityFrame = formFrameConverter.toEntityFrame(addedFormFrame)
-                                                         .orElseThrow();
+                var emptyPristineFrame = emptyEntityFrameFactory.getEmptyEntityFrame(subject.getEntity());
+                var addedFormFrame = editedFramesBySubject.get(subject);
+                var addedEntityFrame = formFrameConverter.toEntityFrame(addedFormFrame).orElseThrow();
                 var changes = generateChangeListForFrames(emptyPristineFrame, addedEntityFrame, context);
                 resultBuilder.add(changes);
                 // Add all class assertions for instances
-                generateChangesForInstances(entity,
-                                            FormFrame.get(FormSubject.get(entity)),
+                generateChangesForInstances(subject.getEntity(),
+                                            FormFrame.get(FormSubject.get(subject.getEntity())),
                                             addedFormFrame,
                                             resultBuilder);
             }
@@ -202,8 +198,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
 
 
     private OntologyChangeList<OWLEntity> generateChangeListForFrames(PlainEntityFrame pristineFrame,
-                                                                          PlainEntityFrame editedFrame,
-                                                                          ChangeGenerationContext context) {
+                                                                      PlainEntityFrame editedFrame,
+                                                                      ChangeGenerationContext context) {
         var frameUpdate = FrameUpdate.get(pristineFrame, editedFrame);
         var changeGeneratorFactory = frameChangeGeneratorFactory.create(frameUpdate);
 
@@ -214,23 +210,23 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                              FormFrame pristineFrame,
                                              FormFrame editedFrame,
                                              ImmutableList.Builder<OntologyChangeList<OWLEntity>> changeListBuilder) {
-        if(!(subject instanceof OWLClass)) {
+        if (!(subject instanceof OWLClass)) {
             return;
         }
         var ontologyChangeList = OntologyChangeList.<OWLEntity>builder();
         var subjectCls = (OWLClass) subject;
         var pristineInstances = pristineFrame.getInstances();
         var editedInstances = editedFrame.getInstances();
-        for(var pristineInstance : pristineInstances) {
-            if(!editedInstances.contains(pristineInstance)) {
+        for (var pristineInstance : pristineInstances) {
+            if (!editedInstances.contains(pristineInstance)) {
                 // Deleted
                 var axiom = dataFactory.getOWLClassAssertionAxiom(subjectCls, pristineInstance);
                 // TODO: Project ontologies?
                 ontologyChangeList.removeAxiom(defaultOntologyIdManager.getDefaultOntologyDocumentId(), axiom);
             }
         }
-        for(var editedInstance : editedInstances) {
-            if(!pristineInstances.contains(editedInstance)) {
+        for (var editedInstance : editedInstances) {
+            if (!pristineInstances.contains(editedInstance)) {
                 // Added
                 var axiom = dataFactory.getOWLClassAssertionAxiom(subjectCls, editedInstance);
                 ontologyChangeList.addAxiom(defaultOntologyIdManager.getDefaultOntologyDocumentId(), axiom);

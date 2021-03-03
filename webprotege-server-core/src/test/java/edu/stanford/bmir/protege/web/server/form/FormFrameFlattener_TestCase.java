@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -29,7 +30,7 @@ public class FormFrameFlattener_TestCase {
     private FormFrameFlattener formFrameFlattener;
 
     @Mock
-    private FormSubject subject, otherSubject;
+    private FormEntitySubject subject, otherSubject;
 
     @Mock
     private OWLClass parentA, parentB, subClassA, subClassB;

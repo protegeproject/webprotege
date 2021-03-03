@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.ImageControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
@@ -11,6 +13,8 @@ import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -31,8 +35,10 @@ public class ImageControlValuesBuilder {
     }
 
     @Nonnull
-    public ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, int depth) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+    public ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor,
+                                                                          @Nonnull Optional<FormEntitySubject> subject,
+                                                                          OwlBinding theBinding, int depth) {
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()
                      .filter(p -> p instanceof IRI)
                      .map(p -> (IRI) p)

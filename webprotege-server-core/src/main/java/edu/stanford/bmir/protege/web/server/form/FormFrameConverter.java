@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
@@ -29,18 +26,7 @@ public class FormFrameConverter {
     @Nonnull
     public Optional<PlainEntityFrame> toEntityFrame(@Nonnull FormFrame formFrame) {
 
-        return formFrame.getSubject()
-                 .accept(new FormSubject.FormDataSubjectVisitorEx<>() {
-                     @Override
-                     public Optional<PlainEntityFrame> visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                         return getEntityFrame(formDataEntitySubject, formFrame);
-                     }
-
-                     @Override
-                     public Optional<PlainEntityFrame> visit(@Nonnull FormIriSubject formDataIriSubject) {
-                         return Optional.empty();
-                     }
-                 });
+        return getEntityFrame(formFrame.getSubject(), formFrame);
     }
 
     public Optional<PlainEntityFrame> getEntityFrame(@Nonnull FormEntitySubject formDataEntitySubject,

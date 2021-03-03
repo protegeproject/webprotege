@@ -59,10 +59,10 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
     private final ProjectSignatureByTypeIndex projectSignatureByTypeIndex;
 
     @Nonnull
-    private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
+    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Nonnull
-    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
+    private final ClassHierarchyChildrenAxiomsIndex classHierarchyChildrenAxiomsIndex;
 
     private boolean stale = true;
 
@@ -73,16 +73,16 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
                                       @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
                                       @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
                                       @Nonnull ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
-                                      @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
-                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
+                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                                      @Nonnull ClassHierarchyChildrenAxiomsIndex classHierarchyChildrenAxiomsIndex) {
         this.projectId = checkNotNull(projectId);
         this.root = checkNotNull(rootCls);
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.subClassOfAxiomsIndex = subClassOfAxiomsIndex;
         this.equivalentClassesAxiomsIndex = equivalentClassesAxiomsIndex;
         this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
-        this.axiomsByEntityReferenceIndex = axiomsByEntityReferenceIndex;
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
+        this.classHierarchyChildrenAxiomsIndex = classHierarchyChildrenAxiomsIndex;
         rootFinder = new TerminalElementFinder<>(this::getParents);
         nodesToUpdate.clear();
     }
@@ -266,14 +266,26 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
     }
 
     private Set<OWLClass> extractChildren(OWLClass parent) {
-        ChildClassExtractor childClassExtractor = new ChildClassExtractor();
-        childClassExtractor.setCurrentParentClass(parent);
-        projectOntologiesIndex
-                .getOntologyDocumentIds()
-                .flatMap(ontId -> axiomsByEntityReferenceIndex.getReferencingAxioms(parent, ontId))
-                .filter(OWLAxiom::isLogicalAxiom)
-                .forEach(ax -> ax.accept(childClassExtractor));
-        return childClassExtractor.getResult();
+        return classHierarchyChildrenAxiomsIndex.getChildrenAxioms(parent)
+                                         .flatMap(ax -> {
+                                             if(ax instanceof OWLSubClassOfAxiom) {
+                                                 return Stream.of(((OWLSubClassOfAxiom) ax).getSubClass().asOWLClass());
+                                             }
+                                             else if(ax instanceof OWLEquivalentClassesAxiom) {
+                                                 return ((OWLEquivalentClassesAxiom) ax).getClassExpressionsAsList()
+                                                         .stream()
+                                                         .filter(IsAnonymous::isNamed)
+                                                         .map(ce -> (OWLClass) ce);
+                                             }
+                                             else {
+                                                 return Stream.empty();
+                                             }
+                                         })
+                                         .collect(toImmutableSet());
     }
 
+    @Override
+    public boolean isLeaf(OWLClass object) {
+        return classHierarchyChildrenAxiomsIndex.isLeaf(object);
+    }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -31,8 +32,8 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter impl
     public VizPortletPresenter(@Nonnull SelectionModel selectionModel,
                                @Nonnull ProjectId projectId,
                                @Nonnull DisplayNameRenderer displayNameRenderer,
-                               @Nonnull VizPresenter vizPresenter) {
-        super(selectionModel, projectId, displayNameRenderer);
+                               @Nonnull VizPresenter vizPresenter, DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.vizPresenter = vizPresenter;
     }
 
@@ -47,5 +48,10 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter impl
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         entityData.ifPresent(vizPresenter::displayEntity);
+    }
+
+    @Override
+    protected void handleReloadRequest() {
+        handleAfterSetEntity(getSelectedEntity());
     }
 }

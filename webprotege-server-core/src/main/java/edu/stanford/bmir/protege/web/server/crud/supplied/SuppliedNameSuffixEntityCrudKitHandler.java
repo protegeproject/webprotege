@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.crud.gen.GeneratedAnnotationsSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import org.semanticweb.owlapi.model.*;
@@ -38,6 +39,8 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     @Nonnull
     private final EntityCrudKitPrefixSettings prefixSettings;
 
+    @Nonnull final GeneratedAnnotationsSettings generatedAnnotationsSettings;
+
     @Nonnull
     private final OWLDataFactory dataFactory;
 
@@ -46,13 +49,14 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @AutoFactory
     @Inject
-    public SuppliedNameSuffixEntityCrudKitHandler(
-            @Nonnull EntityCrudKitPrefixSettings prefixSettings,
-            @Nonnull SuppliedNameSuffixSettings settings,
-            @Provided @Nonnull OWLDataFactory dataFactory,
-            @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
+    public SuppliedNameSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                                  @Nonnull SuppliedNameSuffixSettings settings,
+                                                  @Nonnull GeneratedAnnotationsSettings generatedAnnotationsSettings,
+                                                  @Provided @Nonnull OWLDataFactory dataFactory,
+                                                  @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(settings);
+        this.generatedAnnotationsSettings = checkNotNull(generatedAnnotationsSettings);
         this.dataFactory = dataFactory;
         this.entityIriPrefixResolver = checkNotNull(entityIriPrefixResolver);
     }
@@ -76,7 +80,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public EntityCrudKitSettings<SuppliedNameSuffixSettings> getSettings() {
-        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings, generatedAnnotationsSettings);
     }
 
     @Override

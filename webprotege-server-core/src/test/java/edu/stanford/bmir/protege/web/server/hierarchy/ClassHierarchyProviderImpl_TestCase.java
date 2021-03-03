@@ -49,9 +49,6 @@ public class ClassHierarchyProviderImpl_TestCase {
     private ProjectSignatureByTypeIndex projectSignatureByTypeIndex;
 
     @Mock
-    private AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
-
-    @Mock
     private EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Mock
@@ -65,6 +62,9 @@ public class ClassHierarchyProviderImpl_TestCase {
 
     @Mock
     private IRI clsAIri, clsA2Iri, clsBIri, clsCIri, clsDIri, clsEIri;
+
+    @Mock
+    private ClassHierarchyChildrenAxiomsIndex classHierarchyChildrenAxiomsIndex;
 
     @Before
     public void setUp() {
@@ -99,18 +99,14 @@ public class ClassHierarchyProviderImpl_TestCase {
         when(projectSignatureByTypeIndex.getSignature(EntityType.CLASS))
                 .thenReturn(Stream.of(clsA, clsA2, clsB, clsC, clsD, clsE));
 
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(any(), any()))
-                .thenReturn(Stream.empty());
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsA, ontologyDocumentId))
-                .thenReturn(Stream.of(clsASubClassOfClsB));
+        when(classHierarchyChildrenAxiomsIndex.getChildrenAxioms(clsB))
+                .thenAnswer(invocation -> Stream.of(clsASubClassOfClsB));
 
+        when(classHierarchyChildrenAxiomsIndex.getChildrenAxioms(clsC))
+                .thenAnswer(invocation -> Stream.of(clsBSubClassOfClsC));
 
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsB, ontologyDocumentId))
-                .thenReturn(Stream.of(clsASubClassOfClsB, clsBSubClassOfClsC));
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsC, ontologyDocumentId))
-                .thenReturn(Stream.of(clsBSubClassOfClsC));
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsD, ontologyDocumentId))
-                .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
+        when(classHierarchyChildrenAxiomsIndex.getChildrenAxioms(clsD))
+                .thenAnswer(invocation -> Stream.of(clsA2EquivalentToClsDandClsE));
 
         classHierarchyProvider = new ClassHierarchyProviderImpl(projectId,
                                                                 owlThing,
@@ -118,8 +114,8 @@ public class ClassHierarchyProviderImpl_TestCase {
                                                                 subClassOfAxiomsBySubClassIndex,
                                                                 equivalentClassesAxiomIndex,
                                                                 projectSignatureByTypeIndex,
-                                                                axiomsByEntityReferenceIndex,
-                                                                entitiesInProjectSignatureByIriIndex);
+                                                                entitiesInProjectSignatureByIriIndex,
+                                                                classHierarchyChildrenAxiomsIndex);
 
     }
 

@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-public class DbPortProvider implements Provider<Integer> {
+public class DbPortProvider implements Provider<Optional<Integer>> {
 
     private WebProtegeProperties webProtegeProperties;
 
@@ -23,8 +23,8 @@ public class DbPortProvider implements Provider<Integer> {
     }
 
     @Override
-    public Integer get() {
+    public Optional<Integer> get() {
         Optional<String> dbPort = webProtegeProperties.getDBPort();
-        return Integer.parseInt(dbPort.get());
+        return dbPort.map(Integer::parseInt);
     }
 }

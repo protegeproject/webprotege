@@ -10,11 +10,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import static edu.stanford.bmir.protege.web.shared.PrimitiveType.OBJECT_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(value = MockitoJUnitRunner.class)
 public class OWLObjectPropertyData_TestCase {
@@ -31,6 +33,7 @@ public class OWLObjectPropertyData_TestCase {
     @Before
     public void setUp() {
         shortForms = ImmutableMap.of(LocalNameDictionaryLanguage.get(), browserText);
+        when(entity.getIRI()).thenReturn(IRI.create("http://example.org/x"));
         oWLObjectPropertyData = OWLObjectPropertyData.get(entity, shortForms);
     }
 

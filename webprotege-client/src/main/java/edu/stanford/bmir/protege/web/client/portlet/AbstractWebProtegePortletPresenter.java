@@ -1,10 +1,15 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.events.RefreshUserInterfaceEvent;
+import edu.stanford.bmir.protege.web.client.events.RefreshUserInterfaceHandler;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
@@ -32,6 +37,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private final HandlerRegistration selectionModelHandlerRegistration;
 
+    private DispatchServiceManager dispatch;
+
     private final DisplayNameRenderer displayNameRenderer;
 
     private Optional<PortletUi> portletUi = Optional.empty();
@@ -47,7 +54,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
-                                              @Nonnull DisplayNameRenderer displayNameRenderer) {
+                                              @Nonnull DisplayNameRenderer displayNameRenderer,
+                                              @Nonnull DispatchServiceManager dispatch) {
 
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
@@ -59,6 +67,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
                                                                                           }
                                                                                       }
         );
+        this.dispatch = dispatch;
     }
 
     /**
@@ -86,6 +95,18 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
                                         DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         this::handlePrefLangChanged);
         eventBus.addApplicationEventHandler(PlaceChangeEvent.TYPE, this::handlePlaceChanged);
+        eventBus.addApplicationEventHandler(RefreshUserInterfaceEvent.REFRESH_USER_INTERFACE,
+                                            this::handleRefreshUserInterface);
+    }
+
+    private void handleRefreshUserInterface() {
+        try {
+            GWT.log("Handling Refresh");
+            dispatch.beginBatch();
+            handleReloadRequest();
+        } finally {
+            dispatch.executeCurrentBatch();
+        }
     }
 
     private void handlePlaceChanged(PlaceChangeEvent placeChangeEvent) {
@@ -182,7 +203,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     @Override
     public void dispose() {
         selectionModelHandlerRegistration.removeHandler();
-        portletUi.ifPresent(ui -> ui.dispose());
+        portletUi.ifPresent(HasDispose::dispose);
     }
 
     public void setNodeProperty(@Nonnull String property, @Nonnull String value) {
@@ -192,4 +213,6 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     public String getNodeProperty(@Nonnull String property, String defaultValue) {
         return portletUi.map(ui -> ui.getNodeProperty(property, defaultValue)).orElse(defaultValue);
     }
+
+    protected abstract void handleReloadRequest();
 }

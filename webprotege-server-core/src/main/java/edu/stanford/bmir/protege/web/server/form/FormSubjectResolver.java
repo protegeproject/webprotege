@@ -19,7 +19,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  */
 public class FormSubjectResolver {
 
-    private final Map<FormFrameBuilder, FormSubject> formFrameFormSubjectMap = new IdentityHashMap<>();
+    private final Map<FormFrameBuilder, FormEntitySubject> formFrameFormSubjectMap = new IdentityHashMap<>();
 
     private final Map<FormFrameBuilder, Set<OWLClass>> resolvedParentMap = new IdentityHashMap<>();
 
@@ -32,12 +32,12 @@ public class FormSubjectResolver {
     }
 
     @Nonnull
-    public FormSubject resolveSubject(FormFrameBuilder formFrame) {
+    public FormEntitySubject resolveSubject(FormFrameBuilder formFrame) {
             var existingSubject = formFrameFormSubjectMap.get(formFrame);
             if(existingSubject != null) {
                 return existingSubject;
             }
-            final FormSubject theSubject;
+            final FormEntitySubject theSubject;
             final ImmutableSet<OWLClass> parents;
             var subject = formFrame.getSubject();
             if(subject.isEmpty()) {

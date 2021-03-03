@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 /**
  * Matthew Horridge
@@ -76,6 +77,7 @@ public class EntityFormChangeListGeneratorFactory {
     public EntityFormChangeListGenerator create(@Nonnull OWLEntity subject,
                                                 @Nonnull ImmutableMap<FormId, FormData> pristineFormsData,
                                                 @Nonnull ImmutableMap<FormId, FormData> formsData) {
+        checkNotNull(subject);
         checkNotNull(formsData);
         checkNotNull(pristineFormsData);
         return new EntityFormChangeListGenerator(subject,
@@ -88,5 +90,28 @@ public class EntityFormChangeListGeneratorFactory {
                                                  emptyEntityFrameFactory,
                                                  dataFactory,
                                                  rootOntologyProvider);
+    }
+
+    public EntityFormChangeListGenerator createForAdd(@Nonnull OWLEntity subject,
+                                                     @Nonnull ImmutableMap<FormId, FormData> formsData) {
+        checkNotNull(subject);
+        checkNotNull(formsData);
+        var emptyFormData = getEmptyFormData(subject, formsData);
+        return create(subject, emptyFormData, formsData);
+    }
+
+    public EntityFormChangeListGenerator createForRemove(@Nonnull OWLEntity subject,
+                                                        @Nonnull ImmutableMap<FormId, FormData> formsData) {
+        checkNotNull(subject);
+        checkNotNull(formsData);
+        var emptyFormData = getEmptyFormData(subject, formsData);
+        return create(subject, formsData, emptyFormData);
+    }
+
+    private static ImmutableMap<FormId, FormData> getEmptyFormData(@Nonnull OWLEntity subject,
+                                                            @Nonnull ImmutableMap<FormId, FormData> formsData) {
+        return formsData.keySet()
+                    .stream()
+                    .collect(toImmutableMap(formId -> formId, formId -> FormData.empty(subject, formId)));
     }
 }

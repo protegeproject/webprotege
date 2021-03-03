@@ -575,6 +575,7 @@ public class ProjectModule {
     @Provides
     EntityTagsRepositoryCachingImpl provideEntityTagsRepositoryCachingImpl(EntityTagsRepositoryImpl impl) {
         EntityTagsRepositoryCachingImpl rep = new EntityTagsRepositoryCachingImpl(impl);
+        rep.ensureIndexes();
         rep.preloadCache();
         return rep;
     }

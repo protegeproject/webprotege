@@ -34,7 +34,7 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
                                              ProjectId projectId,
                                              @Nonnull DispatchServiceManager dispatch,
                                              @Nonnull OBOTermDefinitionEditor editor, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.dispatch = dispatch;
         this.editor = editor;
     }

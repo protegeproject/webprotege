@@ -94,6 +94,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  bindingPresenter.getBinding().orElse(null),
                                                                  view.getLabel(),
                                                                  view.getFieldRun(),
+                                                                 view.getDeprecationStrategy(),
                                                                  formFieldDescriptor.get(),
                                                                  view.getRepeatability(),
                                                                  view.getOptionality(),
@@ -119,6 +120,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         view.setLabel(descriptor.getLabel());
 
         view.setHelp(descriptor.getHelp());
+
+        view.setDeprecationStrategy(descriptor.getDeprecationStrategy());
 
         view.setRepeatability(descriptor.getRepeatability());
 

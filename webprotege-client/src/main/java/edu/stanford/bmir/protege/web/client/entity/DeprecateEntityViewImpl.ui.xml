@@ -1,0 +1,21 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+
+        <g:HTMLPanel addStyleNames="{wp.style.form}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.warningLabel}">
+                <g:Label ui:field="referencesCountField"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="replaceWithSubView" addStyleNames="{wp.style.formGroup}">
+                <g:Label text="Replace with" addStyleNames="{wp.style.formLabel}"/>
+                <primitive:PrimitiveDataEditor ui:field="replacementEntityEditor"/>
+                <g:Label text="You can choose to replace this entity with another one.  Any children will be moved to this new entity and any existing relationships values to this entity will be replaced with the replacement entity." addStyleNames="{wp.style.formHelpText}"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:SimplePanel ui:field="entityFormContainer"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

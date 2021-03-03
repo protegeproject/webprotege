@@ -58,8 +58,10 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
     public UsagePortletPresenter(SelectionModel selectionModel,
                                  DispatchServiceManager dispatchServiceManager,
                                  FilterView filterView,
-                                 ProjectId projectId, DisplayNameRenderer displayNameRenderer) {
-        super(selectionModel, projectId, displayNameRenderer);
+                                 ProjectId projectId,
+                                 DisplayNameRenderer displayNameRenderer,
+                                 DispatchServiceManager dispatch) {
+        super(selectionModel, projectId, displayNameRenderer, dispatch);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
         usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());
@@ -121,6 +123,11 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        updateDisplayForSelectedEntity();
+    }
+
+    @Override
+    protected void handleReloadRequest() {
         updateDisplayForSelectedEntity();
     }
 

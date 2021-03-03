@@ -13,6 +13,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,6 +29,9 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Nonnull
     private WebProtegeClientBundle clientBundle;
+
+    @Nonnull
+    private Optional<OWLEntity> currentEntity = Optional.empty();
 
     @Inject
     public EditorPaneEntityChangesPresenter(@Nonnull ChangeListPresenter changesPresenter,
@@ -60,6 +65,7 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Override
     public void setEntity(@Nonnull OWLEntity entity) {
+        this.currentEntity = Optional.of(checkNotNull(entity));
         changesPresenter.displayChangesForEntity(entity);
     }
 
@@ -81,5 +87,10 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
     @Override
     public boolean isActive() {
         return ElementalUtil.isWidgetOrDescendantWidgetActive(changesPresenter.getView());
+    }
+
+    @Override
+    public void reload() {
+        currentEntity.ifPresent(changesPresenter::displayChangesForEntity);
     }
 }

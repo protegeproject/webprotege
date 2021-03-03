@@ -4,12 +4,16 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.MultiChoiceControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,10 +35,10 @@ public class MultiChoiceControlValueBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getMultiChoiceControlDataDtoValues(@Nonnull MultiChoiceControlDescriptor multiChoiceControlDescriptor,
-                                                                         @Nonnull OWLEntityData subject,
+                                                                         @Nonnull Optional<FormEntitySubject> subject,
                                                                          @Nonnull OwlBinding theBinding,
                                                                                 int depth) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         var vals = values.stream()
                          .flatMap(renderer::toFormControlDataDto)
                          .collect(ImmutableList.toImmutableList());

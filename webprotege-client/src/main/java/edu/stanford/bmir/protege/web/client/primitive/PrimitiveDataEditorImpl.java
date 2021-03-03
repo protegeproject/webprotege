@@ -194,6 +194,11 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
+    public void clearCriteria() {
+        entitySuggestOracle.clearCriteria();
+    }
+
+    @Override
     public void setDeprecated(boolean deprecated) {
         view.setDeprecated(deprecated);
     }

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -82,7 +83,8 @@ public class ProjectDetailsRepository_IT {
                                             CREATED_AT,
                                             createdBy,
                                             MODIFIED_AT,
-                                            lastModifiedBy);
+                                            lastModifiedBy,
+                                            EntityDeprecationSettings.empty());
 
         // Insert project details
         repository.save(projectDetails);

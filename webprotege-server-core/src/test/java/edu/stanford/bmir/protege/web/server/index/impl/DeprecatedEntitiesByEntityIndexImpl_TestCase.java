@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
@@ -51,7 +53,7 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        impl = new DeprecatedEntitiesByEntityIndexImpl(projectOntologiesIndex, annotationAssertionsIndex);
+        impl = new DeprecatedEntitiesByEntityIndexImpl(projectOntologiesIndex);
 
         when(projectOntologiesIndex.getOntologyDocumentIds())
                 .thenReturn(Stream.of(ontologyId));
@@ -60,14 +62,11 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
                 .thenReturn(Stream.empty());
         when(annotationAssertionsIndex.getAxiomsForSubject(entityIri, ontologyId))
                 .thenReturn(Stream.of(annotationAssertion));
-
-        when(entity.getIRI())
-                .thenReturn(entityIri);
     }
 
     @Test
     public void shouldGetDependencies() {
-        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex, annotationAssertionsIndex));
+        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex));
     }
 
     @Test
@@ -80,6 +79,7 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
     public void shouldFindEntityToBeDeprecated() {
         when(annotationAssertion.isDeprecatedIRIAssertion())
                 .thenReturn(true);
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationAssertion)));
         var deprecated = impl.isDeprecated(entity);
         assertThat(deprecated, Matchers.is(true));
     }

@@ -20,12 +20,6 @@ public abstract class FormEntitySubjectDto extends FormSubjectDto {
     }
 
     @Nonnull
-    public static FormIriSubjectDto get(@Nonnull IRIData iriData) {
-        return new AutoValue_FormIriSubjectDto(iriData);
-    }
-
-
-    @Nonnull
     public abstract OWLEntityData getEntityData();
 
     @Nonnull
@@ -37,7 +31,7 @@ public abstract class FormEntitySubjectDto extends FormSubjectDto {
     @Memoized
     @Nonnull
     @Override
-    public FormSubject toFormSubject() {
+    public FormEntitySubject toFormSubject() {
         return FormEntitySubject.get(getEntityData().getEntity());
     }
 }
