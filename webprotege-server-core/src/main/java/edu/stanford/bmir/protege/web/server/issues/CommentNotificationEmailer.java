@@ -26,7 +26,9 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.ProjectResource.forProject;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENT;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
@@ -89,11 +91,14 @@ public class CommentNotificationEmailer {
     private Collection<UserId> getUsersToNotify(@Nonnull ProjectId projectId,
                                                 @Nonnull Comment postedComment,
                                                 @Nonnull EntityDiscussionThread thread) {
-        // Thread participants
-        var threadParticipants = participantsExtractor.extractParticipants(thread).stream();
-        // Users that can comment on the project
+        // Thread participants that can view comments
+        var threadParticipants = participantsExtractor.extractParticipants(thread).stream()
+                .filter(userId -> accessManager.hasPermission(forUser(userId),
+                                                              forProject(projectId),
+                                                              VIEW_OBJECT_COMMENT));
+        // Any users that can view comments on the project
         var projectParticipants = accessManager.getSubjectsWithAccessToResource(forProject(projectId),
-                                                                                CREATE_OBJECT_COMMENT)
+                                                                                VIEW_OBJECT_COMMENT)
                                                .stream()
                                                .map(Subject::getUserId)
                                                .filter(Optional::isPresent)
