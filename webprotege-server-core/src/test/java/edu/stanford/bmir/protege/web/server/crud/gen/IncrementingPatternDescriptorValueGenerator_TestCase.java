@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.gen;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.crud.gen.IncrementingPatternDescriptor;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,7 @@ public class IncrementingPatternDescriptorValueGenerator_TestCase {
     private OWLAnnotationAssertionAxiom axiom;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private OntologyDocumentId ontologyId;
 
     @Before
     public void setUp() throws Exception {
@@ -57,7 +58,7 @@ public class IncrementingPatternDescriptorValueGenerator_TestCase {
                 projectOntologiesIndex
         );
 
-        when(projectOntologiesIndex.getOntologyIds())
+        when(projectOntologiesIndex.getOntologyDocumentIds())
                 .then(inv -> Stream.of(ontologyId));
 
         when(descriptor.getStartingValue())

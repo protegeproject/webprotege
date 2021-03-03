@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.owlapi.OwlApiOntologyDocumentTempOWLOntologyIDTranslator;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentIdDisplayNameProvider;
@@ -69,7 +70,7 @@ public class ShellOntologyChecker_TestCase {
     public void shouldReturnRootOntologyForNullArgument() {
         OWLOntology ont = checker.getOntology(null);
         assertThat(ont, Matchers.is(notNullValue()));
-        assertThat(ont.getOntologyID(), is(equalTo(defaultOntologyId)));
+        assertThat(ont.getOntologyID(), is(equalTo(OwlApiOntologyDocumentTempOWLOntologyIDTranslator.toOWLOntologyID(defaultOntologyId))));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class ShellOntologyChecker_TestCase {
     public void shouldReturnOntologyWithGivenShortForm() {
         OWLOntology ont = checker.getOntology(ONTOLOGY_SHORT_FORM);
         assertThat(ont, Matchers.is(notNullValue()));
-        assertThat(ont.getOntologyID(), is(equalTo(ontologyId)));
+        assertThat(ont, is(equalTo(ShellOwlOntology.get(defaultOntologyId))));
     }
 
 }

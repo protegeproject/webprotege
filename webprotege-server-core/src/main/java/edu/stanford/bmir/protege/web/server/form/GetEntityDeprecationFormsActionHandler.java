@@ -89,7 +89,7 @@ public class GetEntityDeprecationFormsActionHandler extends AbstractProjectActio
         var formDtos = entityCreationForms.stream()
                                           .map(formDtoTranslator::toFormDescriptorDto)
                                           .collect(toImmutableList());
-        var referencesCount = projectOntologiesIndex.getOntologyIds()
+        var referencesCount = projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ontId -> axiomsByReferenceIndex.getReferencingAxioms(Collections.singleton(action.getEntity()),
                                                                           ontId))
                 .filter(ax -> !hasSubject(action.getEntity(), ax))

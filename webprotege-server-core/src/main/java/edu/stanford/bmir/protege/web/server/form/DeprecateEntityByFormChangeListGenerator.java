@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
+import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
 import org.semanticweb.owlapi.model.*;
@@ -184,12 +185,12 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
     private void addChangesToReparentEntity(ImmutableList.Builder<OntologyChange> changeListBuilder) {
         // If the deprecated parent is specified then reparent
-        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         getPlacementAxiom().ifPresent(ax -> changeListBuilder.add(AddAxiomChange.of(defaultOntologyId, ax)));
     }
 
     private void addChangesToMarkEntityAsDeprecated(ImmutableList.Builder<OntologyChange> changeListBuilder) {
-        OWLOntologyID defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        OntologyDocumentId defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         // Mark the deprecated entity as deprecated with an annotation
         changeListBuilder.add(AddAxiomChange.of(defaultOntologyId,
                                                 dataFactory.getOWLDeclarationAxiom(entityToBeDeprecated)));
@@ -334,7 +335,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                               .getOWLAnnotationAssertionAxiom(prop,
                                                                               entityToBeDeprecated.getIRI(),
                                                                               value);
-                return AddAxiomChange.of(defaultOntologyIdManager.getDefaultOntologyId(), annotationAx);
+                return AddAxiomChange.of(defaultOntologyIdManager.getDefaultOntologyDocumentId(), annotationAx);
             });
         }).ifPresent(changeListBuilder::add);
 
@@ -375,7 +376,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         entityToBeDeprecated.accept(new OWLEntityVisitor() {
             @Override
             public void visit(@Nonnull OWLClass cls) {
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> subClassOfAxiomsBySubClassIndex.getSubClassOfAxiomsForSubClass(
                                               cls,
                                               ontId)
@@ -389,7 +390,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
             @Override
             public void visit(@Nonnull OWLObjectProperty property) {
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> subObjectPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
                                               property,
                                               ontId).map(ax -> RemoveAxiomChange.of(ontId, ax)))
@@ -398,7 +399,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
             @Override
             public void visit(@Nonnull OWLDataProperty property) {
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
                                               property,
                                               ontId).map(ax -> RemoveAxiomChange.of(ontId, ax)))
@@ -407,7 +408,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
             @Override
             public void visit(@Nonnull OWLNamedIndividual individual) {
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
                                               individual,
                                               ontId)
@@ -424,7 +425,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
             @Override
             public void visit(@Nonnull OWLAnnotationProperty property) {
-                projectOntologiesIndex.getOntologyIds()
+                projectOntologiesIndex.getOntologyDocumentIds()
                                       .flatMap(ontId -> subAnnotationPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
                                               property,
                                               ontId).map(ax -> RemoveAxiomChange.of(ontId, ax)))

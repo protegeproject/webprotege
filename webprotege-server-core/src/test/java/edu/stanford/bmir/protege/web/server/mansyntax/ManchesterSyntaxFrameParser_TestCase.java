@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.owlapi.OwlApiOntologyDocumentTempOWLOntologyIDTranslator;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.project.OntologyDocumentId;
@@ -69,7 +70,7 @@ public class ManchesterSyntaxFrameParser_TestCase {
         dataFactory = new OWLDataFactoryImpl();
 
         when(ontologyChecker.getOntology("theontology"))
-                .thenReturn(ShellOwlOntology.get(theOntologyId));
+                .thenAnswer(invocation -> ShellOwlOntology.get(theOntologyId));
 
         when(defaultOntologyIdManager.getDefaultOntologyDocumentId())
                 .thenReturn(defaultOntologyId);
@@ -88,7 +89,7 @@ public class ManchesterSyntaxFrameParser_TestCase {
     public void shouldParseAxiomWithoutOntologyNameLocator() {
         var axiomOntologyPairs = parser.parse(CLASS_A_SUB_CLASS_OF_B, Collections::emptySet);
         var axiomOntologyPair = getSubClassOfAxiomPair(axiomOntologyPairs);
-        assertThat(getOntologyId(axiomOntologyPair), is(defaultOntologyId));
+        assertThat(getOntologyId(axiomOntologyPair), is(OwlApiOntologyDocumentTempOWLOntologyIDTranslator.toOWLOntologyID(defaultOntologyId)));
         assertThat(axiomOntologyPair.getAxiom(), is(expectedAxiom));
     }
 
@@ -96,7 +97,7 @@ public class ManchesterSyntaxFrameParser_TestCase {
     public void shouldParseAxiomWithOntologyNameLocator() {
         var axiomOntologyPairs = parser.parse(CLASS_A_SUB_CLASS_OF_B_IN_ONT, Collections::emptySet);
         var axiomOntologyPair = getSubClassOfAxiomPair(axiomOntologyPairs);
-        assertThat(getOntologyId(axiomOntologyPair), is(theOntologyId));
+        assertThat(getOntologyId(axiomOntologyPair), is(OwlApiOntologyDocumentTempOWLOntologyIDTranslator.toOWLOntologyID(theOntologyId)));
         assertThat(axiomOntologyPair.getAxiom(), is(expectedAxiom));
     }
 

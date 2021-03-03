@@ -171,7 +171,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         Stats.dump("Index", backingMap, out);
     }
 
-    public boolean hasValues(V cls, OWLOntologyID ontologyId) {
+    public boolean hasValues(V cls, OntologyDocumentId ontologyId) {
         return backingMap.containsKey(Key.get(ontologyId, cls));
     }
 

@@ -95,13 +95,13 @@ public class ClassHierarchyChildrenAxiomsIndexImpl implements ClassHierarchyChil
     @Nonnull
     @Override
     public Stream<OWLClassAxiom> getChildrenAxioms(@Nonnull OWLClass cls) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .flatMap(ont -> index.getAxioms(cls, ont));
     }
 
     @Override
     public boolean isLeaf(@Nonnull OWLClass cls) {
-        return projectOntologiesIndex.getOntologyIds()
+        return projectOntologiesIndex.getOntologyDocumentIds()
                 .noneMatch(ont -> index.hasValues(cls, ont));
     }
 

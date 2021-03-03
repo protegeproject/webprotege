@@ -71,7 +71,7 @@ public class IncrementingPatternDescriptorValueGenerator {
             }
             var literal = dataFactory.getOWLLiteral(formattedValue, datatype);
             var property = cacheKey.getProperty();
-            var exists = projectOntologiesIndex.getOntologyIds()
+            var exists = projectOntologiesIndex.getOntologyDocumentIds()
                                                .flatMap(ontId -> index.getAxiomsByValue(literal, ontId))
                                                .anyMatch(ax -> ax.getProperty().equals(property));
             if (!exists) {

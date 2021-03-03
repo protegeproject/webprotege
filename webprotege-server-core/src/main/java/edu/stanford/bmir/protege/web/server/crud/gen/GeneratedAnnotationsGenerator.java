@@ -80,7 +80,7 @@ public class GeneratedAnnotationsGenerator {
         var ax = dataFactory.getOWLAnnotationAssertionAxiom(annotationProperty,
                                                    entity.getIRI(),
                                                    value);
-        var ontId = defaultOntologyIdManager.getDefaultOntologyId();
+        var ontId = defaultOntologyIdManager.getDefaultOntologyDocumentId();
         return AddAxiomChange.of(ontId, ax);
     }
 
