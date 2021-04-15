@@ -1,4 +1,15 @@
-WebProtégé
+WebProtégé-Fork for Ontology attestation integration
+==========
+
+See the original readme below for building instructions. Some key classes were altered to integrate an attestation 
+portlet in the editor. The portlet can be added by choosing 'Attestation' from the list of available portlets, 
+e.g. when adding a new tab. 
+
+In the graphic below the altered classes are marked in red and the added packages in green.
+The attestation is implemented in a separate module, found here: <removed for review>.
+![docs/package_protege.png](docs/package_protege.png)
+
+WebProtégé (original readme)
 ==========
 
 What is WebProtégé?
