@@ -1,6 +1,8 @@
 WebProtégé
 ==========
 
+**Please note that this is soon to be the *legacy* codebase for WebProtégé.  This repository will be replaced with the [webprotege-backend](https://github.com/protegeproject/webprotege-backend) and [webprotege-gwt-ui](https://github.com/protegeproject/webprotege-gwt-ui) repositories, which cleanly separate out user-interface code from WebProtégé service code.**
+
 What is WebProtégé?
 -------------------
 
