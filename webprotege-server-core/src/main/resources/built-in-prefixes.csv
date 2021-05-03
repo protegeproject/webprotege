@@ -29,6 +29,7 @@ ptr:,http://www.w3.org/2009/pointers#
 cc:,http://creativecommons.org/ns#
 ctag:,http://commontag.org/ns#
 dcterms:,http://purl.org/dc/terms/
+dctypes:,http://purl.org/dc/dcmitype/
 dc:,http://purl.org/dc/elements/1.1/
 foaf:,http://xmlns.com/foaf/0.1/
 gr:,http://purl.org/goodrelations/v1#
