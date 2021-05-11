@@ -81,6 +81,8 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
     private GeneratedAnnotationsSettings generatedAnnotationsDescriptor = GeneratedAnnotationsSettings.empty();
 
+    private EntityType<?> entityType = EntityType.CLASS;
+
     @Before
     public void setUp() throws Exception {
         OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
@@ -89,7 +91,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("");
-        when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of())).thenReturn(PREFIX);
+        when(entityIriPrefixResolver.getIriPrefix(prefixSettings, entityType, ImmutableList.of())).thenReturn(PREFIX);
         handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings,
                                                              generatedAnnotationsDescriptor,
                                                              dataFactory,

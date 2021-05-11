@@ -89,13 +89,15 @@ public class UuidEntityCrudKitHandlerTestCase {
 
     private GeneratedAnnotationsSettings generatedAnnotationsSettings = GeneratedAnnotationsSettings.empty();
 
+    private EntityType<?> entityType = EntityType.CLASS;
+
     @Before
     public void setUp() throws Exception {
         dictionaryLanguage = AnnotationAssertionDictionaryLanguage.get(annotationPropertyIri, "en");
         when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
-        when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of()))
+        when(entityIriPrefixResolver.getIriPrefix(prefixSettings, entityType, ImmutableList.of()))
                 .thenReturn(PREFIX);
         handler = new UuidEntityCrudKitHandler(prefixSettings, suffixSettings,
                                                generatedAnnotationsSettings,

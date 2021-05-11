@@ -107,7 +107,7 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
         }
         else {
             var prefixedNameExpander = context.getPrefixedNameExpander();
-            var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+            var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, entityType, parents);
             entityIRI = getIRI(iriPrefix, suppliedName, prefixedNameExpander);
             labellingLiteral = getLabellingLiteral(suppliedName, langTag, dictionaryLanguage);
         }

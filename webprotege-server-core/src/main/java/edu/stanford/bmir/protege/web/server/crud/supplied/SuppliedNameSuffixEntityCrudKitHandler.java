@@ -133,7 +133,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             }
             else {
                 // Suffix of IRI
-                iri = createEntityIRI(shortForm, parents);
+                iri = createEntityIRI(shortForm, entityType, parents);
                 // Label is supplied name
                 label = suppliedName;
             }
@@ -153,11 +153,13 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         return entity;
     }
 
-    private IRI createEntityIRI(EntityShortForm shortForm, ImmutableList<OWLEntity> parents) {
+    private IRI createEntityIRI(EntityShortForm shortForm,
+                                EntityType<?> entityType,
+                                ImmutableList<OWLEntity> parents) {
         var whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
         var transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
         var escapedShortForm = URLEncoder.encode(transformedShortForm, Charsets.UTF_8);
-        var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+        var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, entityType, parents);
         return IRI.create(iriPrefix + escapedShortForm);
     }
 

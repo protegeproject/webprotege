@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.match.HierarchyPositionCriteriaMatchableEntityTypesExtractor;
 import edu.stanford.bmir.protege.web.server.match.Matcher;
 import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,9 +64,17 @@ public class EntityIriPrefixResolver_TestCase {
     @Mock
     private EntityIriPrefixCriteriaRewriter entityIriPrefixCriteriaRewriter;
 
+    private EntityType<?> entityType = EntityType.CLASS;
+
+    @Mock
+    private HierarchyPositionCriteriaMatchableEntityTypesExtractor leafCriteriaTypesExtractor;
+
     @Before
     public void setUp() {
-        resolver = new EntityIriPrefixResolver(matcherFactory, entityIriPrefixCriteriaRewriter);
+        when(leafCriteriaTypesExtractor.getMatchableEntityTypes(any()))
+                .thenReturn(ImmutableSet.of(entityType));
+        resolver = new EntityIriPrefixResolver(matcherFactory, entityIriPrefixCriteriaRewriter,
+                                               leafCriteriaTypesExtractor);
 
         when(entityIriPrefixCriteriaRewriter.rewriteCriteria(hierarchyCriteria))
                 .thenReturn(criteria);
@@ -82,13 +93,13 @@ public class EntityIriPrefixResolver_TestCase {
 
     @Test
     public void shouldReturnFallbackPrefixForNonMatch() {
-        var resolvedPrefix = resolver.getIriPrefix(prefixSettings, ImmutableList.of(otherParent));
+        var resolvedPrefix = resolver.getIriPrefix(prefixSettings, entityType, ImmutableList.of(otherParent));
         assertThat(resolvedPrefix, is(FALLBACK_IRI_PREFIX));
     }
 
     @Test
     public void shouldReturnFallbackPrefixForNonMatchOfEmptyParents() {
-        var resolvedPrefix = resolver.getIriPrefix(prefixSettings, ImmutableList.of());
+        var resolvedPrefix = resolver.getIriPrefix(prefixSettings, entityType, ImmutableList.of());
         assertThat(resolvedPrefix, is(FALLBACK_IRI_PREFIX));
     }
 
@@ -96,7 +107,7 @@ public class EntityIriPrefixResolver_TestCase {
     public void shouldReturnMatchedPrefixForMatch() {
         when(matcher.matches(parentEntity))
                 .thenReturn(true);
-        var resolvedPrefix = resolver.getIriPrefix(prefixSettings, ImmutableList.of(parentEntity));
+        var resolvedPrefix = resolver.getIriPrefix(prefixSettings, entityType, ImmutableList.of(parentEntity));
         assertThat(resolvedPrefix, is(CONDITIONAL_IRI_PREFIX));
     }
 }

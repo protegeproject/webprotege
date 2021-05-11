@@ -129,7 +129,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
                                           @Nonnull EntityCrudContext context,
                                           @Nonnull OntologyChangeList.Builder<E> builder) {
         var targetOntology = context.getTargetOntologyId();
-        var iri = getNextIRI(session, context.getUserId(), parents);
+        var iri = getNextIRI(session, context.getUserId(), entityType, parents);
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
         builder.add(AddAxiomChange.of(targetOntology, declarationAxiom));
@@ -166,7 +166,9 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
 
 
 
-    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId, ImmutableList<OWLEntity> parents
+    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId,
+                                        EntityType<?> entityType,
+                                        ImmutableList<OWLEntity> parents
     ) {
         StringBuilder formatStringBuilder = new StringBuilder();
         for (int i = 0; i < suffixSettings.getTotalDigits(); i++) {
@@ -178,7 +180,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
             currentId++;
             if(!session.isSessionId(currentId)) {
                 String shortName = numberFormat.format(currentId);
-                var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+                var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, entityType, parents);
                 IRI iri = IRI.create(iriPrefix + shortName);
                 if (projectSignatureIndex.getEntitiesInSignature(iri).limit(1).count() == 0) {
                     session.addSessionId(currentId);
