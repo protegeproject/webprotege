@@ -29,7 +29,6 @@ public class FixedListChoiceDescriptorDtoSupplier {
     public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull FixedChoiceListSourceDescriptor descriptor) {
         return descriptor.getChoices()
                   .stream()
-                  .flatMap(choiceDescriptor -> descriptor.getChoices().stream())
                   .flatMap(this::toChoiceDescriptorDto)
                   .collect(toImmutableList());
     }
