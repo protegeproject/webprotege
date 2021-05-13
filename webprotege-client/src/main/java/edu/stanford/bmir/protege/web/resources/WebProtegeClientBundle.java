@@ -357,8 +357,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-label--error")
         String formLabelError();
 
-        @ClassName("wp-form-editor")
-        String formEditor();
+        @ClassName("wp-form__control")
+        String formControl();
+
+        @ClassName("wp-form__control__editor")
+        String formControlEditor();
+
+        @ClassName("wp-form__control__editor--text")
+        String formControlEditorText();
 
         @ClassName("wp-form-editor--error")
         String formEditorError();

@@ -13,8 +13,8 @@
             box-sizing: border-box;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:TextBox ui:field="numberField" addStyleNames="{style.editorField}"/>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.formControl}">
+        <g:TextBox ui:field="numberField" addStyleNames="{style.editorField} {wp.style.formControlEditor} {wp.style.formControlEditorText}"/>
         <g:Label ui:field="errorLabel" addStyleNames="{wp.style.errorLabel}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

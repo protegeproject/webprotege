@@ -122,9 +122,22 @@
     color: #ff0000;
 }
 
-.wp-form-editor {
+.wp-form__control {
 
 }
+
+.wp-form__control__editor {
+
+}
+
+.wp-form__control__editor--text {
+    border-bottom: 1px solid literal("var(--alternate--separator--color)");
+}
+
+.wp-form__grid__cell .wp-form__control__editor--text {
+    border-bottom: none;
+}
+
 
 .wp-form-editor--error {
     border-bottom: 1px solid #ff0000;
