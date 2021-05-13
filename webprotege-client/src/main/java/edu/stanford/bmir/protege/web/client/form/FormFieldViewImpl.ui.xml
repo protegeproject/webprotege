@@ -15,18 +15,19 @@
             justify-content: flex-start;
             width: 100%;
             align-items: center;
-            cursor: pointer;
         }
         .label {
             flex-grow: 0;
             flex-shrink: 0;
             justify-self: flex-start;
             margin-right: 0.3em;
+            cursor: pointer;
         }
         .handle {
             flex-grow: 0;
             flex-shrink: 0;
             justify-self: flex-start;
+            cursor: pointer;
         }
         .helpIconHolder {
             flex-grow: 1;
@@ -52,7 +53,8 @@
             <g:HTMLPanel>
                 <g:Image ui:field="expansionHandle" url="{tn.expanded.getSafeUri.asString}"
                          addStyleNames="{style.handle}"/>
-            </g:HTMLPanel><g:HTMLPanel addStyleNames="{style.helpIconHolder}">
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{style.helpIconHolder}">
                 <g:HTMLPanel ui:field="helpIcon" addStyleNames="{wp.style.helpIcon} {style.helpIcon}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>

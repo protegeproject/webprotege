@@ -20,6 +20,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.gwt.dom.client.Style.Cursor.DEFAULT;
+import static com.google.gwt.dom.client.Style.Cursor.POINTER;
 
 /**
  * Matthew Horridge
@@ -65,8 +67,13 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Inject
     public FormFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        fieldHeader.sinkEvents(Event.MOUSEEVENTS);
-        fieldHeader.addDomHandler(event -> {
+        setupClickHandlerForHeader(label);
+        setupClickHandlerForHeader(expansionHandle);
+    }
+
+    private void setupClickHandlerForHeader(Widget widget) {
+        widget.sinkEvents(Event.MOUSEEVENTS);
+        widget.addDomHandler(event -> {
             headerClickedHandler.handleHeaderClicked();
         }, ClickEvent.getType());
     }
@@ -91,11 +98,18 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
         this.collapsible = collapsible;
         expansionHandle.setVisible(collapsible);
         if(collapsible) {
-            fieldHeader.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+            setCursor(label, POINTER);
+            setCursor(expansionHandle, POINTER);
         }
         else {
-            fieldHeader.getElement().getStyle().setCursor(Style.Cursor.DEFAULT);
+            setCursor(label, DEFAULT);
+            setCursor(expansionHandle, DEFAULT);
         }
+    }
+
+    private static void setCursor(Widget widget,
+                                  Style.Cursor pointer) {
+        widget.getElement().getStyle().setCursor(pointer);
     }
 
     @Override
