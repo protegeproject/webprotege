@@ -3,6 +3,7 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        @external .wp-form__grid__cell;
         .main {
             display: flex;
             flex-direction: column;
@@ -11,6 +12,10 @@
             display: flex;
             flex-direction: row;
             min-width: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .wp-form__grid__cell .editor {
+            border-bottom: none;
         }
         .value-field {
             flex-grow: 1;
