@@ -14,14 +14,16 @@
         }
         .segmentContainer span {
             padding: 3px;
-            cursor: pointer;
             display: inline-block;
             flex-grow: 1;
             flex-basis: 0;
             text-align: center;
+            cursor: default;
         }
-        .segmentContainer span:hover {
+        .segmentContainer:not([disabled]) span:hover {
+            cursor: pointer;
             background-color: #f0f0f0;
+            outline: none;
         }
         .segmentContainer span+span {
             border-left: 1px solid #e0e0e0;

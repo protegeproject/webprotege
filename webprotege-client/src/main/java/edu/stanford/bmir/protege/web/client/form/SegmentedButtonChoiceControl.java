@@ -39,6 +39,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private static final int SEGMENT_SIZE = 120;
 
+    public static final String DISABLED = "disabled";
+
     private SingleChoiceControlDescriptorDto descriptor;
 
     private Optional<PrimitiveFormControlData> mostRecentSetValue = Optional.empty();
@@ -223,12 +225,22 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     @Override
     public void requestFocus() {
-        focusPanel.setFocus(true);
+        if (enabled) {
+            focusPanel.setFocus(true);
+        }
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        if (enabled) {
+            segmentContainer.getElement().removeAttribute(DISABLED);
+            focusPanel.getElement().removeAttribute(DISABLED);
+        }
+        else {
+            segmentContainer.getElement().setAttribute(DISABLED, "");
+            focusPanel.getElement().setAttribute(DISABLED, "");
+        }
     }
 
     @Override

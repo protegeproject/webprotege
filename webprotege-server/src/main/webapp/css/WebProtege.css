@@ -296,6 +296,11 @@ pre {
     outline-offset: -1px;
 }
 
+:focus[disabled] {
+    outline:        none;
+    outline-offset: -1px;
+}
+
 *.web-protege-no-focus :focus {
     border: none;
 }
