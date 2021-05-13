@@ -32,6 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ImageControl extends Composite implements FormControl {
 
+    public static final String DISABLED = "disabled";
+
     @Nonnull
     private final InputBox inputBox;
 
@@ -97,6 +99,12 @@ public class ImageControl extends Composite implements FormControl {
     @Override
     public void setEnabled(boolean enabled) {
         this.editable = enabled;
+        if(enabled) {
+            focusPanel.getElement().removeAttribute(DISABLED);
+        }
+        else {
+            focusPanel.getElement().setAttribute(DISABLED, "");
+        }
     }
 
     private void updateUi() {
