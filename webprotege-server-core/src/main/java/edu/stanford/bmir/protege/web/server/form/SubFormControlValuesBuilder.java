@@ -57,7 +57,7 @@ public class SubFormControlValuesBuilder {
         var subjectEntityType = subFormControlDescriptor.getFormDescriptor()
                 .getSubjectFactoryDescriptor()
                 .map(FormSubjectFactoryDescriptor::getEntityType)
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Form subject factory descriptor is missing for subform control"));
         return values.stream()
                      .map(primitive -> toFormSubject(primitive, subjectEntityType))
                      .map(subSubject -> formDataDtoBuilderProvider.get()
