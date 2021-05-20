@@ -31,4 +31,12 @@ public abstract class FormFieldData implements IsSerializable {
      */
     @Nonnull
     public abstract Page<FormControlData> getFormControlData();
+
+    public boolean isEmpty() {
+        return getFormControlData().getPageElements().isEmpty();
+    }
+
+    public boolean isNonEmpty() {
+        return !isEmpty();
+    }
 }
