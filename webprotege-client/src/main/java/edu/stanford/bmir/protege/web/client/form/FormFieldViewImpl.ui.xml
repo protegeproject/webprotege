@@ -51,7 +51,7 @@
         <g:HTMLPanel ui:field="fieldHeader" addStyleNames="{style.labelHeader}">
             <g:Label ui:field="label" addStyleNames="{wp.style.formLabel} {style.label}"/>
             <g:HTMLPanel>
-                <g:Image ui:field="expansionHandle" url="{tn.expanded.getSafeUri.asString}"
+                <g:Image ui:field="expansionHandle"
                          addStyleNames="{style.handle}"/>
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{style.helpIconHolder}">

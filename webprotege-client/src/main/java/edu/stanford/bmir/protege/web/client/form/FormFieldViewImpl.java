@@ -96,7 +96,9 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public void setCollapsible(boolean collapsible) {
         this.collapsible = collapsible;
-        expansionHandle.setVisible(collapsible);
+        if (!collapsible) {
+            expansionHandle.setVisible(false);
+        }
         if(collapsible) {
             setCursor(label, POINTER);
             setCursor(expansionHandle, POINTER);
@@ -159,12 +161,14 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public void collapse() {
         content.setVisible(false);
+        expansionHandle.setVisible(true);
         expansionHandle.setUrl(TreeNodeViewResources.RESOURCES.collapsed().getSafeUri());
     }
 
     @Override
     public void expand() {
-        expansionHandle.setUrl(TreeNodeViewResources.RESOURCES.expanded().getSafeUri());
+//        expansionHandle.setUrl(TreeNodeViewResources.RESOURCES.expanded().getSafeUri());
+        expansionHandle.setVisible(false);
         content.setVisible(true);
     }
 
