@@ -66,13 +66,13 @@
             <g:SimplePanel ui:field="formsStackContainer" addStyleNames="{style.container}"/>
             <g:HTMLPanel addStyleNames="{style.buttonBar} {wp.style.panelFilled}">
                 <g:Button ui:field="applyEditsButton" visible="false" text="{formsMsg.edits_Apply}"
-                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptOutlinedButton}"/>
                 <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
-                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeOutlinedButton}"/>
                 <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
-                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryOutlinedButton}"/>
                 <g:Button ui:field="deprecateButton" visible="true" text="{formsMsg.deprecate}"
-                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryOutlinedButton}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
