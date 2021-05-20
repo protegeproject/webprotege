@@ -676,14 +676,23 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--primary")
         String primaryButton();
 
+        @ClassName("wp-btn--primary-outlined")
+        String primaryOutlinedButton();
+
         @ClassName("wp-btn--secondary")
         String secondaryButton();
+
+        @ClassName("wp-btn--secondary-outlined")
+        String secondaryOutlinedButton();
 
         /**
          * An alternate button on a page or on a settings
          */
         @ClassName("wp-btn--alternate")
         String alternateButton();
+
+        @ClassName("wp-btn--alternate-outlined")
+        String alternateOutlinedButton();
 
         /**
          * A button to clear/cancel/return-from the current state.  For example
@@ -692,12 +701,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--escape")
         String escapeButton();
 
+        @ClassName("wp-btn--escape-outlined")
+        String escapeOutlinedButton();
+
         /**
          * A button to accept/apply the current state.  For example
          * a settings "OK" button, or an "Apply" form button
          */
         @ClassName("wp-btn--accept")
         String acceptButton();
+
+        @ClassName("wp-btn--accept-outlined")
+        String acceptOutlinedButton();
 
         @ClassName("wp-topbar__btn")
         String topBarButton();
