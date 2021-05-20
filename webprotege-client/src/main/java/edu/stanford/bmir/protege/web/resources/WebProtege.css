@@ -131,7 +131,7 @@
 }
 
 .wp-form__control__editor--text {
-    border-bottom: 1px solid literal("var(--alternate--separator--color)");
+    border-bottom: 2px solid literal("var(--alternate--separator--color)");
 }
 
 .wp-form__grid__cell .wp-form__control__editor--text {

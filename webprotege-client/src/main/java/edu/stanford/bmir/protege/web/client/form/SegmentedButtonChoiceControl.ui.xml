@@ -7,7 +7,7 @@
         }
         .segmentContainer {
             display: flex;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #e0e0e0;
             border-radius: 3px;
             flex-direction: row;
             overflow: hidden;
@@ -26,7 +26,7 @@
             outline: none;
         }
         .segmentContainer span+span {
-            border-left: 1px solid #e0e0e0;
+            border-left: 2px solid #e0e0e0;
         }
     </ui:style>
     <g:HTMLPanel>
