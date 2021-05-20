@@ -18,10 +18,9 @@
     padding-right:  5px;
     padding-left:   5px;
     padding-bottom: 10px;
-
-    box-shadow:     literal("var(--card--box-shadow)");
-
     overflow:       hidden;
+    border: 2px solid literal("var(--alternate--separator--color)");
+    border-radius: 2px;
 }
 
 .wp-disc-thread__status {
