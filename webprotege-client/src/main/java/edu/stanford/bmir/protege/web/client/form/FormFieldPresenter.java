@@ -264,4 +264,12 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
             setExpansionState(ExpansionState.EXPANDED);
         }
     }
+
+    public boolean isEmpty() {
+        return stackPresenter.isEmpty();
+    }
+
+    public boolean isNonEmpty() {
+        return stackPresenter.isNonEmpty();
+    }
 }
