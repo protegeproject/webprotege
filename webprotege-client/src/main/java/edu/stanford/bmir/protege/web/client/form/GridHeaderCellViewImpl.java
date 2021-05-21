@@ -50,6 +50,7 @@ public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellV
     public void setLabel(@Nonnull String label) {
         labelField.setText(checkNotNull(label));
         labelField.setVisible(true);
+        labelField.setTitle(label);
     }
 
     @Override
