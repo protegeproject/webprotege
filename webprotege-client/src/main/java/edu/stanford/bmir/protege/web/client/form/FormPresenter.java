@@ -240,13 +240,20 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
      */
     @Nonnull
     public Optional<FormData> getFormData() {
-        return currentFormDescriptor.map(formDescriptor -> {
+        return currentFormDescriptor.flatMap(formDescriptor -> {
             ImmutableList<FormFieldData> formFieldData = fieldPresenters.stream()
+                                                                        .filter(FormFieldPresenter::isNonEmpty)
                                                                         .map(FormFieldPresenter::getValue)
                                                                         .collect(toImmutableList());
-            return FormData.get(currentSubject.map(FormSubjectDto::toFormSubject),
-                                formDescriptor.toFormDescriptor(),
-                                formFieldData);
+
+            if(formFieldData.isEmpty()) {
+                return Optional.empty();
+            }
+            else {
+                return Optional.of(FormData.get(currentSubject.map(FormSubjectDto::toFormSubject),
+                                                formDescriptor.toFormDescriptor(),
+                                                formFieldData));
+            }
         });
     }
 
