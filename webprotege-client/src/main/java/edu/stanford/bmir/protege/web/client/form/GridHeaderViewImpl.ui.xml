@@ -18,6 +18,8 @@
             flex-direction: row;
             align-items: center;
             padding-right: 0.4em;
+            background-color: literal("var(--grid-header--background-color)");
+            border-radius: literal("var(--grid-header--border-radius)");
         }
         .filterButton {
             background-color: white;
