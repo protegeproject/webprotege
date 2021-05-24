@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
+import edu.stanford.bmir.protege.web.shared.form.FormDataByFormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import org.semanticweb.owlapi.model.*;
 
@@ -131,7 +132,7 @@ public class CreateEntityFromFormDataChangeListGenerator implements ChangeListGe
                                                FormData.empty(entity, formId));
         var newEntityFormData = ImmutableMap.of(formId,
                                                 formData);
-        var formChangesList = formChangeListGeneratorFactory.create(entity, pristineFormData, newEntityFormData);
+        var formChangesList = formChangeListGeneratorFactory.create(entity, pristineFormData, new FormDataByFormId(newEntityFormData));
         var formChanges = formChangesList.generateChanges(context);
         return OntologyChangeList.<OWLEntity>builder()
                           .addAll(changeListBuilder.build())

@@ -133,7 +133,14 @@ public class FormControlDataProcessor_TestCase {
     public void shouldProcessFormData() {
         var formData = FormData.get(Optional.empty(),
                                     mock(FormDescriptor.class),
-                                    ImmutableList.of());
+                                    ImmutableList.of(
+                                            FormFieldData.get(mock(FormFieldDescriptor.class),
+                                                              Page.of(
+                                                                      ImmutableList.of(
+                                                                              mock(FormControlData.class)
+                                                                      )
+                                                              ))
+                                    ));
         processor.processFormControlData(binding, formData, formFrameBuilder);
         verify(formDataProcessor, times(1))
                 .processFormData(formData, true);

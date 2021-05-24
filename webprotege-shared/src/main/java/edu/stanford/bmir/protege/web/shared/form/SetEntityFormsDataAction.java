@@ -26,17 +26,17 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
 
     private ImmutableMap<FormId, FormData> pristineFormsData;
 
-    private ImmutableMap<FormId, FormData> editedFormsData;
+    private FormDataByFormId editedFormsData;
 
     public SetEntityFormsDataAction(@Nonnull ProjectId projectId,
                                     @Nonnull OWLEntity entity,
                                     @Nonnull ImmutableMap<FormId, FormData> pristineFormsData,
-                                    @Nonnull ImmutableMap<FormId, FormData> editedFormsData) {
+                                    @Nonnull FormDataByFormId editedFormsData) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
         this.pristineFormsData = checkNotNull(pristineFormsData);
         this.editedFormsData = checkNotNull(editedFormsData);
-        checkArgument(editedFormsData.keySet().stream().allMatch(pristineFormsData::containsKey),
+        checkArgument(editedFormsData.getFormIds().stream().allMatch(pristineFormsData::containsKey),
                       "Missing pristine forms data");
     }
 
@@ -60,7 +60,7 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
     }
 
     @Nonnull
-    public ImmutableMap<FormId, FormData> getEditedFormsData() {
+    public FormDataByFormId getEditedFormsData() {
         return editedFormsData;
     }
 }

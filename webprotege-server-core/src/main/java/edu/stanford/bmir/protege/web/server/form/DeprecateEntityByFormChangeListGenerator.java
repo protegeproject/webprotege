@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.util.EntityDeleter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.form.FormDataByFormId;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
@@ -261,7 +262,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                                                                                                      .equals(FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT)))
                                                       .collect(toImmutableList());
         var formDataToPreserve = getFormData(preservedFormDescriptors, entityToBeDeprecated);
-        var changes = formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated, formDataToPreserve)
+        var changes = formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated, new FormDataByFormId(formDataToPreserve))
                                                     .generateChanges(context)
                                                     .getChanges();
         changeListBuilder.addAll(changes);
@@ -305,7 +306,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
                                                                                         projectId,
                                                                                         FormPurpose.ENTITY_EDITING);
         var formDataForReplacement = getFormData(formDescriptorsFormReplacementEntity, replacementEntity.get());
-        changesListBuilder.addAll(formChangeListGeneratorFactory.createForAdd(replacementEntity.get(), formDataForReplacement)
+        changesListBuilder.addAll(formChangeListGeneratorFactory.createForAdd(replacementEntity.get(), new FormDataByFormId(formDataForReplacement))
                                                      .generateChanges(context)
                                                      .getChanges());
 
@@ -318,8 +319,8 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
             return;
         }
         formChangeListGeneratorFactory.createForAdd(entityToBeDeprecated,
-                                                    ImmutableMap.of(deprecationFormData.get().getFormId(),
-                                                                    deprecationFormData.get()))
+                                                    new FormDataByFormId(ImmutableMap.of(deprecationFormData.get().getFormId(),
+                                                                                         deprecationFormData.get())))
                                       .generateChanges(context)
                                       .getChanges()
                                       .forEach(changeBuilder::add);

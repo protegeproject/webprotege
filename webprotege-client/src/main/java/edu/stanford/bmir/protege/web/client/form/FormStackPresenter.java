@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
@@ -116,14 +115,13 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
                                   .collect(toImmutableList());
     }
 
-    /** @noinspection OptionalGetWithoutIsPresent*/
     @Nonnull
-    public ImmutableMap<FormId, FormData> getForms() {
-        return formPresenters.entrySet()
-                      .stream()
-                      .filter(e -> e.getValue().getFormData().isPresent())
-                      .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey,
-                                                           e -> e.getValue().getFormData().get()));
+    public FormDataByFormId getFormData() {
+        Map<FormId, FormData> resultMap = new LinkedHashMap<>();
+        formPresenters.forEach((formId, formPresenter) -> {
+            resultMap.put(formId, formPresenter.getFormData().orElse(null));
+        });
+        return new FormDataByFormId(resultMap);
     }
 
     public void expandAllFields() {

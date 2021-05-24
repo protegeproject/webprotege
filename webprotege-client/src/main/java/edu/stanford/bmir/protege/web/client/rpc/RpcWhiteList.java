@@ -1140,4 +1140,6 @@ public class RpcWhiteList implements Action, Result {
     public void setWhiteSpaceTreatment(WhiteSpaceTreatment whiteSpaceTreatment) {
         this.whiteSpaceTreatment = whiteSpaceTreatment;
     }
+
+    FormDataByFormId formDataByFormId;
 }

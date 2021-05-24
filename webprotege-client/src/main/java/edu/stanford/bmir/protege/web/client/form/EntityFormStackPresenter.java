@@ -30,7 +30,6 @@ import java.util.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static java.util.Map.*;
 
 /**
  * Matthew Horridge
@@ -270,16 +269,8 @@ public class EntityFormStackPresenter {
     }
 
     private void commitEdits(@Nonnull OWLEntity entity) {
-        ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms()
-                                                                          .entrySet()
-                .stream()
-                .filter(e -> pristineDataManager.containsPristineFormData(e.getValue().getFormId()))
-                .collect(toImmutableMap(Entry::getKey, Entry::getValue));
-        if(editedFormData.isEmpty()) {
-            return;
-        }
-        ImmutableSet<FormId> editedFormIds = editedFormData.keySet();
-        GWT.log("[EntityFormStackPresenter] Committing edits for " + editedFormIds);
+        FormDataByFormId editedFormData = formStackPresenter.getFormData();
+        Collection<FormId> editedFormIds = editedFormData.getFormIds();
         ImmutableMap<FormId, FormData> pristineFormData = pristineDataManager.getPristineFormData(editedFormIds);
         dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
                          // Refresh the pristine data to what was committed
