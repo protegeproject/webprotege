@@ -184,13 +184,15 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                 var emptyFormFrame = FormFrame.get(FormSubject.get(subject.getEntity()));
                 generateChangesForInstances(subject.getEntity(), pristineFrame, emptyFormFrame, resultBuilder);
                 if(!this.subject.equals(subject.getEntity())) {
-                    // Non-top-level subject.  This needs deleting because it corresponds to a grid row subject,
-                    // or sub-form subject
-                    var deletionChangeListGenerator = deleteEntitiesChangeListGeneratorFactory.create(Collections.singleton(subject.getEntity()));
-                    var deletionChanges = OntologyChangeList.<OWLEntity>builder()
-                            .addAll(deletionChangeListGenerator.generateChanges(context).getChanges())
-                            .build(subject.getEntity());
-                    resultBuilder.add(deletionChanges);
+                    // Temporarily disable this cleanup
+
+//                    // Non-top-level subject.  This needs deleting because it corresponds to a grid row subject,
+//                    // or sub-form subject
+//                    var deletionChangeListGenerator = deleteEntitiesChangeListGeneratorFactory.create(Collections.singleton(subject.getEntity()));
+//                    var deletionChanges = OntologyChangeList.<OWLEntity>builder()
+//                            .addAll(deletionChangeListGenerator.generateChanges(context).getChanges())
+//                            .build(subject.getEntity());
+//                    resultBuilder.add(deletionChanges);
                 }
             }
             else {
