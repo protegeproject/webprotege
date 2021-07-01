@@ -1,44 +1,67 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel>
-        <div style="padding: 0 1em;">
-            <table>
-                <col width="100px" align="right"/>
-                <tr>
-                    <td align="right">
-                        <g:Label text="Ontology IRI" styleName="{wp.style.formLabel}" addStyleNames="web-protege-form-layout-editor-input"/>
-                    </td>
-                    <td valign="top">
-                        <g:TextBox ui:field="ontologyIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">
-                        <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
-                    </td>
-                    <td valign="top">
-                        <g:TextBox ui:field="versionIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
-                    </td>
-                </tr>
-            </table>
-            <hr></hr>
-            <h2>File-based Project Attestation</h2>
-            <div style="max-width: 200px;">
-                <g:Button ui:field="fileVerifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
-                <g:Label ui:field="fileVerifyResult" addStyleNames="{wp.style.formLabel}"/>
-                <g:Button ui:field="fileSignButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
-                <g:Label ui:field="fileSignResult" addStyleNames="{wp.style.formLabel}"/>
-            </div>
-            <hr></hr>
-            <h2>OWL ontology attestation</h2>
-            <div style="max-width: 200px;">
-                <g:Button ui:field="owlVerifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
-                <g:Label ui:field="owlVerifyResult" addStyleNames="{wp.style.formLabel}"/>
-                <g:Button ui:field="owlSignButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
-                <g:Label ui:field="owlSignResult" addStyleNames="{wp.style.formLabel}"/>
-            </div>
+    <ui:style>
+        .main {}
+        .status::before {
+            padding-right: 10px;
+        }
+        .status[data-attest=true] {
+            color: green;
+        }
+        .status[data-attest=true]::before {
+            content: '\2713';
+        }
+        .status[data-attest=false] {
+            color: red;
+        }
+        .status[data-attest=false]::before {
+            content: '\292C';
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Select project ontology IRI" addStyleNames="{wp.style.formLabel}"/>
+            <g:ValueListBox ui:field="projectIRIs" />
+        </div>
+
+<!--        <div class="{wp.style.formGroup}">-->
+<!--            <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>-->
+<!--            <g:Label ui:field="ontologyIRIField" width="100%" addStyleNames="{wp.style.formIriField}"/>-->
+<!--        </div>-->
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label ui:field="versionIRIField" width="100%" addStyleNames="{wp.style.formIriField}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Contract address" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label ui:field="address" width="100%" addStyleNames="{wp.style.formIriField}"/>
+        </div>
+<!--        <hr></hr>-->
+<!--        <h2>File-based Project Attestation</h2>-->
+<!--        <div style="max-width: 200px; display: none">-->
+<!--            <g:Button ui:field="fileVerifyButton" text="Verify" addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>-->
+<!--            <g:Label ui:field="fileVerifyResult" addStyleNames="{wp.style.formLabel}"/>-->
+<!--            <g:Button ui:field="fileSignButton" text="Sign" addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>-->
+<!--            <g:Label ui:field="fileSignResult" addStyleNames="{wp.style.formLabel}"/>-->
+<!--        </div>-->
+        <hr></hr>
+        <div style="{wp.style.formGroup}">
+            <g:Label text="Attestation status" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label ui:field="status" text="Attestation status unknown" addStyleNames="{wp.style.formIriField} {style.status}"/>
+            <g:Label ui:field="signer" text="" addStyleNames="{wp.style.formIriField}"/>
+            <g:Label ui:field="timestamp" text="" addStyleNames="{wp.style.formIriField}"/>
+        </div>
+        <hr></hr>
+        <div style="{wp.style.formGroup}">
+<!--            <g:Label text="Attestation" addStyleNames="{wp.style.formLabel}"/>-->
+            <g:Button ui:field="owlVerifyButton" text="Verify" addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>
+            <g:Label ui:field="owlVerifyResult" addStyleNames="{wp.style.formLabel}"/>
+            <g:Button ui:field="owlSignButton" text="Sign" addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>
+            <g:Label ui:field="owlSignResult" addStyleNames="{wp.style.formLabel}"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

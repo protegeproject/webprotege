@@ -5,6 +5,7 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.attestation.AttestationVerifyActionHandler;
 import edu.stanford.bmir.protege.web.server.attestation.OntologyHashActionHandler;
+import edu.stanford.bmir.protege.web.server.attestation.ProjectOntologyIdActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.EditAnnotationValuesActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.MoveToParentActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.SetAnnotationValueActionHandler;
@@ -676,6 +677,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideOntologyHashActionHandler(OntologyHashActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideProjectOntologyIdActionHandler(ProjectOntologyIdActionHandler handler) {
         return handler;
     }
 }

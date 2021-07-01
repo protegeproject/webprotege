@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ontology.attestation;
 import ch.unifr.digits.webprotege.attestation.client.ClientAttestationService;
 import ch.unifr.digits.webprotege.attestation.shared.*;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -12,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.revision.*;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
@@ -20,8 +21,7 @@ import javax.inject.Inject;
 import java.util.function.Consumer;
 
 @Portlet(id = "portlets.OntologyAttestation", title = "Ontology Attestation")
-public class AttestationPortletPresenter extends AbstractWebProtegePortletPresenter implements HasFixedPrimaryAxisSize,
-        AttestationPresenter {
+public class AttestationPortletPresenter extends AbstractWebProtegePortletPresenter implements AttestationPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -44,15 +44,15 @@ public class AttestationPortletPresenter extends AbstractWebProtegePortletPresen
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(editor.asWidget());
-        dispatchServiceManager.execute(new GetRootOntologyIdAction(getProjectId()),
-                result -> editor.setValue(result.getObject()));
+//        dispatchServiceManager.execute(new GetRootOntologyIdAction(getProjectId()),
+//                result -> editor.setValue(result.getObject()));
         dispatchServiceManager.execute(new GetAttestationSettingsAction(),
-                result -> attestationSettings = result);
-    }
-
-    @Override
-    public int getFixedPrimaryAxisSize() {
-        return 80;
+                result -> {
+                    attestationSettings = result;
+                    editor.setContractAddress(result.getAddressOntologyContract());
+                });
+        dispatchServiceManager.execute(new GetProjectOntologyIdAction(getProjectId()),
+                result -> editor.setIDs(result.getOntologyIDs()));
     }
 
     @Override
@@ -65,6 +65,7 @@ public class AttestationPortletPresenter extends AbstractWebProtegePortletPresen
     @Override
     public void fileVerify(String ontologyIri, String versionIri, Callback<VerifyResult, Object> callback) {
         RevisionNumber head = RevisionNumber.getHeadRevisionNumber();
+        GWT.log("Revision " + head.toString());
         ClientAttestationService.verifyProjectFile(projectId, head, ontologyIri, versionIri,
                 attestationSettings.getAddressOntologyContract(), callback);
     }
