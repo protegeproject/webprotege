@@ -1,12 +1,41 @@
-WebProtégé-Fork for Ontology attestation integration
+Fork of WebProtégé implementing ontology attestation and verification
 ==========
 
-See the original readme below for building instructions. Some key classes were altered to integrate an attestation 
-portlet in the editor. The portlet can be added by choosing 'Attestation' from the list of available portlets, 
-e.g. when adding a new tab. 
+Modification of the WebProtégé ontology editor to support ontology attestation by implementing a custom portlet. See the original readme below for 
+instructions for WebProtégé in general. 
 
+## Relevant links
+- [Attesattion module](https://github.com/curtys/webprotege-attestation)
+- [Dataset](https://github.com/curtys/webprotege-attestation/tree/master/dataset) and results used for publication
+
+## Requirements
+
+- the **attestation module** implementing most of the functionality: https://github.com/curtys/webprotege-attestation
+- docker-compose
+- Java 8 and Maven
+
+## Building
+
+- follow the building instructions of the **attestation module**
+- run `mvn clean package` to build WebProtégé
+
+## Starting in DevMode
+
+- first, consider following the instructions of the **attestation module** to set up an Ethereum test network
+- start the database with `docker-compose up -d devmongo`
+- start the GWT code server with `mvn gwt:codeserver`
+- start a tomcat server instance with `mvn -Denv=dev tomcat7:run`
+- first time starting up (or after resetting the database) an admin user has to be created. 
+  Executed the **webprotege-cli** JAR (compile it, if not already done). E.g., 
+  `java -jar webprotege-cli/target/webprotege-cli.jar create-admin-account`
+- by default, WebProtégé is available on port 8080.
+
+## Changes made in this fork
+Some key classes were altered to integrate an attestation 
+portlet in the editor. The portlet can be added by choosing 'Attestation' from the list of available portlets, 
+e.g. when adding a new tab.
 In the graphic below the altered classes are marked in red and the added packages in green.
-The attestation is implemented in a separate module, found here: <removed for review>.
+
 ![docs/package_protege.png](docs/package_protege.png)
 
 WebProtégé (original readme)

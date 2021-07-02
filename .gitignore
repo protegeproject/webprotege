@@ -18,3 +18,5 @@ dependency-reduced-pom.xml
 
 .protegedata/
 .devdata/
+
+.vscode/
