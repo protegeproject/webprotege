@@ -445,9 +445,9 @@
             </properties>
         </profile>
         <profile>
-            <id>dev-sc</id>
+            <id>dev</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <data.directory>${project.basedir}/../.devdata</data.directory>
@@ -464,5 +464,6 @@
         <module>webprotege-client</module>
         <module>webprotege-shared-core</module>
         <module>webprotege-cli</module>
+        <module>webprotege-attestation</module>
     </modules>
 </project>

@@ -2,10 +2,12 @@ version: "3"
 
 services:
 
-  devmongo:
-    image: mongo:4.1-bionic
+  ganache:
+    image: trufflesuite/ganache-cli:latest
     ports:
-      - 27017:27017
+      - '8545:8545'
+    command: ganache-cli -s attestation -l 100000000000
+  # mnemonic: endorse soccer immense wonder cheap crew hundred protect bunker lemon burden wash
 
   wpmongo:
     container_name: webprotege-mongodb
@@ -13,12 +15,15 @@ services:
     restart: unless-stopped
     volumes: 
       - ./.protegedata/mongodb:/data/db
+    ports:
+      - '27017:27017'
 
-  webprotege:
-    container_name: webprotege
-    image: protegeproject/webprotege
+  webprotege-attestation:
+    container_name: webprotege-attestation
+    image: webprotege-attestation
     depends_on:
       - wpmongo
+      - ganache
     restart: unless-stopped
     environment:
       - webprotege.mongodb.host=wpmongo

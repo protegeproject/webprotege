@@ -1,0 +1,42 @@
+# Java (general)
+*.class
+bin/
+
+# Maven
+target/
+*.releaseBackup
+
+# Eclipse
+.project
+.classpath
+.settings/
+/build
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# VisualCode
+**/.vscode/
+
+# Netbeans
+build.xml
+manifest.mf
+nbproject/
+/data
+
+# Subversion
+.svn
+
+# Mac
+.DS_Store
+
+# npm
+**/node_modules/
+
+/bin
+/results
+*.owl
+*.rdf
+*.ttl

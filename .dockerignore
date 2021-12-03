@@ -1,0 +1,22 @@
+*.class
+target/
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+out/
+
+logs/
+
+velocity.log.*
+*.log
+
+dependency-reduced-pom.xml
+
+.protegedata/
+.devdata/
+
+.vscode/
