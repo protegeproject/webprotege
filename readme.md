@@ -1,8 +1,8 @@
 Fork of WebProtégé implementing ontology attestation and verification
 ==========
 
-Modification of the WebProtégé ontology editor to support ontology attestation by implementing a custom portlet. See the original readme below for 
-instructions for WebProtégé in general. 
+Modification of the [WebProtégé ontology editor](https://github.com/protegeproject/webprotege) to support ontology attestation by implementing a custom portlet. See the original readme below for 
+instructions for WebProtégé in general. To run a pre-built docker image see ()[]
 
 ## Relevant links
 - [Attesattion module](https://github.com/curtys/webprotege-attestation)
@@ -10,63 +10,14 @@ instructions for WebProtégé in general.
 
 ## Requirements
 
-- the **attestation module** implementing most of the functionality: https://github.com/curtys/webprotege-attestation
+- Requirements of the attestation module for compiling and deploying smart contracts:
+  - solc 7.1.0 
+  - web3j-cli 
+  - node and npm
 - docker-compose
 - Java 8 and Maven
 
-## Building
-
-- follow the building instructions of the **attestation module**
-- run `mvn clean package` to build WebProtégé
-
-## Starting in DevMode
-
-- first, consider following the instructions of the **attestation module** to set up an Ethereum test network
-- start the database with `docker-compose up -d devmongo`
-- start the GWT code server with `mvn gwt:codeserver`
-- start a tomcat server instance with `mvn -Denv=dev tomcat7:run`
-- first time starting up (or after resetting the database) an admin user has to be created. 
-  Executed the **webprotege-cli** JAR (compile it, if not already done). E.g., 
-  `java -jar webprotege-cli/target/webprotege-cli.jar create-admin-account`
-- by default, WebProtégé is available on port 8080.
-
-## Changes made in this fork
-Some key classes were altered to integrate an attestation 
-portlet in the editor. The portlet can be added by choosing 'Attestation' from the list of available portlets, 
-e.g. when adding a new tab.
-In the graphic below the altered classes are marked in red and the added packages in green.
-
-![docs/package_protege.png](docs/package_protege.png)
-
-WebProtégé (original readme)
-==========
-
-What is WebProtégé?
--------------------
-
-WebProtégé is a free, open source collaborative ontology development environment.
-
-It provides the following features:
-- Support for editing OWL 2 ontologies
-- A default simple editing interface, which provides access to commonly used OWL constructs
-- Full change tracking and revision history
-- Collaboration tools such as, sharing and permissions, threaded notes and discussions, watches and email notifications
-- Customizable user interface
-- Support for editing OBO ontologies
-- Multiple file formats for upload and download of ontologies (supported formats: RDF/XML, Turtle, OWL/XML, OBO, and others)
-
-WebProtégé runs as a Web application. End users access it through their Web browsers.
-They do not need to download or install any software. We encourage end-users to use
-
-https://webprotege.stanford.edu
-
-If you have downloaded the webprotege war file from GitHub, and would like to deploy it on your own server,
-please follow the instructions at:
-
-https://github.com/protegeproject/webprotege/wiki/WebProtégé-4.0.0-beta-x-Installation
-
-Building
---------
+## Building for development
 
 To build WebProtégé from source
 
@@ -81,25 +32,23 @@ To build WebProtégé from source
    ```
 5) The WebProtege .war file will be built into the webprotege-server directory
 
-Running from Maven
-------------------
+## Starting in DevMode
 
-To run WebProtégé in SuperDev Mode using maven
+- first, consider following the instructions of the **attestation module** to set up an Ethereum test network
+- start the database with `docker-compose up -d wpmongo`
+- start the GWT code server with `mvn gwt:codeserver`
+- in a different terminal start a tomcat server instance with `mvn -P dev -Denv=dev tomcat7:run`. The maven profile `-P dev` will result in WebProtégé storing its data in `.devdata` instead of the default directory (`/srv/webprotege`).
+- first time starting up (or after resetting the database) an admin user has to be created. 
+  Executed the **webprotege-cli** JAR (compile it, if not already done). E.g., 
+  `java -jar webprotege-cli/target/webprotege-cli-{version}.jar create-admin-account`
+- by default, WebProtégé is available on [http://localhost:8080](http://localhost:8080).
+- After the first start, some application settings need to be configured. Login to [localhost:8080/#application/settings](the settings page) with the previously created admin account.
 
-1) Start the GWT code server in one terminal window
-    ```
-    mvn gwt:codeserver
-    ```
-2) In a different terminal window start the tomcat server
-    ```
-    mvn -Denv=dev tomcat7:run
-    ```
-3) Browse to WebProtégé in a Web browser by navigating to [http://localhost:8080](http://localhost:8080)
+Detailed installation instructions can be found in the (official wiki)[https://github.com/protegeproject/webprotege/wiki/WebProt%C3%A9g%C3%A9-4.0.0-Installation].
 
-Running from Docker
--------------------
+## Running from Docker
 
-To run WebProtégé using Docker containers:
+A pre-built docker image is available. To run the project stack from docker:
 
 1. Enter this following command in the Terminal to start the docker container in the background
 
@@ -114,10 +63,10 @@ To run WebProtégé using Docker containers:
    ```
 
 3. Browse to WebProtégé Settings page in a Web browser by navigating to [http://localhost:5000/#application/settings](http://localhost:5000/#application/settings)
-   1. Define the `System notification email address` and `application host URL`
-   2. Enable `User creation`, `Project creation` and `Project import`
+    1. Define the `System notification email address` and `application host URL`
+    2. Enable `User creation`, `Project creation` and `Project import`
 
-To stop WebProtégé and MongoDB:
+To stop WebProtégé, MongoDB and the Ganache test instance:
 
    ```bash
    docker-compose down
@@ -129,3 +78,21 @@ Sharing the volumes used by the WebProtégé app and MongoDB allow to keep persi
 * MongoDB will store its data in the source code folder at `./.protegedata/mongodb` where you run `docker-compose`
 
 > Path to the shared volumes can be changed in the `docker-compose.yml` file.
+
+By default, a Ganache test blockchain will be started. WebProtégé is pre-configured to use this chain. It is possible to
+change the chain by setting environment variables in `docker-compose.yml` (of the servcie `webprotege-attestation`):
+```yaml
+environment:
+      - webprotege.mongodb.host=wpmongo
+      - ADDRESS_ATTESTATION=<the smart contract address>
+      - PROVIDER_HOST=<host name of the RPC endpoint provider>
+      - PROVIDER_PORT=<port of the RPC endpoint provider>  
+```
+
+## Changes made in this fork
+Some key classes were altered to integrate an attestation 
+portlet in the editor. The portlet can be added by choosing 'Attestation' from the list of available portlets, 
+e.g. when adding a new tab.
+In the graphic below the altered classes are marked in red and the added packages in green.
+
+![docs/package_protege.png](docs/package_protege.png)

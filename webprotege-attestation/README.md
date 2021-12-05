@@ -1,6 +1,6 @@
 ## Ontology attestation and verification module for WebProtégé
 
-A module for WebProtégé, implementing an approach for ontology attestation. Intended to be used with https://github.com/curtys/webprotege-attestation-base/.
+A module for WebProtégé, implementing an approach for ontology attestation.
 
 ## Datasets
 * [ISWC21](dataset/ISWC21)
@@ -23,12 +23,13 @@ Compile solidity contracts and generate interfaces and wrappers:
 ```
 sh ./compile-contracts.sh
 ```
-Start a local Ganache test blockchain
+Start a local Ganache test blockchain with the docker-compose file in the [parent project](../readme.md) (execute from the project root).
 ```
-docker-compose up -d
+docker-compose up -d ganache
 ```
+The seed is fixed, use the mnemonic indicated in the docker-compose file to access the test accounts.
 
-Deploy contracts:
+Deploy contracts (execute from the `scripts` folder):
 ```
 npm install
 npm run deploy
@@ -36,6 +37,7 @@ npm run deploy
 
 ## Configuration
 The contract address must be made available to the application server. To do this, configure the address in `src/main/java/resources/configuration/config.properties`.
+Alternatively, the address may be set n the environment with the key `ADDRESS_ATTESTATION`, the RPC provider host and port by `PROVIDER_HOST` and `PROVIDER_PORT` respectively.
 
 ## Dataset & Running the tests
 The evaluation dataset and test results can be found in the folder `dataset/`.
