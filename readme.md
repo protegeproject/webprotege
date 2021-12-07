@@ -2,11 +2,11 @@ Fork of WebProtégé implementing ontology attestation and verification
 ==========
 
 Modification of the [WebProtégé ontology editor](https://github.com/protegeproject/webprotege) to support ontology attestation by implementing a custom portlet. See the original readme below for 
-instructions for WebProtégé in general. To run a pre-built docker image see ()[]
+instructions for WebProtégé in general. To run a pre-built docker image see the section ["Running from docker"](#running-from-docker).
 
 ## Relevant links
-- For further documentation see the [Attesattion module](https://github.com/curtys/webprotege-attestation)
-- Attestation portlet [usage guide](webprotege-attestation/docs/guide.md)
+- For further documentation see the [Attesattion module](webprotege-attestation) and its [readme](webprotege-attestation/readme.md)
+- Attestation portlet [usage guide](docs/guide.md).(webprotege-attestation/docs/guide.md)
 - [Dataset](https://github.com/curtys/webprotege-attestation/tree/master/dataset) and results used for publication
 
 ## Requirements
