@@ -1,9 +1,6 @@
 ## Ontology attestation and verification module for WebProtégé
 
-A module for WebProtégé, implementing an approach for ontology attestation. See also the [usage guide](docs/guide.md).
-
-## Datasets
-* [ISWC21](dataset/ISWC21)
+A module for WebProtégé, implementing an approach for ontology attestation. See also the [usage guide](../docs/guide.md).
 
 ## Development requirements
 * [solc 7.1.0+](https://docs.soliditylang.org/en/v0.8.10/installing-solidity.html#linux-packages)
