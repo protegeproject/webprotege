@@ -30,8 +30,8 @@
     </properties>
 
     <scm>
-        <connection>scm:git:https://github.com/protegeproject/webprotege.git</connection>
-        <url>https://github.com/webprotege/webprotege.git</url>
+        <connection>scm:git:git://github.com:curtys/webprotege-attestation.git</connection>
+        <url>https://github.com/curtys/webprotege-attestation.git</url>
     </scm>
 
     <prerequisites>
