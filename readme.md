@@ -5,32 +5,31 @@ Modification of the [WebProtégé ontology editor](https://github.com/protegepro
 instructions for WebProtégé in general. To run a pre-built docker image see ()[]
 
 ## Relevant links
-- [Attesattion module](https://github.com/curtys/webprotege-attestation)
+- For further documentation see the [Attesattion module](https://github.com/curtys/webprotege-attestation)
+- Attestation portlet [usage guide](webprotege-attestation/docs/guide.md)
 - [Dataset](https://github.com/curtys/webprotege-attestation/tree/master/dataset) and results used for publication
 
 ## Requirements
 
-- Requirements of the attestation module for compiling and deploying smart contracts:
-  - solc 7.1.0 
-  - web3j-cli 
-  - node and npm
-- docker-compose
+- Development requirements of the attestation module for compiling and deploying smart contracts:
+   - [solc 7.1.0+](https://docs.soliditylang.org/en/v0.8.10/installing-solidity.html#linux-packages) 
+   - [web3j-cli](http://docs.web3j.io/4.8.7/command_line_tools/) 
+   - [Node and NPM](https://nodejs.org/en/)
+   - [Metamask](metamask.io) (or other wallet plugin) for client blockchain interaction
+- [Docker Compose](https://docs.docker.com/compose/install/)
 - Java 8 and Maven
 
 ## Building for development
 
 To build WebProtégé from source
 
-1) Clone the github repository
-   ```
-   git clone https://github.com/protegeproject/webprotege.git
-   ```
-2) Open a terminal in the directory where you clone the repository to
-3) Use maven to package WebProtégé
+1. Clone the github repository
+2. Open a terminal in the directory where you clone the repository
+3. Use maven to package WebProtégé
    ```
    mvn clean package
    ```
-5) The WebProtege .war file will be built into the webprotege-server directory
+4. The WebProtege .war file will be built into the webprotege-server directory
 
 ## Starting in DevMode
 
@@ -44,25 +43,26 @@ To build WebProtégé from source
 - by default, WebProtégé is available on [http://localhost:8080](http://localhost:8080).
 - After the first start, some application settings need to be configured. Login to [localhost:8080/#application/settings](the settings page) with the previously created admin account.
 
-Detailed installation instructions can be found in the (official wiki)[https://github.com/protegeproject/webprotege/wiki/WebProt%C3%A9g%C3%A9-4.0.0-Installation].
+Detailed installation instructions can be found in the [official wiki](https://github.com/protegeproject/webprotege/wiki/WebProt%C3%A9g%C3%A9-4.0.0-Installation).
 
 ## Running from Docker
 
 A pre-built docker image is available. To run the project stack from docker:
 
-1. Enter this following command in the Terminal to start the docker container in the background
+1. Enter this following command in the Terminal to start the docker container in the background. This will start containers for all dependand services as well, i.e., MongoDB and Ganache.
 
    ```bash
    docker-compose up -d
    ```
+1. Deploy the smart contracts (e.g., to Ganache). Follow the instructions [here](webprotege-attestation/README.md).
 
-2. Create the admin user (follow the questions prompted to provider username, email and password)
+1. Create the admin user (follow the questions prompted to provider username, email and password)
 
    ```bash
    docker exec -it webprotege java -jar /webprotege-cli.jar create-admin-account
    ```
 
-3. Browse to WebProtégé Settings page in a Web browser by navigating to [http://localhost:5000/#application/settings](http://localhost:5000/#application/settings)
+1. Browse to WebProtégé Settings page in a Web browser by navigating to [http://localhost:5000/#application/settings](http://localhost:5000/#application/settings)
     1. Define the `System notification email address` and `application host URL`
     2. Enable `User creation`, `Project creation` and `Project import`
 
@@ -79,8 +79,7 @@ Sharing the volumes used by the WebProtégé app and MongoDB allow to keep persi
 
 > Path to the shared volumes can be changed in the `docker-compose.yml` file.
 
-By default, a Ganache test blockchain will be started. WebProtégé is pre-configured to use this chain. It is possible to
-change the chain by setting environment variables in `docker-compose.yml` (of the servcie `webprotege-attestation`):
+By default, a Ganache test blockchain will be started. WebProtégé is pre-configured to use this chain. It is possible to change the chain by setting environment variables in `docker-compose.yml` (of the servcie `webprotege-attestation`):
 ```yaml
 environment:
       - webprotege.mongodb.host=wpmongo
