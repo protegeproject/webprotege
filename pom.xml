@@ -464,6 +464,6 @@
         <module>webprotege-client</module>
         <module>webprotege-shared-core</module>
         <module>webprotege-cli</module>
-        <module>webprotege-attestation</module>
+        <module>webprotege-attestation-lib</module>
     </modules>
 </project>

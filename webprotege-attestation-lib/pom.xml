@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>ch.unifr.digits.webprotege</groupId>
-    <artifactId>webprotege-attestation</artifactId>
+    <artifactId>webprotege-attestation-lib</artifactId>
     <packaging>gwt-lib</packaging>
 
 

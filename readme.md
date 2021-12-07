@@ -5,9 +5,9 @@ Modification of the [WebProtégé ontology editor](https://github.com/protegepro
 instructions for WebProtégé in general. To run a pre-built docker image see the section ["Running from docker"](#running-from-docker).
 
 ## Relevant links
-- For further documentation see the [Attesattion module](webprotege-attestation) and its [readme](webprotege-attestation/readme.md)
-- Attestation portlet [usage guide](docs/guide.md).(webprotege-attestation/docs/guide.md)
-- [Dataset](https://github.com/curtys/webprotege-attestation/tree/master/dataset) and results used for publication
+- For further documentation see the [Attestation library module](webprotege-attestation-lib) and its [readme](webprotege-attestation-lib/README.md)
+- Attestation portlet [usage guide](docs/guide.md)
+- [Dataset](webprotege-attestation-lib/dataset) and results used for publication
 
 ## Requirements
 
@@ -58,7 +58,7 @@ A pre-built docker image is available. To run the project stack from docker:
    ```bash
    docker-compose up -d
    ```
-1. Deploy the smart contracts (e.g., to Ganache). Follow the instructions [here](webprotege-attestation/README.md).
+1. Deploy the smart contracts (e.g., to Ganache). Follow the instructions [here](webprotege-attestation-lib/README.md).
 
 1. Create the admin user (follow the questions prompted to provider username, email and password)
 

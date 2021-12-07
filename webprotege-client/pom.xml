@@ -39,7 +39,7 @@
 
         <dependency>
             <groupId>ch.unifr.digits.webprotege</groupId>
-            <artifactId>webprotege-attestation</artifactId>
+            <artifactId>webprotege-attestation-lib</artifactId>
             <version>${project.version}</version>
             <type>gwt-lib</type>
         </dependency>
