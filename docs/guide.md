@@ -7,7 +7,7 @@ Requirements (see the installation instructions):
 
 ## Setting up Metamask
 1) Install the Metamask plugin for your browser. You may follow the [Metamask installation guide](https://metamask.zendesk.com/hc/en-us/articles/360015489531-Getting-started-with-MetaMask).
-2) Open the extension and login to your account (if you hvae one) or create/import a new one by entering a Mnemonic (Secret Recovery Phrase). If you use the Ganache instance chose "Import wallet" and enter the Mnemonic phrase found in the `docker-compose.yml` file. The Mnemonic is a phrase of 12+ lower-case words.
+2) Open the extension and login to your account (if you have one) or create/import a new one by entering a Mnemonic (Secret Recovery Phrase). If you use the Ganache instance chose "Import wallet" and enter the Mnemonic phrase found in the `docker-compose.yml` file. The Mnemonic is a phrase of 12+ lower-case words.
 3) If using a local blockchain, e.g., the Ganache instance configured in the `docker-compose.yml` file, you need to add a custom network as explained here: https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-network-RPC. For the Ganache instance, enter following values:
 ```
     RPC Url: localhost:

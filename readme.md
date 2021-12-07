@@ -72,7 +72,7 @@ To stop WebProtégé, MongoDB and the Ganache test instance:
    docker-compose down
    ```
 
-Sharing the volumes used by the WebProtégé app and MongoDB allow to keep persistent data, even when the containers stop. Default shared data storage:
+Sharing the volumes used by the WebProtégé app and MongoDB allows for keeping persistent data, even when the containers stop. Default shared data storage:
 
 * WebProtégé will store its data in the source code folder at `./.protegedata/protege` where you run `docker-compose`
 * MongoDB will store its data in the source code folder at `./.protegedata/mongodb` where you run `docker-compose`
