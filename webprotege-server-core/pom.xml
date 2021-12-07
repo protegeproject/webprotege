@@ -253,7 +253,7 @@
         <dependency>
             <groupId>ch.unifr.digits.webprotege</groupId>
             <artifactId>webprotege-attestation</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
