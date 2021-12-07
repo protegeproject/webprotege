@@ -29,7 +29,11 @@ To build WebProtégé from source
    ```
    mvn clean package
    ```
-4. The WebProtege .war file will be built into the webprotege-server directory
+   To ignore tests use
+    ```
+    mvn clean package -DskipTests=True
+   ```
+5. The WebProtege .war file will be built into the webprotege-server directory
 
 ## Starting in DevMode
 
