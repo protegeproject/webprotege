@@ -20,7 +20,7 @@ services:
 
   webprotege-attestation:
     container_name: webprotege-attestation
-    image: webprotege-attestation
+    image: curtys/webprotege-attestation:latest
     depends_on:
       - wpmongo
       - ganache
@@ -30,5 +30,5 @@ services:
     volumes: 
     - ./.protegedata/protege:/srv/webprotege
     ports:
-      - 5000:8080
+      - '5000:8080'
 

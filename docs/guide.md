@@ -17,7 +17,7 @@ Requirements (see the installation instructions):
 
 ## Attesting to the provenance of an ontology in WebProtégé
 
-1. Log into WebProtégé (by default https://localhost:8080) and import an Ontology, e.g., download one from [BioPortal](https://bioportal.bioontology.org), by pressing "Create new project".
+1. Log into WebProtégé (by default https://localhost:5000 when using docker or https://localhost:8080 in DevMode) and import an Ontology, e.g., download one from [BioPortal](https://bioportal.bioontology.org), by pressing "Create new project".
 ![webprotege1.png](webprotege1.png)
 1. Open the project and add a new view by clicking the menu icon of a tab and selecting "Add new view".
 ![webprotege2.png](webprotege2.png)
