@@ -45,6 +45,7 @@
 
 
     <build>
+        <finalName>webprotege-cli</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>

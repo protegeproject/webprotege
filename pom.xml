@@ -169,32 +169,37 @@
         </dependencies>
     </dependencyManagement>
 
+
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>babylon-snapshots</id>
+            <url>https://artifactory.ops.babylontech.co.uk/artifactory/babylon-maven-snapshots</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>babylon-releases</id>
+            <url>https://artifactory.ops.babylontech.co.uk/artifactory/babylon-maven-releases</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>oss-sonatype</id>
-            <name>OSS Sonatype Snapshot Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>babylon-snapshots</id>
+            <url>https://artifactory.ops.babylontech.co.uk/artifactory/babylon-maven-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
             <snapshots>
-                <updatePolicy>daily</updatePolicy>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>
-            <id>edu.protege.stanford</id>
-            <name>Protege Project Maven Repo</name>
-            <url>https://github.com/protegeproject/mvn-repo/raw/master/releases</url>
+            <id>babylon-releases</id>
+            <url>https://artifactory.ops.babylontech.co.uk/artifactory/babylon-maven-releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
             <snapshots>
-                <updatePolicy>daily</updatePolicy>
+                <enabled>false</enabled>
             </snapshots>
         </repository>
     </repositories>
@@ -284,7 +289,7 @@
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
+                    <version>2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

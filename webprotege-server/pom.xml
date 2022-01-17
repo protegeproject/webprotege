@@ -170,6 +170,12 @@
           <version>3.0.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>6.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -207,6 +213,7 @@
                         <addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
                         <path>/</path>
                         <uriEncoding>UTF-8</uriEncoding>
+                        <finalName>webprotege-standalone.jar</finalName>
                     </configuration>
                 </plugin>
             </plugins>

@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.io.InputStream;
+    import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -86,10 +88,19 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
             if (value == null) {
                 value = System.getenv(property);
             }
+            if (value == null) {
+                String upperUnderscoreEnvVarName = toUpperUnderscore(property);
+                logger.info("Reading upper underscore env var {}", upperUnderscoreEnvVarName);value = System.getenv(upperUnderscoreEnvVarName);
+
+            }
         } catch (SecurityException e) {
             logger.info("Cannot access system or environment variable: " + property + " Message: " + e.getMessage());
         }
         return value;
+    }
+
+    private String toUpperUnderscore(String property) {
+        return Arrays.stream(property.split("\\.")).map(String::toUpperCase).collect(Collectors.joining("_"));
     }
 
 }

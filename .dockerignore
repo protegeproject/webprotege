@@ -1,0 +1,5 @@
+**
+
+!webprotege-server/target/webprotege-standalone.jar
+!webprotege-cli/target/webprotege-cli*.jar
+

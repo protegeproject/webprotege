@@ -1,63 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="60 seconds">
+<configuration>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
 
-    <!-- Choose the logs directory path based on operating system -->
-    <if condition='property("os.name").startsWith("Windows")'>
-        <then>
-            <!-- Windows gets \ProgramData\WebProtege\Logs-->
-            <property name="logsdir" value="${logs.directory:-/ProgramData/WebProtege/Logs}"/>
-        </then>
-        <else>
-            <!-- Everything else, e.g. MacOS and Linux gets /var/log/webprotege -->
-            <property name="logsdir" value="${logs.directory:-/var/log/webprotege}"/>
-        </else>
-    </if>
-
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level  %highlight(%msg) %n</Pattern>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <timeZone>UTC</timeZone>
+            <shortenedLoggerNameLength>48</shortenedLoggerNameLength>
+            <fieldNames>
+                <levelValue>[ignore]</levelValue>
+                <version>[ignore]</version>
+                <logger>logger</logger>
+                <thread>thread</thread>
+            </fieldNames>
+            <!-- We need to shorten stacktraces so they fit into infrastructure limits. -->
+            <!-- Sentry should be used for full stacktraces. -->
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <maxDepthPerThrowable>40</maxDepthPerThrowable>
+                <!-- The largest JSON message our Babylon infra can parse is around ~16k, use max 10k for the stacktrace-->
+                <maxLength>10000</maxLength>
+                <!-- Most class names should fit into this limit -->
+                <shortenedClassNameLength>100</shortenedClassNameLength>
+                <!-- Exclude stack elements with no meaning -->
+                <exclude>sun\.reflect\..*\.invoke.*</exclude>
+                <exclude>net\.sf\.cglib\.proxy\.MethodProxy\.invoke</exclude>
+            </throwableConverter>
         </encoder>
     </appender>
 
-    <appender name="webprotege" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logsdir}/webprotege.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${logsdir}/webprotege.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-            <maxHistory>60</maxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
-        </encoder>
-    </appender>
+    <!--    <appender name="SENTRY" class="io.sentry.logback.SentryAppender">-->
+    <!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+    <!--            <level>WARN</level>-->
+    <!--        </filter>-->
+    <!--    </appender>-->
 
-    <appender name="webprotege-all" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logsdir}/webprotege-all.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${logsdir}/webprotege-all.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-            <maxHistory>60</maxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
-        </encoder>
-    </appender>
-
-
-    <logger name="edu.stanford.bmir.protege.web" level="info">
-        <appender-ref ref="webprotege"/>
-        <appender-ref ref="stdout"/>
-    </logger>
-
-    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
-        <Name>BrowsingFilter</Name>
-        <Marker>BROWSING</Marker>
-        <OnMatch>DENY</OnMatch>
-    </turboFilter>
-
-
-    <root level="info">
-        <appender-ref ref="webprotege-all"/>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <!--        <appender-ref ref="SENTRY"/>-->
     </root>
-
 </configuration>
