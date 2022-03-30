@@ -37,7 +37,9 @@ public abstract class AnnotationAssertionPathDictionaryLanguage extends Dictiona
     @Nonnull
     public static AnnotationAssertionPathDictionaryLanguage get(@JsonProperty(PATH) @Nonnull ImmutableList<IRI> path,
                                                                 @JsonProperty(LANG) @Nonnull String newLang) {
-        return new AutoValue_AnnotationAssertionPathDictionaryLanguage(path, newLang);
+        if (newLang == null || newLang.trim() == "")
+            newLang = "en";
+	return new AutoValue_AnnotationAssertionPathDictionaryLanguage(path, newLang);
     }
 
     @Override
