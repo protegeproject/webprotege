@@ -1,7 +1,8 @@
 WebProtégé
 ==========
 
-**Please note that this is soon to be the *legacy* codebase for WebProtégé.  This repository will eventually be replaced with the [webprotege-backend](https://github.com/protegeproject/webprotege-backend) and [webprotege-gwt-ui](https://github.com/protegeproject/webprotege-gwt-ui) repositories, which cleanly separate out user-interface code from WebProtégé service code.  We are also moving WebProtégé to a microservice architecture and we have a raft of [repositories](https://github.com/topics/webprotege?o=desc&s=updated) for this under the GitHub protege project organization. **
+**PLEASE NOTE:  This repository is in the process of being superceded with a collection of other, more fine-grained, [repositories](https://github.com/topics/webprotege?o=desc&s=updated). We are moving WebProtégé to a microservice architecture and each microservice and each common library now has its own repository.  While this repository still serves as the repository for the current WebProtégé release, all active development is now taking place in these repositories.  You can read more about this on the [WebProtégé Next Gen Wiki](https://github.com/protegeproject/webprotege-next-gen/wiki/WebProtégé-Next-Generation-Overview).**
+
 
 What is WebProtégé?
 -------------------
