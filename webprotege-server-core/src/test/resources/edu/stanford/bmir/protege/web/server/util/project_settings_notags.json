@@ -1,0 +1,446 @@
+{
+  "projectSettings": {
+    "projectId": "00000000-0000-0000-0000-000000000000",
+    "displayName": "H-Graph",
+    "description": "",
+    "defaultLanguage": {
+      "type": "AnnotationAssertion",
+      "propertyIri": "rdfs:label"
+    },
+    "defaultDisplayNameSettings": {
+      "primaryDisplayNameLanguages": [
+        {
+          "type": "AnnotationAssertion",
+          "lang": "en",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "lang": "es",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "lang": "fr",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "lang": "de",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "lang": "pt-br",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "lang": "zh",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "propertyIri": "rdfs:label"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasMN",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "en"
+        },
+        {
+          "type": "LocalName"
+        },
+        {
+          "type": "PrefixedName"
+        },
+        {
+          "type": "AnnotationAssertion",
+          "propertyIri": "https://data.elsevier.com/health/core/schema/hasImui"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasCFN",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "en"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasSyn",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "en"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasSyn",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "es"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasSyn",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "fr"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasSyn",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "de"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasSyn",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "pt-BR"
+        },
+        {
+          "type": "AnnotationAssertionPath",
+          "path": [
+            "https://data.elsevier.com/health/core/schema/hasSyn",
+            "http://www.w3.org/2000/01/rdf-schema#label"
+          ],
+          "lang": "zh"
+        }
+      ],
+      "secondaryDisplayNameLanguages": []
+    },
+    "slackIntegrationSettings": {
+      "payloadUrl": "https://localhost/dummyfake"
+    },
+    "webhookSettings": {
+      "webhookSettings": []
+    },
+    "entityDeprecationSettings": {
+      "replacedByFilter": null,
+      "replacedByPropertyIri": null,
+      "deprecatedClassesParent": {
+        "type": "owl:Class",
+        "iri": "https://data.elsevier.com/health/core/schema/RetiredConcept"
+      },
+      "deprecatedObjectPropertiesParent": null,
+      "deprecatedDataPropertiesParent": null,
+      "deprecatedAnnotationPropertiesParent": null,
+      "deprecatedIndividualsParent": null
+    }
+  },
+  "entityCreationSettings": {
+    "prefixSettings": {
+      "conditionalIriPrefixes": [
+        {
+          "iriPrefix": "https://data.elsevier.com/health/core/concept/",
+          "criteria": {
+            "match": "CompositeCriteria",
+            "matchType": "ALL",
+            "criteria": [
+              {
+                "match": "SubClassOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/Concept"
+                },
+                "filterType": "ALL"
+              }
+            ]
+          }
+        },
+        {
+          "iriPrefix": "https://data.elsevier.com/health/core/schema/",
+          "criteria": {
+            "match": "CompositeCriteria",
+            "matchType": "ALL",
+            "criteria": [
+              {
+                "match": "SubClassOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/Relation"
+                },
+                "filterType": "DIRECT"
+              },
+              {
+                "match": "SubClassOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/Term"
+                },
+                "filterType": "DIRECT"
+              }
+            ]
+          }
+        },
+        {
+          "iriPrefix": "https://data.elsevier.com/health/core/relation/",
+          "criteria": {
+            "match": "CompositeCriteria",
+            "matchType": "ALL",
+            "criteria": [
+              {
+                "match": "SubClassOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/Relation"
+                },
+                "filterType": "ALL"
+              }
+            ]
+          }
+        },
+        {
+          "iriPrefix": "https://data.elsevier.com/health/core/term/",
+          "criteria": {
+            "match": "CompositeCriteria",
+            "matchType": "ALL",
+            "criteria": [
+              {
+                "match": "InstanceOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/Term"
+                },
+                "filterType": "ALL"
+              }
+            ]
+          }
+        },
+        {
+          "iriPrefix": "https://data.elsevier.com/health/core/relation/",
+          "criteria": {
+            "match": "CompositeCriteria",
+            "matchType": "ALL",
+            "criteria": [
+              {
+                "match": "InstanceOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/Relation"
+                },
+                "filterType": "ALL"
+              }
+            ]
+          }
+        },
+        {
+          "iriPrefix": "https://data.elsevier.com/health/core/mapping/UMLS/",
+          "criteria": {
+            "match": "CompositeCriteria",
+            "matchType": "ALL",
+            "criteria": [
+              {
+                "match": "InstanceOf",
+                "target": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/UMLS"
+                },
+                "filterType": "DIRECT"
+              }
+            ]
+          }
+        }
+      ],
+      "iriPrefix": "https://data.elsevier.com/health/core/"
+    },
+    "suffixSettings": {
+      "_class": "Uuid",
+      "uuidFormat": "STANDARD"
+    },
+    "generatedAnnotationsSettings": {
+      "descriptors": [
+        {
+          "property": {
+            "type": "owl:AnnotationProperty",
+            "iri": "https://data.elsevier.com/health/core/schema/hasImui"
+          },
+          "value": {
+            "@type": "IncrementingPattern",
+            "startingValue": 10000000,
+            "format": ""
+          },
+          "activatedBy": {
+            "match": "SubClassOf",
+            "target": {
+              "type": "owl:Class",
+              "iri": "https://data.elsevier.com/health/core/concept/id-cccc5330-7d23-35e9-a9f5-fc62b59aeeda"
+            },
+            "filterType": "ALL"
+          }
+        }
+      ]
+    }
+  },
+  "prefixDeclarations": [],
+  "projectTags": [],
+  "sharingSettings": {
+    "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+    "sharingSettings": [
+      {
+        "personId": "Fred Flintstone",
+        "sharingPermission": "EDIT"
+      },
+      {
+        "personId": "Roades",
+        "sharingPermission": "VIEW"
+      },
+      {
+        "personId": "uberuser",
+        "sharingPermission": "MANAGE"
+      }
+    ],
+    "linkSharingPermission": null
+  },
+  "searchSettings": {
+    "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+    "searchFilters": [
+      {
+        "_id": "6166eefe-39f8-408c-ae74-58a04b445dfe",
+        "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+        "label": {
+          "en": "Concepts"
+        },
+        "criteria": {
+          "match": "CompositeCriteria",
+          "criteria": [
+            {
+              "match": "SubClassOf",
+              "target": {
+                "type": "owl:Class",
+                "iri": "https://data.elsevier.com/health/core/schema/Concept"
+              },
+              "filterType": "ALL"
+            }
+          ],
+          "matchType": "ALL"
+        }
+      },
+      {
+        "_id": "dab3e204-3e9a-401e-aca6-a659583effe7",
+        "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+        "label": {
+          "en": "Drugs"
+        },
+        "criteria": {
+          "match": "CompositeCriteria",
+          "criteria": [
+            {
+              "match": "EntityRelationship",
+              "presence": "AT_LEAST_ONE",
+              "property": {
+                "match": "PropertyEquals",
+                "property": {
+                  "type": "owl:ObjectProperty",
+                  "iri": "https://data.elsevier.com/health/core/schema/hasSty"
+                }
+              },
+              "value": {
+                "match": "ValueEqualToEntity",
+                "value": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/id-5cc97031-dac3-3c38-835f-a4de1c207f4d"
+                }
+              }
+            }
+          ],
+          "matchType": "ALL"
+        }
+      },
+      {
+        "_id": "1974dc30-d9e9-4b9d-961d-5f3b3fbe5f77",
+        "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+        "label": {
+          "en": "Diseases"
+        },
+        "criteria": {
+          "match": "CompositeCriteria",
+          "criteria": [
+            {
+              "match": "EntityRelationship",
+              "presence": "AT_LEAST_ONE",
+              "property": {
+                "match": "PropertyEquals",
+                "property": {
+                  "type": "owl:ObjectProperty",
+                  "iri": "https://data.elsevier.com/health/core/schema/hasSty"
+                }
+              },
+              "value": {
+                "match": "ValueEqualToEntity",
+                "value": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/id-ed318c77-e1bc-3b91-aada-7a1c35b64c25"
+                }
+              }
+            }
+          ],
+          "matchType": "ALL"
+        }
+      },
+      {
+        "_id": "a77074c8-9b64-43fe-be60-4126868934b0",
+        "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+        "label": {
+          "en": "Organisms"
+        },
+        "criteria": {
+          "match": "CompositeCriteria",
+          "criteria": [
+            {
+              "match": "EntityRelationship",
+              "presence": "AT_LEAST_ONE",
+              "property": {
+                "match": "PropertyEquals",
+                "property": {
+                  "type": "owl:ObjectProperty",
+                  "iri": "https://data.elsevier.com/health/core/schema/hasSty"
+                }
+              },
+              "value": {
+                "match": "ValueEqualToEntity",
+                "value": {
+                  "type": "owl:Class",
+                  "iri": "https://data.elsevier.com/health/core/schema/id-eb5d93da-a896-3a27-a2a7-5d6cd3458047"
+                }
+              }
+            }
+          ],
+          "matchType": "ALL"
+        }
+      },
+      {
+        "_id": "4b578004-3a90-4ae3-a710-5f8a2e9b1e09",
+        "projectId": "ff079d1f-9bb8-4b2d-9d1f-59940722b863",
+        "label": {
+          "en": "Relations"
+        },
+        "criteria": {
+          "match": "CompositeCriteria",
+          "criteria": [
+            {
+              "match": "SubClassOf",
+              "target": {
+                "type": "owl:Class",
+                "iri": "https://data.elsevier.com/health/core/schema/Relation"
+              },
+              "filterType": "ALL"
+            }
+          ],
+          "matchType": "ALL"
+        }
+      }
+    ]
+  }
+}

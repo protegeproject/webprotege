@@ -4,6 +4,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.server.util.TypelessJSONSerialization;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,10 +32,12 @@ public class ProjectSettingsService {
     public void importSettings(@Nonnull String settingsToImportJson,
                                @Nonnull Runnable importSuccessfulHandler,
                                @Nonnull Runnable importErrorHandler) {
+	String settingsJsonWithUpdatedProjectId;
         try {
+            settingsJsonWithUpdatedProjectId = updateInputJSONProjectId(settingsToImportJson);
             RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, "/data/projects/" + projectId.getId() + "/settings");
-
-            requestBuilder.setRequestData(settingsToImportJson);
+            
+            requestBuilder.setRequestData(settingsJsonWithUpdatedProjectId);
             requestBuilder.setHeader("Content-Type", "application/json");
             requestBuilder.setCallback(new RequestCallback() {
                 @Override
@@ -56,6 +59,10 @@ public class ProjectSettingsService {
         } catch (RequestException e) {
             importErrorHandler.run();
         }
+    }
+    
+    private String updateInputJSONProjectId(@Nonnull String settingsToImportJson) {
+	return TypelessJSONSerialization.resplaceAllStringValue(settingsToImportJson, "projectId", this.projectId.getId());	
     }
 
 }
