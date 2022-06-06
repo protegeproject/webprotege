@@ -1,6 +1,25 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
+import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableSet;
+import com.mongodb.DuplicateKeyException;
+
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
@@ -12,16 +31,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import java.util.*;
-
-import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
-import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -66,12 +75,24 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
     @Override
     public void setProjectSharingSettings(ProjectSharingSettings settings) {
-        ProjectId projectId = settings.getProjectId();
-        ProjectResource projectResource = new ProjectResource(projectId);
+	ProjectId projectId = settings.getProjectId();
+	ProjectResource projectResource = new ProjectResource(projectId);
 
-        // Remove existing assignments
-        accessManager.getSubjectsWithAccessToResource(projectResource)
-                .forEach(subject -> accessManager.setAssignedRoles(subject, projectResource, Collections.emptySet()));
+	// Overwrite existing assignments with blank assignment
+	for (Subject subject : accessManager.getSubjectsWithAccessToResource(projectResource)) {
+	    try {
+		logger.info("Subject: {}, resource: {}", subject, projectResource);
+		accessManager.setAssignedRoles(subject, projectResource, Collections.emptySet());
+	    } catch (DuplicateKeyException e) {
+		// TODO: fix for intermittent 'E11000 duplicate key error collection:
+		// webprotege.RoleAssignments
+		// index: userName_1_projectId_1
+		// dup key: { userName: null, projectId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+		// }'
+		String msg = String.format("Subject: %s, resource: %s", subject, projectResource);
+		logger.warn(msg, e);
+	    }
+	}
 
         Map<PersonId, SharingSetting> map = settings.getSharingSettings().stream()
                                                     .collect(toMap(SharingSetting::getPersonId, s -> s, (s1, s2) -> s1));
@@ -93,7 +114,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                                                roles);
             }
             else {
-                logger.info("User in sharing setting not found.  An email invitation needs to be sent");
+                logger.warn("User in sharing setting not found.  An email invitation needs to be sent");
                 // TODO
                 // We need to send the user an email invitation
             }

@@ -1,8 +1,24 @@
 package edu.stanford.bmir.protege.web.server.api.resources;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
+import javax.annotation.Nonnull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.stanford.bmir.protege.web.server.api.ActionExecutor;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
@@ -23,21 +39,14 @@ import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import javax.annotation.Nonnull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-08-24
  */
 public class ProjectSettingsResource {
+    
+    protected static Logger logger = LoggerFactory.getLogger(ProjectSettingsResource.class);
 
     @Nonnull
     private final ProjectId projectId;
@@ -78,6 +87,16 @@ public class ProjectSettingsResource {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response setProjectSettings(@Context UserId userId, AllProjectSettings allProjectSettings) {
+	logger.info("Called setProjectSettings for projectId '{}'", this.projectId.getId());
+	try {
+	    return _setProjectSettings(userId, allProjectSettings);
+	} catch (Exception e) {
+	    logger.error("setProjectSettings failed", e);
+	    throw e;	    
+	}
+    }
+    
+    private Response _setProjectSettings(@Context UserId userId, AllProjectSettings allProjectSettings) {
         var projectSettings = allProjectSettings.getProjectSettings().withProjectId(projectId);
         actionExecutor.execute(new SetProjectSettingsAction(projectSettings), userId);
 
