@@ -1,5 +1,8 @@
 package ch.unifr.digits.webprotege.attestation.server;
 
+import ch.unifr.digits.webprotege.attestation.server.compression.tree.CompressionTree;
+import ch.unifr.digits.webprotege.attestation.server.compression.tree.OWLToRDFTranslator;
+import ch.unifr.digits.webprotege.attestation.server.compression.tree.RDFTriple;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -17,7 +20,18 @@ public class OntologyAttestationService<T> extends FileAttestationService<T> {
         return attest(ontologyIri, versionIri, name, hash, null);
     }
 
-    public String ontologyHash(OWLOntology ontology) {
+    public String ontologyHash(OWLOntology ontology)  {
+        try {
+            OWLToRDFTranslator translator = new OWLToRDFTranslator(ontology);
+            RDFTriple[] triples = translator.getTriples();
+            CompressionTree ct = new CompressionTree(triples);
+            return ct.getRoot();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String simpleOntologyHash(OWLOntology ontology) {
         Set<OWLEntity> signature = ontology.getSignature(Imports.INCLUDED);
         Set<OWLAxiom> axioms = ontology.getAxioms(Imports.INCLUDED);
         Set<OWLAnnotation> annotations = ontology.getAnnotations();
