@@ -15,11 +15,6 @@
             align-items: center;
         }
 
-        .signUp {
-            flex-grow: 0;
-            flex-shrink: 0;
-        }
-
         .logo {
             flex-grow: 0;
             flex-shrink: 1;
@@ -35,11 +30,6 @@
             display:         flex;
             flex-direction:  row;
             justify-content: flex-end;
-        }
-
-        .wp-login__signup-button {
-            margin:       3px;
-            align-self: flex-end;
         }
 
         .login-form {
@@ -58,12 +48,7 @@
         .wp-login__footnote a {
             color: inherit;
         }
-
-        .footnote {
-            padding-top: 10px;
-        }
     </ui:style>
-
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.login.login} {wp.style.panelFilled}">
         <g:HTMLPanel addStyleNames="{wp.login.loginLogo} {style.logo}"/>
