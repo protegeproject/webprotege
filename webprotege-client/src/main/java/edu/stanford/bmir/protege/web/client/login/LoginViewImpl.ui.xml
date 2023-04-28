@@ -66,10 +66,6 @@
 
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.login.login} {wp.style.panelFilled}">
-        <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
-                  addStyleNames="{style.signUp} {style.wp-login__signup-button} {wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.alternateButton}"/>
-
-
         <g:HTMLPanel addStyleNames="{wp.login.loginLogo} {style.logo}"/>
 
         <g:Label text="{msg.signInToContinue}" addStyleNames="{wp.login.loginMessage} {style.message}"/>
@@ -83,31 +79,23 @@
             <div style="height: 20px;"/>
             <g:Button ui:field="signInButton" text="{msg.signIn}"
                       addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.primaryButton}"/>
+            <div style="height: 20px;"/>
+            <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
+                      addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.alternateButton}"/>
+
             <g:HTMLPanel addStyleNames="{style.bottomBar}">
                 <g:Anchor text="{msg.forgotUserNameOrPassword}" ui:field="forgotPasswordButton"
                           addStyleNames="{wp.login.loginForgotUsernameOrPassword}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
 
-        <g:HTMLPanel addStyleNames="{style.footnote} {wp.login.loginFootnote}">
-            <p>WebProtege is developed by the Protege team in the
-                Biomedical Informatics
-                Research Group (BMIR)
-                at Stanford University, California, USA.
-            </p>
-
-
-            <p>The work is supported by Grant GM121724 from the National Institute
-                of General Medical Sciences
-                at the United States National Institutes of Health.
-            </p>
-            <p>
-                WebProtégé <ui:text from="{version.versionString}"/> .
-                <a href="html/privacy.html" target="_blank">
-                    Privacy Policy</a> .
-                <a href="html/termsofuse.html" target="_blank">Terms of Use</a>
-            </p>
-        </g:HTMLPanel>
+<!--        <g:HTMLPanel addStyleNames="{style.footnote} {wp.login.loginFootnote}">-->
+<!--            <p>WebProtege is developed by the Protege team in the-->
+<!--                Biomedical Informatics-->
+<!--                Research Group (BMIR)-->
+<!--                at Stanford University, California, USA.-->
+<!--            </p>-->
+<!--        </g:HTMLPanel>-->
 
 
     </g:HTMLPanel>
