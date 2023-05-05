@@ -175,6 +175,7 @@ public class PerspectivePresenter implements HasDispose {
                                     @Nonnull Optional<Node> rootNode,
                                     boolean viewsCloseable) {
         Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
+        viewsCloseable = false;
         perspective.setViewsCloseable(viewsCloseable);
         EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
         perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
