@@ -38,7 +38,7 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private final PortletFactory portletFactory;
 
-    private boolean viewsCloseable = true;
+    private boolean viewsCloseable = false;
 
     private final Provider<PortletUi> portletUiProvider;
 
