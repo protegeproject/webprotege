@@ -41,8 +41,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @UiField
     protected TabBar tabBar;
 
-    @UiField
-    protected Button newTabButton;
+//    @UiField
+//    protected Button newTabButton;
 
 
     private Optional<PerspectiveId> highlightedPerspective = Optional.empty();
@@ -99,34 +99,34 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         }
     }
 
-    @UiHandler("newTabButton")
-    protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
-        if(!addPerspectiveAllowed) {
-            return;
-        }
-        PopupMenu popupMenu = new PopupMenu();
-        for (final PerspectiveDescriptor perspectiveDescriptor : bookmarkedPerspectives) {
-            AbstractUiAction action = new AbstractUiAction(localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel())) {
-                @Override
-                public void execute() {
-                    addBookMarkedPerspectiveLinkHandler.handleAddToFavorites(perspectiveDescriptor);
-                }
-            };
-            action.setEnabled(!displayedPerspectives.contains(perspectiveDescriptor.getPerspectiveId()));
-            popupMenu.addItem(action);
-        }
-        popupMenu.addSeparator();
-        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
-                          () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
-        if(managePerspectivesAllowed) {
-            popupMenu.addSeparator();
-            popupMenu.addItem(messages.perspective_manage(),
-                              () -> managePerspectivesHandler.handleManagePerspectives());
-        }
-
-        popupMenu.showRelativeTo(newTabButton);
-
-    }
+//    @UiHandler("newTabButton")
+//    protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
+//        if(!addPerspectiveAllowed) {
+//            return;
+//        }
+//        PopupMenu popupMenu = new PopupMenu();
+//        for (final PerspectiveDescriptor perspectiveDescriptor : bookmarkedPerspectives) {
+//            AbstractUiAction action = new AbstractUiAction(localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel())) {
+//                @Override
+//                public void execute() {
+//                    addBookMarkedPerspectiveLinkHandler.handleAddToFavorites(perspectiveDescriptor);
+//                }
+//            };
+//            action.setEnabled(!displayedPerspectives.contains(perspectiveDescriptor.getPerspectiveId()));
+//            popupMenu.addItem(action);
+//        }
+//        popupMenu.addSeparator();
+//        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
+//                          () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+//        if(managePerspectivesAllowed) {
+//            popupMenu.addSeparator();
+//            popupMenu.addItem(messages.perspective_manage(),
+//                              () -> managePerspectivesHandler.handleManagePerspectives());
+//        }
+//
+//        popupMenu.showRelativeTo(newTabButton);
+//
+//    }
 
     public void setFavourites(List<PerspectiveDescriptor> perspectives) {
         removeAllDisplayedPerspectives();
@@ -252,11 +252,11 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         }
     }
 
-    @Override
-    public void setAddPerspectiveAllowed(boolean addPerspectiveAllowed) {
-        newTabButton.setVisible(addPerspectiveAllowed);
-        this.addPerspectiveAllowed = addPerspectiveAllowed;
-    }
+//    @Override
+//    public void setAddPerspectiveAllowed(boolean addPerspectiveAllowed) {
+//        newTabButton.setVisible(addPerspectiveAllowed);
+//        this.addPerspectiveAllowed = addPerspectiveAllowed;
+//    }
 
     @Override
     public void setClosePerspectiveAllowed(boolean closePerspectiveAllowed) {

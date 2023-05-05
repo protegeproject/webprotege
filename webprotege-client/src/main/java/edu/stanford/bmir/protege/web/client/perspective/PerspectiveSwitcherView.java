@@ -97,7 +97,7 @@ public interface PerspectiveSwitcherView extends IsWidget {
 
     void setAvailablePerspectives(List<PerspectiveDescriptor> perspectives);
 
-    void setAddPerspectiveAllowed(boolean addPerspectiveAllowed);
+//    void setAddPerspectiveAllowed(boolean addPerspectiveAllowed);
 
     void setClosePerspectiveAllowed(boolean closePerspectiveAllowed);
 

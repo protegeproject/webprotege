@@ -77,14 +77,14 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
             setUserProjectPerspectives(perspectives);
             displayPlace(place);
         });
-        view.setAddPerspectiveAllowed(false);
+//        view.setAddPerspectiveAllowed(false);
         view.setClosePerspectiveAllowed(false);
         view.setAddViewAllowed(false);
         view.setManagePerspectivesAllowed(false);
         permissionChecker.hasPermission(ADD_OR_REMOVE_PERSPECTIVE,
                                         canAddRemove -> {
                                             view.setClosePerspectiveAllowed(canAddRemove);
-                                            view.setAddPerspectiveAllowed(canAddRemove);
+//                                            view.setAddPerspectiveAllowed(canAddRemove);
                                             view.setManagePerspectivesAllowed(canAddRemove);
                                             if(canAddRemove) {
                                                 view.setAddBlankPerspectiveHandler(this::handleCreateNewPerspective);
