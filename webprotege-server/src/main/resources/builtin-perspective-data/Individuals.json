@@ -1,63 +1,37 @@
 {
-  "direction": "row",
-  "@type" : "ParentNode",
-  "children": [
-    {
-      "weight": 0.3,
-      "node": {
-        "@type" : "LeafNode",
-        "properties": {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.IndividualsList"
+  "perspectiveId" : "69df8fa8-4f84-499e-9341-28eb5085c40c",
+  "label" : {
+    "en" : "Individuals"
+  },
+  "favorite" : true,
+  "layout" : {
+    "direction": "row",
+    "@type": "ParentNode",
+    "children": [
+      {
+        "weight": 0.15,
+        "node": {
+          "@type": "LeafNode",
+          "properties": {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.IndividualsList"
+            }
+          }
+        }
+      },
+      {
+        "weight": 0.85,
+        "node": {
+          "@type": "LeafNode",
+          "properties": {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.IndividualEditor"
+            }
           }
         }
       }
-    },
-    {
-      "weight": 0.5,
-      "node": {
-        "@type" : "LeafNode",
-        "properties": {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.IndividualEditor"
-          }
-        }
-      }
-    },
-    {
-      "weight": 0.2,
-      "node": {
-        "@type" : "ParentNode",
-        "direction": "column",
-        "children": [
-          {
-            "weight": 0.6,
-            "node": {
-              "@type" : "LeafNode",
-              "properties": {
-                "portlet": {
-                  "@type": "String",
-                  "value": "portlets.Comments"
-                }
-              }
-            }
-          },
-          {
-            "weight": 0.4,
-            "node": {
-              "@type" : "LeafNode",
-              "properties": {
-                "portlet": {
-                  "@type": "String",
-                  "value": "portlets.ProjectFeed"
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  ]
+    ]
+  }
 }
