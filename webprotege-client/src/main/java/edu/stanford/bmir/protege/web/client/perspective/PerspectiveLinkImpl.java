@@ -77,6 +77,7 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
         popupMenu.addItem(text, runnable);
     }
 
+    @Override
     public void setMenuButtonVisible(boolean visible) {
         menuButton.setVisible(visible);
     }
