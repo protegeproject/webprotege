@@ -12,11 +12,11 @@ import javax.annotation.Nonnull;
  */
 public interface TopBarView extends IsWidget {
 
-    void setProjectTitle(@Nonnull String projectTitle);
-
-    void clearProjectTitle();
-
-    AcceptsOneWidget getGoToHomeContainer();
+//    void setProjectTitle(@Nonnull String projectTitle);
+//
+//    void clearProjectTitle();
+//
+//    AcceptsOneWidget getGoToHomeContainer();
 
     void addToLeft(IsWidget widget);
 
@@ -24,13 +24,13 @@ public interface TopBarView extends IsWidget {
 
     void addToRight(IsWidget widget);
 
-    AcceptsOneWidget getProjectMenuContainer();
-
-    AcceptsOneWidget getSharingSettingsContainer();
-
+//    AcceptsOneWidget getProjectMenuContainer();
+//
+//    AcceptsOneWidget getSharingSettingsContainer();
+//
     AcceptsOneWidget getLoggedInUserContainer();
-
-    AcceptsOneWidget getHelpContainer();
-
-    AcceptsOneWidget getPreferredLanguageContainer();
+//
+//    AcceptsOneWidget getHelpContainer();
+//
+//    AcceptsOneWidget getPreferredLanguageContainer();
 }

@@ -26,41 +26,41 @@ public class TopBarViewImpl extends Composite implements TopBarView {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    @UiField
-    protected AcceptsOneWidget homeContainer;
-
-    @UiField
-    protected AcceptsOneWidget projectMenuContainer;
-
-    @UiField
-    protected AcceptsOneWidget sharingSettingsContainer;
-
+//    @UiField
+//    protected AcceptsOneWidget homeContainer;
+//
+//    @UiField
+//    protected AcceptsOneWidget projectMenuContainer;
+//
+//    @UiField
+//    protected AcceptsOneWidget sharingSettingsContainer;
+//
     @UiField
     protected AcceptsOneWidget loggedInUserContainer;
+//
+//    @UiField
+//    protected AcceptsOneWidget helpContainer;
+//
+//    @UiField
+//    protected HasText projectTitle;
 
-    @UiField
-    protected AcceptsOneWidget helpContainer;
-
-    @UiField
-    protected HasText projectTitle;
-
-    @UiField
-    SimplePanel preferredLanguageContainer;
-
-    @Override
-    public AcceptsOneWidget getGoToHomeContainer() {
-        return homeContainer;
-    }
-
-    @Override
-    public void setProjectTitle(@Nonnull String projectTitle) {
-        this.projectTitle.setText(projectTitle);
-    }
-
-    @Override
-    public void clearProjectTitle() {
-        this.projectTitle.setText("");
-    }
+//    @UiField
+//    SimplePanel preferredLanguageContainer;
+//
+//    @Override
+//    public AcceptsOneWidget getGoToHomeContainer() {
+//        return homeContainer;
+//    }
+//
+//    @Override
+//    public void setProjectTitle(@Nonnull String projectTitle) {
+//        this.projectTitle.setText(projectTitle);
+//    }
+//
+//    @Override
+//    public void clearProjectTitle() {
+//        this.projectTitle.setText("");
+//    }
 
     @Override
     public void addToLeft(IsWidget widget) {
@@ -77,27 +77,27 @@ public class TopBarViewImpl extends Composite implements TopBarView {
 
     }
 
-    public AcceptsOneWidget getProjectMenuContainer() {
-        return projectMenuContainer;
-    }
-
-    @Override
-    public AcceptsOneWidget getSharingSettingsContainer() {
-        return sharingSettingsContainer;
-    }
-
+//    public AcceptsOneWidget getProjectMenuContainer() {
+//        return projectMenuContainer;
+//    }
+//
+//    @Override
+//    public AcceptsOneWidget getSharingSettingsContainer() {
+//        return sharingSettingsContainer;
+//    }
+//
     @Override
     public AcceptsOneWidget getLoggedInUserContainer() {
         return loggedInUserContainer;
     }
-
-    @Override
-    public AcceptsOneWidget getHelpContainer() {
-        return helpContainer;
-    }
-
-    @Override
-    public AcceptsOneWidget getPreferredLanguageContainer() {
-        return preferredLanguageContainer;
-    }
+//
+//    @Override
+//    public AcceptsOneWidget getHelpContainer() {
+//        return helpContainer;
+//    }
+//
+//    @Override
+//    public AcceptsOneWidget getPreferredLanguageContainer() {
+//        return preferredLanguageContainer;
+//    }
 }
