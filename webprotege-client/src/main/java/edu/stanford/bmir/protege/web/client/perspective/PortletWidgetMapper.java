@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
+import com.gargoylesoftware.htmlunit.httpclient.HtmlUnitRedirectStrategie;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -38,7 +39,7 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private final PortletFactory portletFactory;
 
-    private boolean viewsCloseable = false;
+    private boolean viewsCloseable = true;
 
     private final Provider<PortletUi> portletUiProvider;
 
