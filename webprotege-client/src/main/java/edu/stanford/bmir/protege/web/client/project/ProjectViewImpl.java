@@ -59,11 +59,6 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
         return perspectiveLinkBarViewContainer;
     }
 
-    @UiHandler("classesButton")
-    protected void handleSwitchClassesPerspective(ClickEvent clickEvent) {
-
-    }
-
     @Override
     public AcceptsOneWidget getPerspectiveViewContainer() {
         return perspectiveViewContainer;

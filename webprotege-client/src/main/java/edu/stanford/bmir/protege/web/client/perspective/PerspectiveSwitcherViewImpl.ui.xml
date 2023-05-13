@@ -5,69 +5,21 @@
     <ui:style>
         @external .gwt-TabBar, .gwt-TabBarItem, .gwt-TabBarFirst .gwt-TabBarItem-selected;
         .main {
+            padding: 350px 5px;
             display: flex;
-            flex-direction: row;
-            overflow: hidden;
-            background-color: literal("var(--alternate--background-color)");
-            border-bottom: 1px solid literal("var(--alternate--separator-strong--color)");
-        }
-        .tabBarContainer {
-            flex-grow: 1;
-            flex-shrink: 1;
-            overflow: hidden;
-        }
-        .linkTabBar {
-            white-space: nowrap;
-            font-size: 12px;
-            font-weight: normal;
-        }
-        .newTabButton {
+            flex-direction: column;
             flex-grow: 0;
             flex-shrink: 0;
-            margin-right: 5px;
-            margin-left: 5px;
-            padding-left: 3px;
-            padding-right: 3px;
-            border-radius: 2px;
+            justify-content: space-evenly;
         }
+        .menuButton {
 
-        .main .gwt-TabBar .gwt-TabBarFirst {
-            width: 0;
-        }
-
-        .main .gwt-TabBar .gwt-TabBarItem {
-            padding-top: 4px;
-            padding-bottom: 4px;
-            padding-left: 14px;
-            padding-right: 14px;
-            font-size: 12px;
-            cursor: pointer;
-            outline-style: none;
-            outline-width: 0;
-            background-color: literal("var(--tab--background-color)");
-            border-right: 1px solid literal("var(--alternate--separator-strong--color)");
-            border-bottom: none;
-            border-top: none;
-            margin: 0;
-        }
-
-        .main .gwt-TabBar .gwt-TabBarItem:hover {
-            background-color: literal("var(--tab--hover--background-color)");
-        }
-
-        .main .gwt-TabBar .gwt-TabBarItem-selected, .main .gwt-TabBar .gwt-TabBarItem-selected:hover {
-            color: literal("var(--selected-tab--color)");
-            background-color: literal("var(--selected-tab--background-color)");
-            outline: none 0;
-        }
-
-
-    </ui:style>
+        }</ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
-        <g:SimplePanel addStyleNames="{style.tabBarContainer}">
-            <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
-        </g:SimplePanel>
-        <g:Button ui:field="settingButton" text="Setting" addStyleNames="{style.newTabButton} {wp.buttons.topBarButton}"/>
-        <g:Button ui:field="newTabButton" text="{msg.perspective_tabs}  &#x25be;" addStyleNames="{style.newTabButton} {wp.buttons.topBarButton}"/>
+        <g:Button ui:field="classesButton" text="Class" addStyleNames="{style.menuButton}"/>
+        <g:Button ui:field="propertiesButton" text="Property" addStyleNames="{style.menuButton}"/>
+        <g:Button ui:field="individualButton" text="Individual" addStyleNames="{style.menuButton}"/>
+        <g:Button ui:field="settingButton" text="Setting" addStyleNames="{style.menuButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
+
