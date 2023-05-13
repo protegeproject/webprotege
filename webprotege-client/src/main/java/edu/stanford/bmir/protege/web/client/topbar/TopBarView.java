@@ -24,7 +24,7 @@ public interface TopBarView extends IsWidget {
 
     void addToRight(IsWidget widget);
 
-//    AcceptsOneWidget getProjectMenuContainer();
+    AcceptsOneWidget getProjectMenuContainer();
 //
 //    AcceptsOneWidget getSharingSettingsContainer();
 //
@@ -32,5 +32,5 @@ public interface TopBarView extends IsWidget {
 //
 //    AcceptsOneWidget getHelpContainer();
 //
-//    AcceptsOneWidget getPreferredLanguageContainer();
+    AcceptsOneWidget getPreferredLanguageContainer();
 }

@@ -3,9 +3,8 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
-        @external .gwt-TabBar, .gwt-TabBarItem, .gwt-TabBarFirst .gwt-TabBarItem-selected;
         .main {
-            padding: 350px 5px;
+            padding: 5px;
             display: flex;
             flex-direction: column;
             flex-grow: 0;
@@ -16,9 +15,7 @@
 
         }</ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
-        <g:Button ui:field="classesButton" text="Class" addStyleNames="{style.menuButton}"/>
-        <g:Button ui:field="propertiesButton" text="Property" addStyleNames="{style.menuButton}"/>
-        <g:Button ui:field="individualButton" text="Individual" addStyleNames="{style.menuButton}"/>
+        <g:VerticalPanel ui:field="sideBar" addStyleNames="{style.menuButton}"/>
         <g:Button ui:field="settingButton" text="Setting" addStyleNames="{style.menuButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -4,18 +4,20 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
+//import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TabBar;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+//import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
@@ -38,24 +40,11 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     private static PerspectiveSwitcherViewImplUiBinder ourUiBinder = GWT.create(PerspectiveSwitcherViewImplUiBinder.class);
 
-//    @UiField
-//    protected TabBar tabBar;
-//
-//    @UiField
-//    protected Button newTabButton;
-
     @UiField
-    protected Button classesButton;
-
-    @UiField
-    protected Button propertiesButton;
-
-    @UiField
-    protected Button individualButton;
+    protected VerticalPanel sideBar;
 
     @UiField
     protected Button settingButton;
-
 
     private Optional<PerspectiveId> highlightedPerspective = Optional.empty();
 
@@ -100,22 +89,24 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         initWidget(rootElement);
     }
 
-    @UiHandler("classesButton")
+//    @UiHandler("classesButton")
     protected void handlePerspectiveLinkClicked(ClickEvent clickEvent) {
         /*
           Veto the selection if it does not correspond to the highlighted link
          */
-        PerspectiveId link = displayedPerspectives.get(event.getItem());
-        if (!highlightedPerspective.equals(Optional.of(link))) {
-            // TODO: clickEvent.cancel;
-        }
+//        PerspectiveId link = displayedPerspectives.get(event.getItem());
+//        if (!highlightedPerspective.equals(Optional.of(link))) {
+//            // TODO: clickEvent.cancel;
+//        }
     }
 
     @UiHandler("settingButton")
     protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
         PopupMenu popupMenu = new PopupMenu();
-        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
-                          () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+        popupMenu.addItem("Display",
+                () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+        popupMenu.addItem("Project",
+                () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
         popupMenu.showRelativeTo(settingButton);
 
     }
@@ -159,7 +150,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                                             }
                                         });
         }
-//        tabBar.addTab(linkWidget.asWidget());
+        sideBar.add(linkWidget.asWidget());
     }
 
     @Override
