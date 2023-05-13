@@ -54,7 +54,7 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
     }
 
     @UiHandler("menuButton")
-    protected void handlMenuClicked(ClickEvent clickEvent) {
+    protected void handleMenuClicked(ClickEvent clickEvent) {
         popupMenu.showRelativeTo(menuButton);
     }
 

@@ -4,7 +4,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
+//import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -13,9 +13,11 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+//import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
@@ -43,7 +45,6 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     @UiField
     protected Button settingButton;
-
 
     private Optional<PerspectiveId> highlightedPerspective = Optional.empty();
 
@@ -99,14 +100,16 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 //        }
     }
 
-//    @UiHandler("settingButton")
-//    protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
-//        PopupMenu popupMenu = new PopupMenu();
-//        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
-//                          () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
-//        popupMenu.showRelativeTo(settingButton);
-//
-//    }
+    @UiHandler("settingButton")
+    protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
+        PopupMenu popupMenu = new PopupMenu();
+        popupMenu.addItem("Display",
+                () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+        popupMenu.addItem("Project",
+                () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+        popupMenu.showRelativeTo(settingButton);
+
+    }
 
     public void setFavourites(List<PerspectiveDescriptor> perspectives) {
         removeAllDisplayedPerspectives();

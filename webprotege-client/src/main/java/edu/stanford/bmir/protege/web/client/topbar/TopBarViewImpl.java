@@ -28,10 +28,10 @@ public class TopBarViewImpl extends Composite implements TopBarView {
 
 //    @UiField
 //    protected AcceptsOneWidget homeContainer;
-//
-//    @UiField
-//    protected AcceptsOneWidget projectMenuContainer;
-//
+
+    @UiField
+    protected AcceptsOneWidget projectMenuContainer;
+
 //    @UiField
 //    protected AcceptsOneWidget sharingSettingsContainer;
 //
@@ -44,8 +44,8 @@ public class TopBarViewImpl extends Composite implements TopBarView {
 //    @UiField
 //    protected HasText projectTitle;
 
-//    @UiField
-//    SimplePanel preferredLanguageContainer;
+    @UiField
+    SimplePanel preferredLanguageContainer;
 //
 //    @Override
 //    public AcceptsOneWidget getGoToHomeContainer() {
@@ -77,9 +77,9 @@ public class TopBarViewImpl extends Composite implements TopBarView {
 
     }
 
-//    public AcceptsOneWidget getProjectMenuContainer() {
-//        return projectMenuContainer;
-//    }
+    public AcceptsOneWidget getProjectMenuContainer() {
+        return projectMenuContainer;
+    }
 //
 //    @Override
 //    public AcceptsOneWidget getSharingSettingsContainer() {
@@ -96,8 +96,8 @@ public class TopBarViewImpl extends Composite implements TopBarView {
 //        return helpContainer;
 //    }
 //
-//    @Override
-//    public AcceptsOneWidget getPreferredLanguageContainer() {
-//        return preferredLanguageContainer;
-//    }
+    @Override
+    public AcceptsOneWidget getPreferredLanguageContainer() {
+        return preferredLanguageContainer;
+    }
 }
