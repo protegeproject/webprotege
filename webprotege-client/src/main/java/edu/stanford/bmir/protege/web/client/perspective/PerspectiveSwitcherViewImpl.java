@@ -11,7 +11,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TabBar;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
@@ -38,20 +38,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     private static PerspectiveSwitcherViewImplUiBinder ourUiBinder = GWT.create(PerspectiveSwitcherViewImplUiBinder.class);
 
-//    @UiField
-//    protected TabBar tabBar;
-//
-//    @UiField
-//    protected Button newTabButton;
-
     @UiField
-    protected Button classesButton;
-
-    @UiField
-    protected Button propertiesButton;
-
-    @UiField
-    protected Button individualButton;
+    protected VerticalPanel sideBar;
 
     @UiField
     protected Button settingButton;
@@ -100,25 +88,25 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         initWidget(rootElement);
     }
 
-    @UiHandler("classesButton")
+//    @UiHandler("classesButton")
     protected void handlePerspectiveLinkClicked(ClickEvent clickEvent) {
         /*
           Veto the selection if it does not correspond to the highlighted link
          */
-        PerspectiveId link = displayedPerspectives.get(event.getItem());
-        if (!highlightedPerspective.equals(Optional.of(link))) {
-            // TODO: clickEvent.cancel;
-        }
+//        PerspectiveId link = displayedPerspectives.get(event.getItem());
+//        if (!highlightedPerspective.equals(Optional.of(link))) {
+//            // TODO: clickEvent.cancel;
+//        }
     }
 
-    @UiHandler("settingButton")
-    protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
-        PopupMenu popupMenu = new PopupMenu();
-        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
-                          () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
-        popupMenu.showRelativeTo(settingButton);
-
-    }
+//    @UiHandler("settingButton")
+//    protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
+//        PopupMenu popupMenu = new PopupMenu();
+//        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
+//                          () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+//        popupMenu.showRelativeTo(settingButton);
+//
+//    }
 
     public void setFavourites(List<PerspectiveDescriptor> perspectives) {
         removeAllDisplayedPerspectives();
@@ -159,7 +147,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                                             }
                                         });
         }
-//        tabBar.addTab(linkWidget.asWidget());
+        sideBar.add(linkWidget.asWidget());
     }
 
     @Override
