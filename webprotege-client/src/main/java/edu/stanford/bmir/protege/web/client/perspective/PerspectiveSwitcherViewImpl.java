@@ -38,11 +38,20 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     private static PerspectiveSwitcherViewImplUiBinder ourUiBinder = GWT.create(PerspectiveSwitcherViewImplUiBinder.class);
 
-    @UiField
-    protected TabBar tabBar;
+//    @UiField
+//    protected TabBar tabBar;
+//
+//    @UiField
+//    protected Button newTabButton;
 
     @UiField
-    protected Button newTabButton;
+    protected Button classesButton;
+
+    @UiField
+    protected Button propertiesButton;
+
+    @UiField
+    protected Button individualButton;
 
     @UiField
     protected Button settingButton;
@@ -91,43 +100,23 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         initWidget(rootElement);
     }
 
-    @UiHandler("tabBar")
-    protected void handlePerspectiveLinkClicked(BeforeSelectionEvent<Integer> event) {
+    @UiHandler("classesButton")
+    protected void handlePerspectiveLinkClicked(ClickEvent clickEvent) {
         /*
           Veto the selection if it does not correspond to the highlighted link
          */
         PerspectiveId link = displayedPerspectives.get(event.getItem());
         if (!highlightedPerspective.equals(Optional.of(link))) {
-            event.cancel();
+            // TODO: clickEvent.cancel;
         }
     }
 
-    @UiHandler("newTabButton")
+    @UiHandler("settingButton")
     protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
-        if(!addPerspectiveAllowed) {
-            return;
-        }
         PopupMenu popupMenu = new PopupMenu();
-        for (final PerspectiveDescriptor perspectiveDescriptor : bookmarkedPerspectives) {
-            AbstractUiAction action = new AbstractUiAction(localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel())) {
-                @Override
-                public void execute() {
-                    addBookMarkedPerspectiveLinkHandler.handleAddToFavorites(perspectiveDescriptor);
-                }
-            };
-            action.setEnabled(!displayedPerspectives.contains(perspectiveDescriptor.getPerspectiveId()));
-            popupMenu.addItem(action);
-        }
-        popupMenu.addSeparator();
         popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
                           () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
-        if(managePerspectivesAllowed) {
-            popupMenu.addSeparator();
-            popupMenu.addItem(messages.perspective_manage(),
-                              () -> managePerspectivesHandler.handleManagePerspectives());
-        }
-
-        popupMenu.showRelativeTo(newTabButton);
+        popupMenu.showRelativeTo(settingButton);
 
     }
 
@@ -170,7 +159,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                                             }
                                         });
         }
-        tabBar.addTab(linkWidget.asWidget());
+//        tabBar.addTab(linkWidget.asWidget());
     }
 
     @Override
@@ -181,13 +170,13 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             return;
         }
         displayedPerspectives.remove(perspectiveId);
-        tabBar.removeTab(index);
+//        tabBar.removeTab(index);
     }
 
     private void removeAllDisplayedPerspectives() {
-        while (tabBar.getTabCount() > 0) {
-            tabBar.removeTab(0);
-        }
+//        while (tabBar.getTabCount() > 0) {
+//            tabBar.removeTab(0);
+//        }
         this.displayedPerspectives.clear();
     }
 
@@ -248,9 +237,9 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         }
         for (int i = 0; i < displayedPerspectives.size(); i++) {
             if (displayedPerspectives.get(i).equals(highlightedPerspective.get())) {
-                if (tabBar.getSelectedTab() != i) {
-                    tabBar.selectTab(i);
-                }
+//                if (tabBar.getSelectedTab() != i) {
+//                    tabBar.selectTab(i);
+//                }
                 break;
             }
         }
@@ -258,7 +247,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     @Override
     public void setAddPerspectiveAllowed(boolean addPerspectiveAllowed) {
-        newTabButton.setVisible(false);
+//        newTabButton.setVisible(false);
         this.addPerspectiveAllowed = addPerspectiveAllowed;
     }
 

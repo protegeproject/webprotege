@@ -49,18 +49,9 @@
 
         <g:SimplePanel addStyleNames="{style.topBar}" ui:field="topBar" debugId="TopBarContainer"/>
         <g:HTMLPanel addStyleNames="{style.projectList}">
-            <g:HTMLPanel addStyleNames="{style.sideBar}">
-                <g:Button ui:field="classesButton" text="Class" addStyleNames="{style.menuButton}"/>
-                <g:Button ui:field="propertiesButton" text="Property" addStyleNames="{style.menuButton}"/>
-                <g:Button ui:field="individualButton" text="Individual" addStyleNames="{style.menuButton}"/>
-                <g:Button ui:field="settingButton" text="Setting" addStyleNames="{style.menuButton}"/>
-            </g:HTMLPanel>
+            <g:SimplePanel addStyleNames="{style.sideBar}" ui:field="perspectiveLinkBarViewContainer"/>
             <g:SimpleLayoutPanel addStyleNames="{style.center}" ui:field="perspectiveViewContainer"/>
         </g:HTMLPanel>
 
-
-
-
-        <g:SimplePanel addStyleNames="{style.linkBar}" ui:field="perspectiveLinkBarViewContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>
