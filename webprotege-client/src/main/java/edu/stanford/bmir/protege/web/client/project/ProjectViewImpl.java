@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveImpl;
 
@@ -55,6 +57,11 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
     @Override
     public AcceptsOneWidget getPerspectiveLinkBarViewContainer() {
         return perspectiveLinkBarViewContainer;
+    }
+
+    @UiHandler("classesButton")
+    protected void handleSwitchClassesPerspective(ClickEvent clickEvent) {
+
     }
 
     @Override
