@@ -25,12 +25,11 @@
         }
 
         .sideBar {
-            padding: 350px 5px;
             display: flex;
             flex-direction: column;
             flex-grow: 0;
             flex-shrink: 0;
-            justify-content: space-evenly;
+            background-color: literal("var(--sidebar-background-color)");
         }
 
         .projectList {

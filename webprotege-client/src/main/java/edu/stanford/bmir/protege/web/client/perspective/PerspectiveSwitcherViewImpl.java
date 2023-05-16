@@ -14,10 +14,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.stanford.bmir.protege.web.client.Messages;
 //import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.action.UIAction;
+//import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
+//import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
