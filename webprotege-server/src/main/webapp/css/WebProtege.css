@@ -279,6 +279,7 @@ a {
 .poly-split-panel-movable-splitter,.poly-split-panel-fixed-splitter {
     width: 5px;
     background-color: var(--alternate--separator--color);
+    z-index: 999;
 }
 
 
