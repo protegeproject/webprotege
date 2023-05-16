@@ -70,7 +70,7 @@ public class TopBarPresenter implements HasDispose {
                       @Nonnull ProjectViewPlace place) {
         container.setWidget(view);
 //        goToHomePresenter.start(view.getGoToHomeContainer(), eventBus);
-        projectMenuPresenter.start(view.getProjectMenuContainer(), eventBus);
+//        projectMenuPresenter.start(view.getProjectMenuContainer(), eventBus);
         loggedInUserPresenter.start(view.getLoggedInUserContainer(), eventBus);
 //        helpPresenter.start(view.getHelpContainer(), eventBus);
 //        sharingButtonPresenter.start(view.getSharingSettingsContainer(), eventBus);
@@ -78,7 +78,7 @@ public class TopBarPresenter implements HasDispose {
 //            String displayName = projectDetails.map(ProjectDetails::getDisplayName).orElse("");
 //            view.setProjectTitle(displayName);
 //        });
-        displayNameSettingsTopBarPresenter.start(view.getPreferredLanguageContainer());
+//        displayNameSettingsTopBarPresenter.start(view.getPreferredLanguageContainer());
     }
 
     @Override

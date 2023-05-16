@@ -18,9 +18,13 @@
     /* Used for the color of placeholder text */
     --placeholder--color:                   rgba(200, 200, 200, 1.0);
 
+    /* Used for topBar and sideBar color */
+    --secondary--background-color:          #232323;
+
+
     --alternate--background-color:          #fafafa;
-    --alternate--separator--color:          #e0e0e0;
-    --alternate--separator-strong--color:   #d0d0d0;
+    --alternate--separator--color:          #4F4E4E;
+    --alternate--separator-strong--color:   #4F4E4E;
 
     --accent--color:                        #116cd6;
 
@@ -37,7 +41,7 @@
     --list-item--padding:                   0.3em;
     --list--background-color:               var(--primary--background-color);
 
-    --popup--border-radius:             5px;
+    --popup--border-radius:                 5px;
     --selected-menu-item--background-color: var(--accent--color);
     --selected-menu-item--color:            white;
 
@@ -50,7 +54,10 @@
     --btn--hover--color:                    var(--accent--color);
 
     --wp-topbar--color:                     var(--primary--color);
-    --topbar--background-color:                     var(--alternate--background-color);
+
+    --topbar--background-color:             var(--secondary--background-color);
+
+    --sidebar-background-color:             var(--secondary--background-color);
 
     --inlay-panel--background-color:                var(--alternate--background-color);
 
@@ -69,8 +76,8 @@
 
     --outline:                                      #94c0ed solid 2px;
 
-    --widgetmap-view-border-color:                  var(--separator--color);
-    --widgetmap-view-header-background-color:       #808080;
+    --widgetmap-view-border-color:                  var(--secondary--background-color);
+    --widgetmap-view-header-background-color:       var(--secondary--background-color);
     --widgetmap-view-header-font-weight:            400;
     --widgetmap-view-header-padding-left:           3px;
 
@@ -259,17 +266,18 @@ a {
 
 .widget-holder-label {
     color: #ffffff !important;
-    font-size: 15px !important;
-    font-weight: 500;
+    font-size: px !important;
+    font-weight: 600;
 }
 
 .widget-holder-header {
-    padding-left: 4px !important;
+    padding-left: 15px !important;
     background-color: var(--widgetmap-view-header-background-color) !important;
     line-height: 1.4em;
 }
 
 .poly-split-panel-movable-splitter,.poly-split-panel-fixed-splitter {
+    width: 5px;
     background-color: var(--alternate--separator--color);
 }
 
