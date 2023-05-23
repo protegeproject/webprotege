@@ -19,9 +19,9 @@
     </ui:style>
 
     <g:HTMLPanel>
-            <g:Label ui:field="label" addStyleNames="{style.label}"/>
-            <g:HTMLPanel addStyleNames="{style.menuButtonContainer}">
-                <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.button}"/>
-            </g:HTMLPanel>
+        <g:Label ui:field="label" addStyleNames="{style.label}"/>
+        <g:HTMLPanel addStyleNames="{style.menuButtonContainer}">
+            <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.button}"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

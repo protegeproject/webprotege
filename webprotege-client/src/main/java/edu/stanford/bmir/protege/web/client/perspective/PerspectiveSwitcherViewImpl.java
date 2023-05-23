@@ -8,10 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 //import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 //import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -25,6 +22,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 
 /**
@@ -122,15 +120,28 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @Override
     public void addFavorite(final PerspectiveDescriptor perspectiveDescriptor) {
         PerspectiveId perspectiveId = perspectiveDescriptor.getPerspectiveId();
+        String label = localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel());
         this.displayedPerspectives.add(perspectiveDescriptor.getPerspectiveId());
         PerspectiveLink linkWidget = linkFactory.createPerspectiveLink(perspectiveId);
-        linkWidget.setLabel(localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel()));
+        linkWidget.setLabel(label);
         linkWidget.setMenuButtonVisible(false);
+        linkWidget.setLabelVisible(false);
         linkWidget.addClickHandler(event -> {
             GWT.log("[PerspectiveSwitcherViewImpl] link clicked");
             highlightedPerspective = Optional.of(perspectiveId);
             linkActivatedHandler.handlePerspectiveActivated(perspectiveId);
         });
+        switch (label) {
+            case "Classes":
+                linkWidget.setStyle(BUNDLE.style().sideBarClassesIcon());
+                break;
+            case "Individuals":
+                linkWidget.setStyle(BUNDLE.style().sideBarIndividualIcon());
+                break;
+            case "Properties":
+                linkWidget.setStyle(BUNDLE.style().sideBarPropertiesIcon());
+                break;
+        }
         if (addViewAllowed) {
             linkWidget.addActionHandler(messages.perspective_addView(), () -> {
                 if (addViewAllowed) {
@@ -138,7 +149,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                 }
             });
         }
-        if(resettablePerspectives.contains(perspectiveId)) {
+        if (resettablePerspectives.contains(perspectiveId)) {
             linkWidget.addActionHandler(messages.perspective_reset(),
                                         () -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveDescriptor));
         }

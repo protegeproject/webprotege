@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
@@ -36,6 +37,7 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
 
     @UiField
     protected MenuButton menuButton;
+
 
     private final PopupMenu popupMenu;
 
@@ -71,6 +73,10 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
     public void setLabel(@Nonnull String label) {
         this.label.setText(label);
     }
+    @Override
+    public void setStyle(@Nonnull String url){
+        this.addStyleName(url);
+    }
 
     @Override
     public void addActionHandler(@Nonnull String text, @Nonnull Runnable runnable) {
@@ -82,5 +88,9 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
         menuButton.setVisible(visible);
     }
 
+    @Override
+    public void setLabelVisible(boolean visible) {
+        label.setVisible(visible);
+    }
 
 }

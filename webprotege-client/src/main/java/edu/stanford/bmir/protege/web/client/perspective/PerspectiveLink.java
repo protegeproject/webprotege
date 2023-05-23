@@ -16,8 +16,12 @@ public interface PerspectiveLink extends IsWidget, HasLabel, HasClickHandlers {
 
     void setLabel(@Nonnull String label);
 
+    void setStyle(@Nonnull String url);
+
     void addActionHandler(@Nonnull String text, @Nonnull Runnable runnable);
 
     void setMenuButtonVisible(@Nonnull boolean visible);
+
+    void setLabelVisible(@Nonnull boolean visible);
 }
 

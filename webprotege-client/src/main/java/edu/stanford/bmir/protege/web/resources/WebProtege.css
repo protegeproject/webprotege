@@ -174,25 +174,31 @@
 .sideBarIndividualIcon {
     background-image: individualPanelIconUrl;
     background-repeat: no-repeat;
-    min-height: 2.5em;
-    background-size: 2.5em;
-    width: 2.5em;
+    height: 1.7em;
+    background-size: 1.5em;
+    width: 1.5em;
+    background-position: center;
+    margin: 15px auto;
 }
 
 .sideBarClassesIcon {
     background-image: classesPanelIconUrl;
     background-repeat: no-repeat;
-    min-height: 2.5em;
-    background-size: 2.5em;
-    width: 2.5em;
+    height: 1.5em;
+    background-size: 1.5em;
+    width: 1.5em;
+    background-position: center;
+    margin: 15px auto;
 }
 
 .sideBarPropertiesIcon {
     background-image: propertiesPanelIconUrl;
     background-repeat: no-repeat;
-    min-height: 2.5em;
-    background-size: 2.5em;
-    width: 2.5em;
+    height: 1.5em;
+    background-size: 1.5em;
+    width: 1.5em;
+    background-position: center;
+    margin: 15px auto;
 }
 
 .sideBarSettingPanelIcon {
@@ -201,6 +207,8 @@
     min-height: 2.5em;
     background-size: 2.5em;
     width: 2.5em;
+    background-position: center;
+    margin: 15px auto;
 }
 
 .classIconInset {

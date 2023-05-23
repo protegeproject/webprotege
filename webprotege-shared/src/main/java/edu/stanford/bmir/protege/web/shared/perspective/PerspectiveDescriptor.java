@@ -50,4 +50,5 @@ public abstract class PerspectiveDescriptor {
         }
         return PerspectiveDescriptor.get(getPerspectiveId(), getLabel(), favorite);
     }
+
 }
