@@ -3,7 +3,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-            width: 7em;
+            width: 9em;
             height: 5em;
             background-color: #C5D3E0;
             background-size: 3.2em;
@@ -14,10 +14,11 @@
             border: 1px solid;
         }
         .label {
-
+            padding-top: 3.6em;
+            color: var();
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.buttons.btnGlyph}">
-
+        <g:Label ui:field="label" addStyleNames="{style.label}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

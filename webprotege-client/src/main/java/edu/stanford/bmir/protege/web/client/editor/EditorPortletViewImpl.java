@@ -23,7 +23,7 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
 
     private EditorPaneChangedHandler editorPaneChangedHandler = () -> {};
 
-    private List<Tooltip> tooltips = new ArrayList<>();
+//    private List<Tooltip> tooltips = new ArrayList<>();
 
     interface EditorPortletViewImplUiBinder extends UiBinder<HTMLPanel, EditorPortletViewImpl> {
 
@@ -83,7 +83,8 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         if (!additionalStyles.isEmpty()) {
             widget.addStyleName(additionalStyles);
         }
-        tooltips.add(Tooltip.create(widget, displayName));
+//        tooltips.add(Tooltip.create(widget, displayName));
+        widget.setLabel(displayName);
         tabBar.addTab(widget);
         SimplePanel simplePanel = new SimplePanel();
         Style style = simplePanel.getElement().getStyle();
@@ -124,6 +125,6 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
 
     @Override
     public void dispose() {
-        tooltips.forEach(Tooltip::dispose);
+//        tooltips.forEach(Tooltip::dispose);
     }
 }
