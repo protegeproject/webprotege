@@ -4,7 +4,6 @@
     <ui:style>
         @external .gwt-TabBar;
         @external .gwt-TabBarItem;
-        @external .gwt-TabBarItem-selected;
         .main {
             display: flex;
             flex-direction: column;
@@ -15,7 +14,7 @@
             background-color: literal("var(--alternate--background-color)");
             padding-bottom: 2px;
             padding-top: 1px;
-            height: 4em;
+            height: 5em;
         }
         .tagListContainer {
             padding-top: 2px;
@@ -38,16 +37,7 @@
             font-weight: 400;
             cursor: pointer;
             text-align: center;
-            border-bottom: 2px solid transparent;
             outline: none;
-            margin-right: 10px;
-
-        }
-        .main .gwt-TabBarItem-selected {
-            border-bottom: 2px solid literal("var(--selected-tab--color)");
-        }
-        .main .gwt-TabBarItem-selected div {
-            background-color: literal("var(--selected-tab--color)");
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

@@ -38,7 +38,7 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
     @Nonnull
     @Override
     public String getCaption() {
-        return "Changes";
+        return "Change";
     }
 
     @Nonnull

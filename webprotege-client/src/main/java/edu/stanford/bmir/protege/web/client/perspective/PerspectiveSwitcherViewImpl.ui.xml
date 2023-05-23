@@ -4,7 +4,8 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
-            padding: 5px;
+            padding: 10px;
+            padding-top: 75px;
             display: flex;
             flex-direction: column;
             flex-grow: 0;

@@ -3,10 +3,18 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-            width: 20px;
-            height: 20px;
-            box-sizing: border-box;
-            background-color: literal("var(--primary--color)");
+            width: 7em;
+            height: 5em;
+            background-color: #C5D3E0;
+            background-size: 3.2em;
+            background-repeat: no-repeat;
+            background-position-x: center;
+            background-position-y: 0.35em;
+            border-color: var(--alternate--separator--color);
+            border: 1px solid;
+        }
+        .label {
+
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.buttons.btnGlyph}">

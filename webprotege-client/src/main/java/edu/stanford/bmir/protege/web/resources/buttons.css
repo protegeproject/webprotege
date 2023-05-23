@@ -311,8 +311,8 @@
 }
 
 .wp-btn-g:hover {
-    background-color: literal("var(--btn--hover--color)");
-    outline: 1px solid #505050 !important;
+    /*background-color: literal("var(--btn--hover--color)");*/
+    /*outline: 1px solid #505050 !important;*/
 }
 
 .wp-btn-g--create:hover {
@@ -404,13 +404,11 @@
 }
 
 .wp-btn-g--editor {
-    mask-image: editorIconUrl;
-    -webkit-mask-image: editorIconUrl;
+    background: editorIconUrl;
 }
 
 .wp-btn-g--changes {
-    mask-image: changesIconUrl;
-    -webkit-mask-image: changesIconUrl;
+    background: changesIconUrl;
 }
 
 .wp-btn-g--container {
@@ -423,8 +421,7 @@
 }
 
 .wp-btn-g--viz {
-    mask-image: vizIconUrl;
-    -webkit-mask-image: vizIconUrl;
+    background: vizIconUrl;
 }
 
 .wp-btn-g--download {
