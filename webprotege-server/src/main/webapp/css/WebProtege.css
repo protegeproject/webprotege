@@ -252,6 +252,9 @@ textarea {
 button {
     border: none;
     margin: 0;
+    width: 2.5em;
+    height: 2.5em;
+    background: initial;
 }
 
 a {

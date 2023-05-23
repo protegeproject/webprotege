@@ -192,6 +192,22 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgCommentSmallFilledIcon();
 
+    @Source("classes-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgClassesPanelIcon();
+
+    @Source("individual-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgIndividualPanelIcon();
+
+    @Source("properties-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgPropertiesPanelIcon();
+
+    @Source("setting-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgSettingPanelIcon();
+
     @Source("home-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource homeIcon();
@@ -385,6 +401,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String tableHeader();
 
         String warningLabel();
+
+        String sideBarClassesIcon();
+
+        String sideBarIndividualIcon();
+
+        String sideBarPropertiesIcon();
+
+        String sideBarSettingPanelIcon();
 
         String classIconInset();
 

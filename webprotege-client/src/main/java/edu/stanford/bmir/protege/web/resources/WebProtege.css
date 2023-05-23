@@ -19,6 +19,10 @@
 @url datetimeIconUrl dateTimeIcon;
 @url homeIconUrl homeIcon;
 @url helpIconUrl svgHelpIcon;
+@url classesPanelIconUrl svgClassesPanelIcon;
+@url individualPanelIconUrl svgIndividualPanelIcon;
+@url propertiesPanelIconUrl svgPropertiesPanelIcon;
+@url settingPanelIconUrl svgSettingPanelIcon;
 
 .gwt-TabLayoutPanelTab {
     background-color: #c0c0c0;
@@ -165,6 +169,38 @@
     vertical-align: top;
     padding: 4px 4px 4px 4px;
     font-size: 10px;
+}
+
+.sideBarIndividualIcon {
+    background-image: individualPanelIconUrl;
+    background-repeat: no-repeat;
+    min-height: 2.5em;
+    background-size: 2.5em;
+    width: 2.5em;
+}
+
+.sideBarClassesIcon {
+    background-image: classesPanelIconUrl;
+    background-repeat: no-repeat;
+    min-height: 2.5em;
+    background-size: 2.5em;
+    width: 2.5em;
+}
+
+.sideBarPropertiesIcon {
+    background-image: propertiesPanelIconUrl;
+    background-repeat: no-repeat;
+    min-height: 2.5em;
+    background-size: 2.5em;
+    width: 2.5em;
+}
+
+.sideBarSettingPanelIcon {
+    background-image: settingPanelIconUrl;
+    background-repeat: no-repeat;
+    min-height: 2.5em;
+    background-size: 2.5em;
+    width: 2.5em;
 }
 
 .classIconInset {

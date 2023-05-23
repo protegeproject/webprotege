@@ -1,55 +1,9 @@
-<?xml version="1.0" standalone="yes"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-    <circle cx="15" cy="15" r="4" fill="none" stroke-width="1.5" stroke="#000000"/>
-    <path d="M 15.2,12.5
-             l 0,3
-             l -2.5,-0.5"
-    stroke="#000000"
-          fill="none"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-    />
-    <path d="M6,5
-            l8,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-    <path d="M6,8
-            l8,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-    <path d="M6,11
-            l3.5,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-    <path d="M6,14
-            l2,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-
-    <!--<path d="M18,10-->
-            <!--l0,-8-->
-            <!--l-16,0-->
-            <!--l0,16-->
-            <!--l7,0"-->
-          <!--fill="none"-->
-          <!--stroke="#000000"-->
-          <!--stroke-width="1.5"-->
-          <!--stroke-linecap="round"-->
-          <!--stroke-linejoin="round"/>-->
+<svg width="85" height="85" viewBox="0 0 85 85" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="85" height="85" fill="url(#pattern0)"/>
+<defs>
+<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_4_27" transform="scale(0.00666667)"/>
+</pattern>
+<image id="image0_4_27" width="150" height="150" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAMAAAAL34HQAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGJUExURQAAAACAgABVqjMzmRpNmRROnSJEmRtJmxpGlSBIlx9LlRxKmRtHmB9Jlx5Glh5Llh1ImhtImB9ImB5Jlx1Hlh1KmBxIlxtLmR9Jmx5ImB5Hmh5KmBxJmh5JmB1HmBxImhxKmh5ImR1ImB5Kmh1KmBxImBxKmRxJlxxJmh1JmRxJmB5Kmh1ImR1JmRxImR5ImR5Kmh1JmR5JmB1JmR5JmR1Imh1JmR1Kmh1Jmh1Kmh5KmR1Jmh1ImR1JmR5Hlx1Kmh1JmR1JmR1KmR1KmR1JmR1JmR1KmR1JmRxJmh1JmR1JmR1JmR1JmR1JmR1JmR1JmB1JmR5JmR1JmR1JmR1JmR1JmR1JmR1Jmh1JmB1JmR1KmUBbgkRdf0RyxFZnc1locF1qbl5sbGBsa2RuaWdwZ2tyZGxyY290YnJ2X3Z3XXh5W3h6W3l5W317WIB9VoR/VIWAU4eBUYuDT5aJR6GZYqiSO6qUOrqbL7ucLtyuGOOyEuizD/O6CPS7B/a7Bvi8Bfu9A/6/AP/AAMpRZ+kAAABYdFJOUwACAwUKDQ8cHSApLS8xMzM1OTk7PT5AQUJDREVJTU9RU1VZXWFjZGVlaW1vcXN1eHl9gYWJjZOVl5yjuLvDxcnKzNHT1NXa3+Di4+fo6+/x8fLz9/v8/v7LTT2jAAAACXBIWXMAABcRAAAXEQHKJvM/AAACZElEQVR4Xu3aZW8bQRSF4ds2ZWZuyphym6acMlOKU4aUmVOGX97NnWO5Um3Pjhd6tTrPB0eyZva8n1aKZCEiIiIiIiJjOqav7S7YmilDMZbW8O2uDBe7h2Awlc6juFe4A7MwmcJU3CnFOIyG9eJGKXZhNGgzLpSkC7Mhu/3x6/0Fu+Z3dmI25LyefvW7cE906CRmAyboYfcFdwv0yS+NwnBrM/xhXC3SV780EcOtMcsvMSsVZsVgVgxmxcgl692NjPCcOma1gOfUMasFPKcul6z8MSsGs2IwK0aVs/iWb4RZfqmSWfljVgxmxWBWjFyy+DpthFl+qZJZ+WNWDGbFYFaMKmfxLd8Is/xSJbPyx6wYzIrBrBjMilGFrAX+8HfcLdBnv5Quq8Mffo+7BfqgQ5eGYTjgkJ52T99m8A3LNQMf/3XH7/RiNmSHP57JzR/ogQF838A2zIaMPIMLWdz6iSCveVbfaMwGLdfzV/Wzbbd/oUg1z1qB0RT0d7pX9Fb77qJINc3qwWQqcw7iVhb3kDSoSdaxhRhMa/b6PYf3tme//5mvc/1oSvisy2f/tq9n2QislWLMEY1w7j6ialnncOA/GXtcK5x7iCobWTL+hGY498hUlkw6pR3OPTaVJZNPa4hzz0xlybQ+LXHuuaksmVl7T7wwlSVzL2iLcy9NZck8bUm8NpUl8zUm8cZUlnRqTeKBflrJkkWaU2MmSxajSNnJkiVIGmQoS5aiKWEpS1YiyliWrEKVsSxZbTNLumxmyTqbWbLBZpZstJklm2xmJf+rm8ySLTazZCv+EhERERFRNiJ/AKzeddM7C7+XAAAAAElFTkSuQmCC"/>
+</defs>
 </svg>
