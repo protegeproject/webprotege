@@ -176,9 +176,9 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     }
 
     private void removeAllDisplayedPerspectives() {
-//        while (tabBar.getTabCount() > 0) {
-//            tabBar.removeTab(0);
-//        }
+        while (sideBar.getWidgetCount() > 0) {
+            sideBar.remove(0);
+        }
         this.displayedPerspectives.clear();
     }
 
