@@ -7,7 +7,7 @@
     <g:HTMLPanel addStyleNames="{wp.style.form}">
         <div class="{wp.style.formGroup}">
             <div class="{wp.style.formHelpText}">The application URL is the URL that users use to access
-                WebProtégé. If you have
+                AxiomatIQ. If you have
                 something like an Apache HTTP Server sitting in-front of Tomcat then this may be
                 different to
                 the Tomcat URL. Note that the Path and Port fields are optional. The Host field is
@@ -24,7 +24,7 @@
                 </g:ListBox>
                 <div class="{wp.style.formHelpText}">
                     It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
-                    running WebProtégé. The http protocol should be used for testing purposes only.
+                    running AxiomatIQ. The http protocol should be used for testing purposes only.
                 </div>
             </div>
             <div class="{wp.style.formGroup}">

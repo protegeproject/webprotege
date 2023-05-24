@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
  */
 public class DefaultApplicationPreferences {
 
-    public static final String DEFAULT_APPLICATION_NAME = "WebProtégé";
+    public static final String DEFAULT_APPLICATION_NAME = "AxiomatIQ";
 
 
     public static final String EMPTY_EMAIL_ADDRESS = "";

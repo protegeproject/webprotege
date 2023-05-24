@@ -16,7 +16,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTML ui:field="html" styleName="{style.html}"/>
         <div>
-            WebProtégé
+            AxiomatIQ
             <ui:text from="{version.versionString}"/>
         </div>
     </g:HTMLPanel>
