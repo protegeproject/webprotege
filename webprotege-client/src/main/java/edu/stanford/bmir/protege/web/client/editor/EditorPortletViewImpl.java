@@ -1,23 +1,18 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLink;
-import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
-import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
-
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Matthew Horridge
@@ -50,8 +45,6 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
 
     @Nonnull
     private final List<String> tabs = new ArrayList<>();
-
-    private final List<PerspectiveDescriptor> perspectiveDescriptors = new ArrayList<>();
 
     @Inject
     public EditorPortletViewImpl() {
