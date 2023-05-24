@@ -25,9 +25,9 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
     public static final String MAIL_PROPERTIES_PREFIX = "mail.smtp";
 
-    public static final String MAIL_SMTP_USER_MISSING_MESSAGE = "Mail properties are not configured correctly.  The mail.smtp.auth has been specified, which means that authentication will be used to send emails, but the mail.smtp.user property has not been specified.  Please specify a user name for the smtp mail server by using this property.  Mail properties may be specified using a mail.properties file placed in the root directory of the WebProtégé web-app directory.";
+    public static final String MAIL_SMTP_USER_MISSING_MESSAGE = "Mail properties are not configured correctly.  The mail.smtp.auth has been specified, which means that authentication will be used to send emails, but the mail.smtp.user property has not been specified.  Please specify a user name for the smtp mail server by using this property.  Mail properties may be specified using a mail.properties file placed in the root directory of the AxiomatIQ web-app directory.";
 
-    public static final String MAIL_SMTP_PASSWORD_MISSING_MESSAGE = "Mail properties are not configured correctly.  The mail.smtp.auth has been specified, which means that authentication will be used to send emails, but the mail.smtp.password property has not been specified.  Please specify a password for the smtp mail server by using this property.  Mail properties may be specified using a mail.properties file placed in the root directory of the WebProtégé web-app directory.";
+    public static final String MAIL_SMTP_PASSWORD_MISSING_MESSAGE = "Mail properties are not configured correctly.  The mail.smtp.auth has been specified, which means that authentication will be used to send emails, but the mail.smtp.password property has not been specified.  Please specify a password for the smtp mail server by using this property.  Mail properties may be specified using a mail.properties file placed in the root directory of the AxiomatIQ web-app directory.";
 
     private static Logger logger = LoggerFactory.getLogger(MailPropertiesProvider.class);
 

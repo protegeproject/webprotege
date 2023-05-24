@@ -13,10 +13,11 @@
             justify-content: space-evenly;
         }
         .menuButton {
-
+            width: 2.5em;
+            height: 2.5em;
         }</ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
-        <g:VerticalPanel ui:field="sideBar" addStyleNames="{style.menuButton}"/>
+        <g:VerticalPanel ui:field="sideBar"/>
         <div class="{wp.style.sideBarSettingPanelIcon}">
             <g:Button ui:field="settingButton" addStyleNames="{style.menuButton}"/>
         </div>

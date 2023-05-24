@@ -10,12 +10,11 @@
             background-repeat: no-repeat;
             background-position-x: center;
             background-position-y: 0.35em;
-            border-color: var(--alternate--separator--color);
+            border-color: literal("var(--alternate--separator--color)");
             border: 1px solid;
         }
         .label {
             padding-top: 3.6em;
-            color: var();
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.buttons.btnGlyph}">
