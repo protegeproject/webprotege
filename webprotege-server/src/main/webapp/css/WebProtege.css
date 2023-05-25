@@ -21,6 +21,8 @@
     /* Used for topBar and sideBar color */
     --secondary--background-color:          #232323;
 
+    --sidebar-button-color:                 #8495AD;
+    --sidebar-button-seleted-color:         #FFFFFF;
 
     --alternate--background-color:          #fafafa;
     --alternate--separator--color:          #4F4E4E;
