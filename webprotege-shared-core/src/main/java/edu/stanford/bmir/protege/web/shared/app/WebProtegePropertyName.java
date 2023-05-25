@@ -1,12 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.app;
 
-/**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 19/07/2013
- */
-
 import edu.stanford.bmir.protege.web.shared.annotations.WebProtegePropertiesDocumentation;
 
 import javax.annotation.Nullable;
@@ -19,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * or required.  Required properties must have a value specified in the server size webprotege.properties file.
  * Optional properties do not need a value specified in the webprotege.properties file.  If optional then a default
  * value must be specified here for the property.
- *
+ * <p>
  * In general the property names listed here should correspond to the property names specified in the
  * webprotege.properties file with the dots replaced by underscores and the name coverted to upper case.  For
  * example, data.directory becomes DATA_DIRECTORY.
