@@ -5,13 +5,13 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLink;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Matthew Horridge
@@ -21,8 +21,6 @@ import java.util.Map;
 public class EditorPortletViewImpl extends Composite implements EditorPortletView {
 
     private EditorPaneChangedHandler editorPaneChangedHandler = () -> {};
-
-//    private List<Tooltip> tooltips = new ArrayList<>();
 
     interface EditorPortletViewImplUiBinder extends UiBinder<HTMLPanel, EditorPortletViewImpl> {
 
@@ -82,9 +80,9 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         if (!additionalStyles.isEmpty()) {
             widget.addStyleName(additionalStyles);
         }
-//        tooltips.add(Tooltip.create(widget, displayName));
         widget.setLabel(displayName);
         tabBar.addTab(widget);
+
         SimplePanel simplePanel = new SimplePanel();
         Style style = simplePanel.getElement().getStyle();
         style.setTop(0, Style.Unit.PX);
@@ -96,7 +94,6 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         tabs.add(displayName);
         return simplePanel;
     }
-
 
     @Override
     protected void onLoad() {
@@ -124,6 +121,5 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
 
     @Override
     public void dispose() {
-//        tooltips.forEach(Tooltip::dispose);
     }
 }

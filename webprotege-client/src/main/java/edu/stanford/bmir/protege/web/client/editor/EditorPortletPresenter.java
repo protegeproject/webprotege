@@ -107,6 +107,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(view);
         startPanePresenters(portletUi, eventBus);
+        // TODO
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
                                         this::handleClassFrameChangedEvent);
@@ -152,6 +153,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         });
 
     }
+
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {

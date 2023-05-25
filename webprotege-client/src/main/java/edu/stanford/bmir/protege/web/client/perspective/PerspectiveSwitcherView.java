@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Panel;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
@@ -63,7 +65,7 @@ public interface PerspectiveSwitcherView extends IsWidget {
      */
     void setFavourites(List<PerspectiveDescriptor> perspectives);
 
-    void addFavorite(PerspectiveDescriptor perspectiveDescriptor);
+    void addFavorite(Panel panel, PerspectiveDescriptor perspectiveDescriptor, @Nonnull String additionalStyles);
 
     void removeFavorite(PerspectiveDescriptor perspectiveDescriptor);
 
