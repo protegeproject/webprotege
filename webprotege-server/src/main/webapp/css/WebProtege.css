@@ -21,6 +21,8 @@
     /* Used for topBar and sideBar color */
     --secondary--background-color:          #232323;
 
+    --highlighted-graph-color:              #F4743B;
+    --secondary--graph-color:               #4F4E4E;
 
     --alternate--background-color:          #fafafa;
     --alternate--separator--color:          #4F4E4E;
@@ -966,8 +968,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 
 .wp-graph__node__shape--class {
-    fill: none;
-    stroke: #6195cc;
+    fill: var(--secondary--graph-color);
 }
 
 .wp-graph__node__shape--individual {
@@ -976,7 +977,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__node--root-node .wp-graph__node__shape--class {
-    fill: var(--selected-item--background-color);
+    fill: var(--highlighted-graph-color);
 }
 
 
@@ -987,6 +988,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 .wp-graph__node__label {
     pointer-events: none;
+    fill: white;
 }
 
 .wp-graph__node--root-node .wp-graph__node__label {
@@ -1002,13 +1004,13 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__edge--is-a {
-    stroke: #f8ba2c;
+    stroke: var(--secondary--graph-color);
 }
 .wp-graph__edge--ind-cls {
     stroke-dasharray: 3 3;
 }
 .wp-graph__edge--rel {
-    stroke: #6195cc;
+    stroke: var(--highlighted-graph-color);
 }
 
 .wp-graph__edge__label {
@@ -1017,7 +1019,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__edge__label + text {
-    fill: #6195cc;
+    fill: var(--highlighted-graph-color);
     font-size: 0.8em;
     cursor: default;
 }
@@ -1031,11 +1033,11 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__edge__arrow-head--is-a {
-    fill: #f8ba2c;
+    fill: var(--secondary--graph-color);
 }
 
 .wp-graph__edge__arrow-head--rel {
-    stroke: #6195cc;
+    stroke: var(--highlighted-graph-color);
     fill: none;
 }
 
