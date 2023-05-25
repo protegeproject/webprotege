@@ -12,10 +12,6 @@
             flex-shrink: 0;
             justify-content: space-evenly;
         }
-        .settingButton {
-            width: 2.5em;
-            height: 2.5em;
-        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
         <g:VerticalPanel ui:field="sideBar"/>

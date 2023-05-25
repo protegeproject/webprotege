@@ -7,10 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -33,7 +30,7 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
 
 
     @UiField
-    protected Label label;
+    protected Button button;
 
     @UiField
     protected MenuButton menuButton;
@@ -66,14 +63,6 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
     }
 
     @Override
-    public String getLabel() {
-        return label.getText();
-    }
-
-    public void setLabel(@Nonnull String label) {
-        this.label.setText(label);
-    }
-    @Override
     public void setStyle(@Nonnull String url){
         this.addStyleName(url);
     }
@@ -86,11 +75,6 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
     @Override
     public void setMenuButtonVisible(boolean visible) {
         menuButton.setVisible(visible);
-    }
-
-    @Override
-    public void setLabelVisible(boolean visible) {
-        label.setVisible(visible);
     }
 
 }

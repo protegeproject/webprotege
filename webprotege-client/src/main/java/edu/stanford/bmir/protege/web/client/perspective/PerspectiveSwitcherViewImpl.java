@@ -130,12 +130,9 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @Override
     public void addFavorite(Panel panel, final PerspectiveDescriptor perspectiveDescriptor, @Nonnull String additionalStyles) {
         PerspectiveId perspectiveId = perspectiveDescriptor.getPerspectiveId();
-        String label = localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel());
         this.displayedPerspectives.add(perspectiveDescriptor.getPerspectiveId());
         PerspectiveLink linkWidget = linkFactory.createPerspectiveLink(perspectiveId);
-        linkWidget.setLabel(label);
         linkWidget.setMenuButtonVisible(false);
-        linkWidget.setLabelVisible(false);
         linkWidget.addClickHandler(event -> {
             GWT.log("[PerspectiveSwitcherViewImpl] link clicked");
             highlightedPerspective = Optional.of(perspectiveId);
@@ -239,9 +236,9 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         if (!highlightedPerspective.isPresent()) {
             return;
         }
-        for (int i = 0; i < displayedPerspectives.size(); i++) {
-            if (displayedPerspectives.get(i).equals(highlightedPerspective.get())) {
-//                if (tabBar.getSelectedTab() != i) {
+        for (PerspectiveId displayedPerspective : displayedPerspectives) {
+            if (displayedPerspective.equals(highlightedPerspective.get())) {
+//                if (sideBar.get() != i) {
 //                    tabBar.selectTab(i);
 //                }
                 break;

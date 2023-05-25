@@ -10,11 +10,9 @@ import javax.annotation.Nonnull;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 22/05/2014
  */
-public interface PerspectiveLink extends IsWidget, HasLabel, HasClickHandlers {
+public interface PerspectiveLink extends IsWidget, HasClickHandlers {
 
     PerspectiveId getPerspectiveId();
-
-    void setLabel(@Nonnull String label);
 
     void setStyle(@Nonnull String url);
 
@@ -22,6 +20,5 @@ public interface PerspectiveLink extends IsWidget, HasLabel, HasClickHandlers {
 
     void setMenuButtonVisible(@Nonnull boolean visible);
 
-    void setLabelVisible(@Nonnull boolean visible);
 }
 
