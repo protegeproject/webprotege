@@ -26,10 +26,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public enum WebProtegePropertyName {
 
-    @WebProtegePropertiesDocumentation(description = "The version of the WebProtégé application", example = "2.5.0")
+    @WebProtegePropertiesDocumentation(description = "The version of the AxiomatIQ application", example = "2.5.0")
     APPLICATION_VERSION("application.version"),
 
-    @WebProtegePropertiesDocumentation(description = "The directory where WebProtégé data is stored", example = "/src/webprotege")
+    @WebProtegePropertiesDocumentation(description = "The directory where AxiomatIQ data is stored", example = "/src/webprotege")
     DATA_DIRECTORY("data.directory"),
 
     @WebProtegePropertiesDocumentation(description = "The host name of the mongodb server", example = "localhost")
@@ -38,13 +38,13 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
     MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017)),
 
-    @WebProtegePropertiesDocumentation(description = "The username that WebProtégé should use to connect to to MongoDB")
+    @WebProtegePropertiesDocumentation(description = "The username that AxiomatIQ should use to connect to to MongoDB")
     MONGO_DB_AUTH_USERNAME("mongodb.auth.username", PropertyValue.ofString("")),
 
     @WebProtegePropertiesDocumentation(description = "The MongoDB database (source) that is used to store credentials in MongoDB")
     MONGO_DB_AUTH_SOURCE("mongodb.auth.source", PropertyValue.ofString("")),
 
-    @WebProtegePropertiesDocumentation(description = "The password that WebProtégé should use to connect to MongoDB")
+    @WebProtegePropertiesDocumentation(description = "The password that AxiomatIQ should use to connect to MongoDB")
     MONGO_DB_AUTH_PASSWORD("mongodb.auth.password", PropertyValue.ofString("")),
 
     @WebProtegePropertiesDocumentation(description = "The time in milliseconds after which a project becomes dormant and is purgable from memory", example = "180000")

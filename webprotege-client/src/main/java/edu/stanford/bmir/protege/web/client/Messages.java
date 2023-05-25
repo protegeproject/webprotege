@@ -281,7 +281,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String error_anErrorHasOccurred();
 
     
-    @DefaultMessage("WebProtégé cannot connect to the server.  Please check your network connection.")
+    @DefaultMessage("AxiomatIQ cannot connect to the server.  Please check your network connection.")
     @Key("error.connectionError.msg")
     String error_connectionError_msg();
 
@@ -321,12 +321,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String error_statusCode();
 
     
-    @DefaultMessage("WebProtégé has been updated.  Please empty your browser caches and reload your browser.")
+    @DefaultMessage("AxiomatIQ has been updated.  Please empty your browser caches and reload your browser.")
     @Key("error.upgraded")
     String error_upgraded();
 
     
-    @DefaultMessage("WebProtégé has encountered an error.  Please try again.")
+    @DefaultMessage("AxiomatIQ has encountered an error.  Please try again.")
     @Key("error.webProtegeHasEncounteredAnErrorPleaseTryAgain")
     String error_webProtegeHasEncounteredAnErrorPleaseTryAgain();
 
@@ -1115,7 +1115,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("project.settings")
     String projectSettings();
 
-    @DefaultMessage("WebProtégé Application Settings")
+    @DefaultMessage("AxiomatIQ Application Settings")
     @Key("app.settings.title")
     String applicationSettings();
 
