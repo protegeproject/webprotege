@@ -172,43 +172,55 @@
 }
 
 .sideBarIndividualIcon {
-    background-image: individualPanelIconUrl;
-    background-repeat: no-repeat;
-    height: 1.7em;
-    background-size: 1.5em;
-    width: 1.5em;
+    -webkit-mask-box-image: individualPanelIconUrl;
+    background-color: literal("var(--sidebar-button-color)");
+    height: 1.5em;
+    width: 1.6em;
     background-position: center;
     margin: 15px auto;
 }
 
 .sideBarClassesIcon {
-    background-image: classesPanelIconUrl;
-    background-repeat: no-repeat;
+    -webkit-mask-box-image: classesPanelIconUrl;
+    background-color: literal("var(--sidebar-button-color)");
     height: 1.5em;
-    background-size: 1.5em;
-    width: 1.5em;
+    width: 1.6em;
     background-position: center;
     margin: 15px auto;
 }
 
 .sideBarPropertiesIcon {
-    background-image: propertiesPanelIconUrl;
-    background-repeat: no-repeat;
+    -webkit-mask-box-image: propertiesPanelIconUrl;
+    background-color: literal("var(--sidebar-button-color)");
     height: 1.5em;
-    background-size: 1.5em;
-    width: 1.5em;
+    width: 1.6em;
     background-position: center;
     margin: 15px auto;
 }
 
 .sideBarSettingPanelIcon {
-    background-image: settingPanelIconUrl;
-    background-repeat: no-repeat;
-    min-height: 2.5em;
-    background-size: 2.5em;
-    width: 2.5em;
+    -webkit-mask-box-image: settingPanelIconUrl;
+    background-color: literal("var(--sidebar-button-color)");
+    height: 1.5em;
+    width: 1.6em;
     background-position: center;
     margin: 15px auto;
+}
+
+.sideBarIndividualIcon:focus {
+    background-color: literal("--sidebar-button-seleted-color");
+}
+
+.sideBarClassesIcon:focus {
+    background-color: literal("--sidebar-button-seleted-color");
+}
+
+.sideBarPropertiesIcon:focus {
+    background-color: literal("--sidebar-button-seleted-color");
+}
+
+.sideBarSettingPanelIcon:focus {
+    background-color: literal("--sidebar-button-seleted-color");
 }
 
 .classIconInset {
