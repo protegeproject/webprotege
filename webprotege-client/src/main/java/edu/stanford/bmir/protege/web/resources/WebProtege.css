@@ -175,7 +175,7 @@
     -webkit-mask-box-image: individualPanelIconUrl;
     background-color: literal("var(--sidebar-button-color)");
     height: 1.5em;
-    width: 1.6em;
+    width: 1.4em;
     background-position: center;
     margin: 15px auto;
 }
@@ -193,7 +193,7 @@
     -webkit-mask-box-image: propertiesPanelIconUrl;
     background-color: literal("var(--sidebar-button-color)");
     height: 1.5em;
-    width: 1.6em;
+    width: 1.5em;
     background-position: center;
     margin: 15px auto;
 }
@@ -201,10 +201,26 @@
 .sideBarSettingPanelIcon {
     -webkit-mask-box-image: settingPanelIconUrl;
     background-color: literal("var(--sidebar-button-color)");
-    height: 1.5em;
-    width: 1.6em;
+    height: 2.5em;
+    width: 2.5em;
     background-position: center;
     margin: 15px auto;
+}
+
+.sideBarIndividualIcon:focus {
+    background-color: white;
+}
+
+.sideBarSettingPanelIcon:focus {
+    background-color: white;
+}
+
+.sideBarClassesIcon:focus {
+    background-color: white;
+}
+
+.sideBarPropertiesIcon:focus {
+    background-color: white;
 }
 
 .sideBarIndividualIcon:focus {

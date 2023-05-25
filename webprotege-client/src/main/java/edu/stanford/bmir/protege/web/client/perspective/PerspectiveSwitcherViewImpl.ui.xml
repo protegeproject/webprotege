@@ -19,9 +19,7 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
         <g:VerticalPanel ui:field="sideBar"/>
-        <div class="{wp.style.sideBarSettingPanelIcon}">
-            <g:Button ui:field="settingButton" addStyleNames="{style.settingButton}"/>
-        </div>
+        <g:Button ui:field="settingButton" addStyleNames="{wp.style.sideBarSettingPanelIcon}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
 

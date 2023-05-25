@@ -21,6 +21,8 @@
     /* Used for topBar and sideBar color */
     --secondary--background-color:          #232323;
 
+    --sidebar-button-color:                 #8495AD;
+
     --highlighted-graph-color:              #F4743B;
     --secondary--graph-color:               #4F4E4E;
 
@@ -269,8 +271,8 @@ a {
 
 .widget-holder-label {
     color: #ffffff !important;
-    font-size: px !important;
-    font-weight: 600;
+    font-size: 15px !important;
+    font-weight: 500;
 }
 
 .widget-holder-header {
