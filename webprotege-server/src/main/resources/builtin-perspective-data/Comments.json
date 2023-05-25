@@ -1,30 +1,37 @@
 {
-  "@type" : "ParentNode",
-  "direction": "row",
-  "children": [
-    {
-      "weight": 0.3,
-      "node": {
-        "@type" : "LeafNode",
-        "properties" : {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.CommentedEntities"
+  "perspectiveId" : "c1ca9766-512f-413f-9bcc-7d3fa6363c9a",
+  "label" : {
+    "en" : "Discussions"
+  },
+    "favorite" : false,
+    "layout": {
+      "@type": "ParentNode",
+      "direction": "row",
+      "children": [
+        {
+          "weight": 0.3,
+          "node": {
+            "@type": "LeafNode",
+            "properties": {
+              "portlet": {
+                "@type": "String",
+                "value": "portlets.CommentedEntities"
+              }
+            }
+          }
+        },
+        {
+          "weight": 0.7,
+          "node": {
+            "@type": "LeafNode",
+            "properties": {
+              "portlet": {
+                "@type": "String",
+                "value": "portlets.Comments"
+              }
+            }
           }
         }
-      }
-    },
-    {
-      "weight": 0.7,
-      "node": {
-        "@type" : "LeafNode",
-        "properties" : {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.Comments"
-          }
-        }
-      }
+      ]
     }
-  ]
 }
