@@ -42,9 +42,9 @@
 
     <script src="https://d3js.org/d3.v5.js"></script>
 
-    <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
-    <script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.js"></script>
-    <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
+    <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/uuid@7.0.3/dist/umd/uuidv4.min.js" type="text/javascript"></script>
 
 
 
