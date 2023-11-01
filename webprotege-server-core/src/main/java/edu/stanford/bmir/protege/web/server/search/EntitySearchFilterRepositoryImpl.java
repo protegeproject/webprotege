@@ -94,6 +94,8 @@ public class EntitySearchFilterRepositoryImpl implements EntitySearchFilterRepos
     public void saveSearchFilters(@Nonnull ImmutableList<EntitySearchFilter> filters) {
         try {
             writeLock.lock();
+            if (filters.size() < 1)
+        	return;
             var writes = filters.stream()
                                 .map(this::toMongoDocument)
                                 .map(this::toReplaceOne)

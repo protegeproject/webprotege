@@ -16,7 +16,7 @@ public interface TagRepository {
 
     void saveTag(@Nonnull Tag tag);
 
-    void saveTags(@Nonnull Iterable<Tag> tags);
+    void saveTags(@Nonnull List<Tag> tags);
 
     void deleteTag(@Nonnull TagId tagId);
 

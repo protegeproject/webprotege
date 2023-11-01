@@ -105,8 +105,10 @@ public class TagRepositoryImpl implements TagRepository, Repository {
         return objectMapper.convertValue(tag, Document.class);
     }
 
-    public void saveTags(@Nonnull Iterable<Tag> tags) {
+    public void saveTags(@Nonnull List<Tag> tags) {
         writeLock.lock();
+        if (tags.size() < 1)
+            return;
         try {
             checkNotNull(tags);
             Spliterator<Tag> spliterator = tags.spliterator();

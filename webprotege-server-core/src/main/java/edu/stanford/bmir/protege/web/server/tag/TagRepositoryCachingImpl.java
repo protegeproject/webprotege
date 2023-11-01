@@ -53,7 +53,7 @@ public class TagRepositoryCachingImpl implements TagRepository {
     }
 
     @Override
-    public synchronized void saveTags(@Nonnull Iterable<Tag> tags) {
+    public synchronized void saveTags(@Nonnull List<Tag> tags) {
         delegate.saveTags(tags);
         invalidate();
     }
