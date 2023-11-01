@@ -26,7 +26,7 @@
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
         <auto-factory.version>1.0-beta7</auto-factory.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <commonmark.version>0.11.0</commonmark.version>
     </properties>
 
