@@ -1,25 +1,41 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import com.google.common.collect.Streams;
-import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.tag.*;
-import org.semanticweb.owlapi.model.OWLEntity;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.tag.TagId.createTagId;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.tag.TagId.createTagId;
-import static java.util.stream.Collectors.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+
+import org.semanticweb.owlapi.model.OWLEntity;
+
+import com.google.common.collect.Streams;
+
+import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.tag.ProjectTagsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import edu.stanford.bmir.protege.web.shared.tag.TagData;
+import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 /**
  * Matthew Horridge
@@ -150,6 +166,8 @@ public class TagsManager {
      */
     public void setProjectTags(@Nonnull Collection<TagData> newProjectTags) {
         checkNotNull(newProjectTags);
+        if (newProjectTags.size() == 0)
+            return;
         Collection<Tag> currentProjectTags = getProjectTags();
         Set<OWLEntity> modifiedEntityTags = new HashSet<>();
         try {

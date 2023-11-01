@@ -13,9 +13,14 @@ import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Matthew Horridge
@@ -26,7 +31,11 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 
     @Nonnull
     private final OWLDataFactory dataFactory;
+    
+    private static Logger logger = LoggerFactory.getLogger(ObjectMapperProvider.class);
 
+    private static AtomicInteger mapperInstanceCount = new AtomicInteger();
+    
     @Inject
     public ObjectMapperProvider() {
         this.dataFactory = new OWLDataFactoryImpl();
@@ -35,6 +44,9 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     @Override
     public ObjectMapper get() {
         ObjectMapper mapper = new ObjectMapper();
+        int instanceCount = mapperInstanceCount.incrementAndGet();
+        String msg = String.format("Instantiated another ObjectMappger#%08x, total: %d", mapper.hashCode(), instanceCount);
+        logger.info(msg);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
         mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
