@@ -27,4 +27,9 @@ ENV WEBPROTEGE_VERSION $WEBPROTEGE_VERSION
 COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-${WEBPROTEGE_VERSION}.jar /webprotege-cli.jar
 COPY --from=build /webprotege/webprotege-server/target/webprotege-server-${WEBPROTEGE_VERSION}.war ./webprotege.war
 RUN unzip webprotege.war \
-    && rm webprotege.war
+    && rm webprotege.war \
+    && chmod -R a+rwx /srv/webprotege \
+    && chmod -R a+rwx /usr/local/tomcat/temp \
+    && mkdir -p /var/log/webprotege \
+    && chmod -R a+rwx /var/log/webprotege
+    
