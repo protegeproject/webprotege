@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectCacheManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.upload.FileUploadServlet;
+import edu.stanford.bmir.protege.web.server.auth.oidc.OidcAuthServlet;
+import edu.stanford.bmir.protege.web.server.auth.oidc.OidcRuntimeConfig;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -61,4 +63,7 @@ public interface ServerComponent {
 
     ProjectCacheManager getProjectCacheManager();
 
+    OidcAuthServlet getOidcAuthServlet();
+
+    OidcRuntimeConfig getOidcRuntimeConfig();
 }

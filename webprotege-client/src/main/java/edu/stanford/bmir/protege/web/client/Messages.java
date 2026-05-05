@@ -917,6 +917,16 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String signInToContinue();
 
     
+    @DefaultMessage("Sign in with Keycloak")
+    @Key("signInWithKeycloak")
+    String signInWithKeycloak();
+
+    
+    @DefaultMessage("Single sign-on failed. Try again or use username and password.")
+    @Key("login_oidc_failed")
+    String login_oidc_failed();
+
+    
     @DefaultMessage("Sign Out")
     @Key("signOut")
     String signOut();

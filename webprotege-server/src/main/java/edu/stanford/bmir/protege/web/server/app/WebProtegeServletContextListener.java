@@ -45,6 +45,9 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("JerseyContainerServlet", serverComponent.getJerseyServletContainer())
                           .addMapping("/data/*");
 
+            servletContext.addServlet("OidcAuthServlet", serverComponent.getOidcAuthServlet())
+                          .addMapping("/webprotege/oidc/login", "/webprotege/oidc/callback");
+
             servletContext.addListener(serverComponent.getSessionListener());
             serverComponent.getWebProtegeConfigurationChecker().performConfiguration();
             serverComponent.getProjectCacheManager().start();
