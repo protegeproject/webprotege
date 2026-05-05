@@ -95,3 +95,34 @@ Sharing the volumes used by the WebProtégé app and MongoDB allow to keep persi
 * MongoDB will store its data in the source code folder at `./.protegedata/mongodb` where you run `docker-compose`
 
 > Path to the shared volumes can be changed in the `docker-compose.yml` file.
+
+OIDC (OpenID Connect SSO)
+-------------------------
+
+WebProtégé can delegate sign-in to any OIDC-compatible identity provider (for example Keycloak) using the **authorization code flow**. The server loads `{issuer}/.well-known/openid-configuration`, redirects users to the provider, exchanges the code for tokens, validates the ID token, then provisions or matches a **local** WebProtégé user and starts a normal session.
+
+OIDC is **not** configured in `webprotege.properties`. Set **environment variables** on the JVM process (or equivalent JVM `-D` system properties; environment wins over `-D`).
+
+**Required** (all three must be set; if any is missing, OIDC stays disabled and local login works as usual):
+
+| Variable | Purpose |
+|----------|---------|
+| `WEBPROTEGE_OIDC_ISSUER_URI` | Issuer base URL, e.g. `https://auth.example.com/realms/myrealm` (used to discover authorization, token, and JWKS endpoints). |
+| `WEBPROTEGE_OIDC_CLIENT_ID` | OIDC client id registered at the provider. |
+| `WEBPROTEGE_OIDC_CLIENT_SECRET` | Client secret for a **confidential** client. |
+
+**Optional**:
+
+| Variable | Default / behavior |
+|----------|-------------------|
+| `WEBPROTEGE_OIDC_REDIRECT_URI` | If unset, the callback URL is derived from the incoming HTTP request. For reverse proxies, ensure the public URL the browser sees matches what you register at the IdP. Callback path is always `…/webprotege/oidc/callback`. |
+| `WEBPROTEGE_OIDC_SCOPES` | `openid profile email` |
+| `WEBPROTEGE_OIDC_USERNAME_CLAIM` | `preferred_username` — used to **link** OIDC accounts to local users; must match an existing username or a new local user is created on first login. |
+| `WEBPROTEGE_OIDC_HIDE_LOCAL_LOGIN` | When `true`, the username/password form is hidden and users rely on OIDC (login URL: `…/webprotege/oidc/login`). |
+
+**IdP registration**: Register a redirect URI of the form `https://<your-public-host><context>/webprotege/oidc/callback` (same scheme/host as end users use).
+
+**JVM equivalents** (if you prefer `-D` instead of env): `webprotege.oidc.issuer.uri`, `webprotege.oidc.client.id`, `webprotege.oidc.client.secret`, `webprotege.oidc.redirect.uri`, `webprotege.oidc.scopes`, `webprotege.oidc.username.claim`, `webprotege.oidc.hide.local.login`.
+
+In Docker Compose, add variables under the `webprotege` service `environment:` list (same names as above).
+

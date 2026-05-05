@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.login;
 
+import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.client.auth.ClientOidcConfig;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -72,6 +74,13 @@ public class LoginPresenter implements Presenter {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         view.clearView();
         view.hideErrorMessages();
+        if (ClientOidcConfig.isOidcSsoEnabled()) {
+            view.configureOidcLogin(ClientOidcConfig.getOidcLoginUrl(), ClientOidcConfig.isOidcHideLocalLogin());
+        }
+        String oidcError = Window.Location.getParameter("oidc_error");
+        if (oidcError != null && !oidcError.isEmpty()) {
+            view.showOidcLoginFailedMessage();
+        }
         boolean canCreateUser = loggedInUserManager.isAllowedApplicationAction(CREATE_ACCOUNT);
         view.setSignUpForAccountVisible(canCreateUser);
         container.setWidget(view);

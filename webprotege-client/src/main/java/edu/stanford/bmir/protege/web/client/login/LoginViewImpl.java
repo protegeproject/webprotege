@@ -34,6 +34,12 @@ public class LoginViewImpl extends Composite implements LoginView {
     private static LoginViewImplUiBinder ourUiBinder = GWT.create(LoginViewImplUiBinder.class);
 
     @UiField
+    protected Anchor oidcLoginAnchor;
+
+    @UiField
+    protected HTMLPanel localLoginFieldsPanel;
+
+    @UiField
     protected TextBox userNameField;
 
     @UiField
@@ -121,6 +127,9 @@ public class LoginViewImpl extends Composite implements LoginView {
         userNameField.setText("");
         passwordField.setText("");
         hideErrorMessages();
+        oidcLoginAnchor.setVisible(false);
+        oidcLoginAnchor.setHref("#");
+        localLoginFieldsPanel.setVisible(true);
     }
 
     @Override
@@ -161,6 +170,20 @@ public class LoginViewImpl extends Composite implements LoginView {
     @Override
     public void setSignUpForAccountVisible(boolean visible) {
         signUpForAccountButton.setVisible(visible);
+    }
+
+    @Override
+    public void configureOidcLogin(@Nonnull String loginUrl, boolean hideLocalLogin) {
+        oidcLoginAnchor.setHref(loginUrl);
+        oidcLoginAnchor.setText(MESSAGES.signInWithKeycloak());
+        oidcLoginAnchor.setTarget("_self");
+        oidcLoginAnchor.setVisible(true);
+        localLoginFieldsPanel.setVisible(!hideLocalLogin);
+    }
+
+    @Override
+    public void showOidcLoginFailedMessage() {
+        messageBox.showAlert(MESSAGES.login_oidc_failed());
     }
 
     @Override

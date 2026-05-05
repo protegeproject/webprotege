@@ -51,4 +51,8 @@ public interface LoginView extends IsWidget, RequiresResize, ProvidesResize {
     void setSignUpForAccountHandler(@Nonnull SignUpForAccountHandler handler);
 
     void setSignUpForAccountVisible(boolean visible);
+
+    void configureOidcLogin(@Nonnull String loginUrl, boolean hideLocalLogin);
+
+    void showOidcLoginFailedMessage();
 }

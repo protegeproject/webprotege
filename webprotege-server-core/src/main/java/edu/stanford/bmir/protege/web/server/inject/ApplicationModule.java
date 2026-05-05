@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
+import edu.stanford.bmir.protege.web.server.auth.oidc.OidcRuntimeConfig;
+import edu.stanford.bmir.protege.web.server.auth.oidc.OidcRuntimeConfigLoader;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
@@ -172,6 +174,7 @@ public class ApplicationModule {
         return dataFactory;
     }
 
+    @Provides
     @ApplicationSingleton
     public UserActivityManager provideUserActivityManager(UserActivityManagerProvider provider) {
         return provider.get();
@@ -181,6 +184,12 @@ public class ApplicationModule {
     @ApplicationSingleton
     public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
         return povider.get();
+    }
+
+    @Provides
+    @ApplicationSingleton
+    public OidcRuntimeConfig provideOidcRuntimeConfig() {
+        return OidcRuntimeConfigLoader.load();
     }
 
     @Provides
