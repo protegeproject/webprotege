@@ -74,7 +74,11 @@
 
         <g:Label text="{msg.signInToContinue}" addStyleNames="{wp.login.loginMessage} {style.message}"/>
 
-        <g:HTMLPanel addStyleNames="{style.login-form} {wp.login.loginForm}">
+        <g:Anchor ui:field="oidcLoginAnchor" visible="false"
+                  addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.primaryButton}"
+                  href="#"/>
+
+        <g:HTMLPanel ui:field="localLoginFieldsPanel" addStyleNames="{style.login-form} {wp.login.loginForm}">
             <g:Label text="{msg.userName}" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="userNameField" visibleLength="30"/>
             <div style="height: 10px;"/>

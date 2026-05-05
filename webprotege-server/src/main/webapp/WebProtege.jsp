@@ -17,6 +17,8 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ServerComponent" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.auth.oidc.OidcRuntimeConfig" %>
+<%@ page import="javax.servlet.http.HttpServletRequest" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -50,6 +52,7 @@
 
     <script>
         <%
+            writeOidcBootstrap(out, request);
             writeUserInSession(session, out);
         %>
     </script>
@@ -133,6 +136,31 @@
 
     private String getStyleCustomization() {
         return styleCustomizationFileManager.getStyleCustomization();
+    }
+
+    private void writeOidcBootstrap(JspWriter out, HttpServletRequest request) throws IOException {
+        try {
+            ServerComponent component = getServerComponent();
+            OidcRuntimeConfig oidc = component.getOidcRuntimeConfig();
+            boolean enabled = oidc.isEnabled();
+            boolean hideLocal = oidc.isHideLocalLogin();
+            String ctx = request.getContextPath();
+            if (ctx == null) {
+                ctx = "";
+            }
+            String login = ctx + "/webprotege/oidc/login";
+            out.println("window.webprotegeOidcSsoEnabled = " + enabled + ";");
+            out.println("window.webprotegeOidcHideLocalLogin = " + hideLocal + ";");
+            out.println("window.webprotegeOidcLoginUrl = \"" + escapeForJsString(login) + "\";");
+        } catch (Throwable t) {
+            out.println("window.webprotegeOidcSsoEnabled = false;");
+            out.println("window.webprotegeOidcHideLocalLogin = false;");
+            out.println("window.webprotegeOidcLoginUrl = \"\";");
+        }
+    }
+
+    private String escapeForJsString(String s) {
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {
