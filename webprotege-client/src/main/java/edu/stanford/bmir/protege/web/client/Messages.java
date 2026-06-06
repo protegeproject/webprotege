@@ -901,6 +901,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("showIri")
     String showIri();
 
+
+    @DefaultMessage("Change IRI...")
+    @Key("changeEntityIri")
+    String changeEntityIri();
+
     
     @DefaultMessage("showing")
     @Key("showing")
