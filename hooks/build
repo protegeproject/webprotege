@@ -7,6 +7,6 @@ printenv
 # and while executing hooks like here.
 # DOCKER_TAG: the Docker repository tag being built.
 # https://docs.docker.com/docker-hub/builds/advanced/
-docker build -t $IMAGE_NAME --build-arg WEBPROTEGE_VERSION=$DOCKER_TAG .
+docker build -t $IMAGE_NAME .
 
 echo "------ HOOK END   - BUILD -------"
