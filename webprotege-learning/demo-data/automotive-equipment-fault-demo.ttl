@@ -1,0 +1,116 @@
+@prefix auto: <http://example.com/automotive/production#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.com/automotive/production>
+    a owl:Ontology ;
+    rdfs:label "汽车行业设备故障与生产异常本体"@zh ;
+    rdfs:comment "Demo ontology: equipment fault triggers production exception and impacts work order execution in automotive manufacturing."@en .
+
+auto:Workshop a owl:Class ; rdfs:label "车间"@zh .
+auto:ProductionLine a owl:Class ; rdfs:label "产线"@zh .
+auto:Equipment a owl:Class ; rdfs:label "设备"@zh .
+auto:ProductionEquipment a owl:Class ; rdfs:subClassOf auto:Equipment ; rdfs:label "生产设备"@zh .
+auto:WeldingRobot a owl:Class ; rdfs:subClassOf auto:ProductionEquipment ; rdfs:label "焊接机器人"@zh .
+auto:CNCMachine a owl:Class ; rdfs:subClassOf auto:ProductionEquipment ; rdfs:label "数控机床"@zh .
+auto:ConveyorSystem a owl:Class ; rdfs:subClassOf auto:ProductionEquipment ; rdfs:label "输送系统"@zh .
+auto:PressMachine a owl:Class ; rdfs:subClassOf auto:ProductionEquipment ; rdfs:label "冲压设备"@zh .
+auto:QualityInspectionEquipment a owl:Class ; rdfs:subClassOf auto:Equipment ; rdfs:label "质量检测设备"@zh .
+auto:FaultEvent a owl:Class ; rdfs:label "故障事件"@zh .
+auto:MechanicalFault a owl:Class ; rdfs:subClassOf auto:FaultEvent ; rdfs:label "机械故障"@zh .
+auto:ElectricalFault a owl:Class ; rdfs:subClassOf auto:FaultEvent ; rdfs:label "电气故障"@zh .
+auto:SensorFault a owl:Class ; rdfs:subClassOf auto:FaultEvent ; rdfs:label "传感器故障"@zh .
+auto:HydraulicFault a owl:Class ; rdfs:subClassOf auto:FaultEvent ; rdfs:label "液压故障"@zh .
+auto:ProductionException a owl:Class ; rdfs:label "生产异常"@zh .
+auto:LineStopException a owl:Class ; rdfs:subClassOf auto:ProductionException ; rdfs:label "停线异常"@zh .
+auto:QualityDeviationException a owl:Class ; rdfs:subClassOf auto:ProductionException ; rdfs:label "质量偏差异常"@zh .
+auto:ScheduleDelayException a owl:Class ; rdfs:subClassOf auto:ProductionException ; rdfs:label "计划延迟异常"@zh .
+auto:WorkOrder a owl:Class ; rdfs:label "工单"@zh .
+auto:ProductionWorkOrder a owl:Class ; rdfs:subClassOf auto:WorkOrder ; rdfs:label "生产工单"@zh .
+auto:MaintenanceWorkOrder a owl:Class ; rdfs:subClassOf auto:WorkOrder ; rdfs:label "维护工单"@zh .
+auto:Product a owl:Class ; rdfs:label "产品"@zh .
+auto:VehicleModel a owl:Class ; rdfs:label "车型"@zh .
+auto:Shift a owl:Class ; rdfs:label "班次"@zh .
+
+auto:locatedInWorkshop a owl:ObjectProperty ; rdfs:label "位于车间"@zh ; rdfs:domain auto:Equipment ; rdfs:range auto:Workshop .
+auto:belongsToProductionLine a owl:ObjectProperty ; rdfs:label "属于产线"@zh ; rdfs:domain auto:Equipment ; rdfs:range auto:ProductionLine .
+auto:lineLocatedInWorkshop a owl:ObjectProperty ; rdfs:label "产线位于车间"@zh ; rdfs:domain auto:ProductionLine ; rdfs:range auto:Workshop .
+auto:occursOnEquipment a owl:ObjectProperty ; rdfs:label "发生在设备上"@zh ; rdfs:domain auto:FaultEvent ; rdfs:range auto:Equipment .
+auto:triggersException a owl:ObjectProperty ; rdfs:label "触发生产异常"@zh ; rdfs:domain auto:FaultEvent ; rdfs:range auto:ProductionException .
+auto:affectsWorkOrder a owl:ObjectProperty ; rdfs:label "影响工单"@zh ; rdfs:domain auto:ProductionException ; rdfs:range auto:WorkOrder .
+auto:assignedToEquipment a owl:ObjectProperty ; rdfs:label "分配至设备"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range auto:Equipment .
+auto:producesProduct a owl:ObjectProperty ; rdfs:label "生产产品"@zh ; rdfs:domain auto:ProductionWorkOrder ; rdfs:range auto:Product .
+auto:forVehicleModel a owl:ObjectProperty ; rdfs:label "对应车型"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range auto:VehicleModel .
+auto:handledByMaintenanceOrder a owl:ObjectProperty ; rdfs:label "由维护工单处理"@zh ; rdfs:domain auto:ProductionException ; rdfs:range auto:MaintenanceWorkOrder .
+auto:executedOnShift a owl:ObjectProperty ; rdfs:label "执行班次"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range auto:Shift .
+auto:relatedFaultEvent a owl:ObjectProperty ; rdfs:label "关联故障事件"@zh ; rdfs:domain auto:ProductionException ; rdfs:range auto:FaultEvent .
+
+auto:equipmentId a owl:DatatypeProperty ; rdfs:label "设备编号"@zh ; rdfs:domain auto:Equipment ; rdfs:range xsd:string .
+auto:equipmentStatus a owl:DatatypeProperty ; rdfs:label "设备状态"@zh ; rdfs:domain auto:Equipment ; rdfs:range xsd:string .
+auto:faultCode a owl:DatatypeProperty ; rdfs:label "故障代码"@zh ; rdfs:domain auto:FaultEvent ; rdfs:range xsd:string .
+auto:severityLevel a owl:DatatypeProperty ; rdfs:label "严重等级"@zh ; rdfs:domain auto:FaultEvent ; rdfs:range xsd:string .
+auto:occurrenceTime a owl:DatatypeProperty ; rdfs:label "发生时间"@zh ; rdfs:domain auto:FaultEvent ; rdfs:range xsd:dateTime .
+auto:resolutionTime a owl:DatatypeProperty ; rdfs:label "恢复时间"@zh ; rdfs:domain auto:FaultEvent ; rdfs:range xsd:dateTime .
+auto:downtimeMinutes a owl:DatatypeProperty ; rdfs:label "停机时长(分钟)"@zh ; rdfs:domain auto:ProductionException ; rdfs:range xsd:integer .
+auto:exceptionDescription a owl:DatatypeProperty ; rdfs:label "异常描述"@zh ; rdfs:domain auto:ProductionException ; rdfs:range xsd:string .
+auto:workOrderId a owl:DatatypeProperty ; rdfs:label "工单编号"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range xsd:string .
+auto:workOrderStatus a owl:DatatypeProperty ; rdfs:label "工单状态"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range xsd:string .
+auto:plannedQuantity a owl:DatatypeProperty ; rdfs:label "计划产量"@zh ; rdfs:domain auto:ProductionWorkOrder ; rdfs:range xsd:integer .
+auto:actualQuantity a owl:DatatypeProperty ; rdfs:label "实际产量"@zh ; rdfs:domain auto:ProductionWorkOrder ; rdfs:range xsd:integer .
+auto:plannedStartTime a owl:DatatypeProperty ; rdfs:label "计划开始时间"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range xsd:dateTime .
+auto:plannedEndTime a owl:DatatypeProperty ; rdfs:label "计划结束时间"@zh ; rdfs:domain auto:WorkOrder ; rdfs:range xsd:dateTime .
+auto:lineCapacity a owl:DatatypeProperty ; rdfs:label "产线产能(件/小时)"@zh ; rdfs:domain auto:ProductionLine ; rdfs:range xsd:integer .
+auto:defectRate a owl:DatatypeProperty ; rdfs:label "不良率"@zh ; rdfs:domain auto:ProductionException ; rdfs:range xsd:double .
+
+auto:WS-Stamping a auto:Workshop ; rdfs:label "冲压车间"@zh .
+auto:WS-Welding a auto:Workshop ; rdfs:label "焊装车间"@zh .
+auto:WS-Assembly a auto:Workshop ; rdfs:label "总装车间"@zh .
+
+auto:LINE-Weld-A a auto:ProductionLine ; rdfs:label "焊装A线"@zh ; auto:lineLocatedInWorkshop auto:WS-Welding ; auto:lineCapacity 24 .
+auto:LINE-Weld-B a auto:ProductionLine ; rdfs:label "焊装B线"@zh ; auto:lineLocatedInWorkshop auto:WS-Welding ; auto:lineCapacity 20 .
+auto:LINE-Assembly-Main a auto:ProductionLine ; rdfs:label "总装主线"@zh ; auto:lineLocatedInWorkshop auto:WS-Assembly ; auto:lineCapacity 30 .
+auto:LINE-Stamping-1 a auto:ProductionLine ; rdfs:label "冲压1号线"@zh ; auto:lineLocatedInWorkshop auto:WS-Stamping ; auto:lineCapacity 18 .
+
+auto:WR-001 a auto:WeldingRobot ; rdfs:label "焊接机器人#1"@zh ; auto:equipmentId "WR-001" ; auto:equipmentStatus "Fault" ; auto:belongsToProductionLine auto:LINE-Weld-A ; auto:locatedInWorkshop auto:WS-Welding .
+auto:WR-002 a auto:WeldingRobot ; rdfs:label "焊接机器人#2"@zh ; auto:equipmentId "WR-002" ; auto:equipmentStatus "Running" ; auto:belongsToProductionLine auto:LINE-Weld-B ; auto:locatedInWorkshop auto:WS-Welding .
+auto:CNC-003 a auto:CNCMachine ; rdfs:label "数控机加工中心#3"@zh ; auto:equipmentId "CNC-003" ; auto:equipmentStatus "Fault" ; auto:belongsToProductionLine auto:LINE-Weld-A ; auto:locatedInWorkshop auto:WS-Welding .
+auto:CV-004 a auto:ConveyorSystem ; rdfs:label "输送带系统#4"@zh ; auto:equipmentId "CV-004" ; auto:equipmentStatus "Running" ; auto:belongsToProductionLine auto:LINE-Assembly-Main ; auto:locatedInWorkshop auto:WS-Assembly .
+auto:PR-005 a auto:PressMachine ; rdfs:label "冲压压机#5"@zh ; auto:equipmentId "PR-005" ; auto:equipmentStatus "Maintenance" ; auto:belongsToProductionLine auto:LINE-Stamping-1 ; auto:locatedInWorkshop auto:WS-Stamping .
+auto:QI-006 a auto:QualityInspectionEquipment ; rdfs:label "视觉检测站#6"@zh ; auto:equipmentId "QI-006" ; auto:equipmentStatus "Running" ; auto:belongsToProductionLine auto:LINE-Weld-A ; auto:locatedInWorkshop auto:WS-Welding .
+
+auto:Model-X-EV a auto:VehicleModel ; rdfs:label "Model-X 纯电SUV"@zh .
+auto:Model-Y-Hybrid a auto:VehicleModel ; rdfs:label "Model-Y 混动轿车"@zh .
+auto:Product-BIW a auto:Product ; rdfs:label "白车身总成"@zh .
+auto:Product-Subframe a auto:Product ; rdfs:label "副车架"@zh .
+auto:Product-DoorAssembly a auto:Product ; rdfs:label "车门总成"@zh .
+auto:Product-HoodPanel a auto:Product ; rdfs:label "前盖外板"@zh .
+
+auto:Shift-Morning a auto:Shift ; rdfs:label "早班"@zh .
+auto:Shift-Afternoon a auto:Shift ; rdfs:label "中班"@zh .
+
+auto:FAULT-20250711-001 a auto:SensorFault ; rdfs:label "焊接机器人位置传感器信号丢失"@zh ; auto:faultCode "E-WR-SENSOR-042" ; auto:severityLevel "Critical" ; auto:occurrenceTime "2025-07-11T08:15:00"^^xsd:dateTime ; auto:occursOnEquipment auto:WR-001 .
+auto:FAULT-20250711-002 a auto:MechanicalFault ; rdfs:label "数控机床主轴轴承过热"@zh ; auto:faultCode "E-CNC-MECH-118" ; auto:severityLevel "Major" ; auto:occurrenceTime "2025-07-11T09:40:00"^^xsd:dateTime ; auto:occursOnEquipment auto:CNC-003 .
+auto:FAULT-20250711-003 a auto:ElectricalFault ; rdfs:label "焊接机器人伺服驱动器过流报警"@zh ; auto:faultCode "E-WR-ELEC-207" ; auto:severityLevel "Major" ; auto:occurrenceTime "2025-07-11T10:05:00"^^xsd:dateTime ; auto:occursOnEquipment auto:WR-002 .
+auto:FAULT-20250711-004 a auto:HydraulicFault ; rdfs:label "冲压压机液压系统压力不足"@zh ; auto:faultCode "E-PR-HYD-033" ; auto:severityLevel "Critical" ; auto:occurrenceTime "2025-07-11T07:30:00"^^xsd:dateTime ; auto:occursOnEquipment auto:PR-005 .
+
+auto:EXC-20250711-001 a auto:LineStopException ; rdfs:label "焊装A线停线"@zh ; auto:exceptionDescription "焊接机器人#1传感器故障导致焊装A线紧急停线，影响白车身组装节拍。"@zh ; auto:downtimeMinutes 95 ; auto:relatedFaultEvent auto:FAULT-20250711-001 ; auto:handledByMaintenanceOrder auto:WO-M-001 .
+auto:EXC-20250711-002 a auto:QualityDeviationException ; rdfs:label "副车架机加工尺寸超差"@zh ; auto:exceptionDescription "数控机床主轴过热引起加工精度下降，抽检孔位偏差超规格。"@zh ; auto:downtimeMinutes 45 ; auto:defectRate 0.08 ; auto:relatedFaultEvent auto:FAULT-20250711-002 .
+auto:EXC-20250711-003 a auto:ScheduleDelayException ; rdfs:label "焊装B线节拍延迟"@zh ; auto:exceptionDescription "焊接机器人#2伺服过流降速运行，车门总成工单交付延迟。"@zh ; auto:downtimeMinutes 60 ; auto:relatedFaultEvent auto:FAULT-20250711-003 .
+auto:EXC-20250711-004 a auto:ScheduleDelayException ; rdfs:label "冲压产能不足"@zh ; auto:exceptionDescription "冲压压机液压故障检修中，前盖外板工单产量未达计划。"@zh ; auto:downtimeMinutes 120 ; auto:relatedFaultEvent auto:FAULT-20250711-004 .
+
+auto:WO-2025-0701 a auto:ProductionWorkOrder ; rdfs:label "焊装A线-白车身组装"@zh ; auto:workOrderId "WO-2025-0701" ; auto:workOrderStatus "Suspended" ; auto:plannedQuantity 48 ; auto:actualQuantity 12 ; auto:plannedStartTime "2025-07-11T08:00:00"^^xsd:dateTime ; auto:plannedEndTime "2025-07-11T16:00:00"^^xsd:dateTime ; auto:assignedToEquipment auto:WR-001 ; auto:producesProduct auto:Product-BIW ; auto:forVehicleModel auto:Model-X-EV ; auto:executedOnShift auto:Shift-Morning .
+auto:WO-2025-0702 a auto:ProductionWorkOrder ; rdfs:label "机加工-副车架"@zh ; auto:workOrderId "WO-2025-0702" ; auto:workOrderStatus "Delayed" ; auto:plannedQuantity 60 ; auto:actualQuantity 38 ; auto:plannedStartTime "2025-07-11T08:30:00"^^xsd:dateTime ; auto:plannedEndTime "2025-07-11T17:00:00"^^xsd:dateTime ; auto:assignedToEquipment auto:CNC-003 ; auto:producesProduct auto:Product-Subframe ; auto:forVehicleModel auto:Model-Y-Hybrid ; auto:executedOnShift auto:Shift-Morning .
+auto:WO-2025-0703 a auto:ProductionWorkOrder ; rdfs:label "焊装B线-车门总成"@zh ; auto:workOrderId "WO-2025-0703" ; auto:workOrderStatus "Delayed" ; auto:plannedQuantity 40 ; auto:actualQuantity 22 ; auto:plannedStartTime "2025-07-11T09:00:00"^^xsd:dateTime ; auto:plannedEndTime "2025-07-11T18:00:00"^^xsd:dateTime ; auto:assignedToEquipment auto:WR-002 ; auto:producesProduct auto:Product-DoorAssembly ; auto:forVehicleModel auto:Model-X-EV ; auto:executedOnShift auto:Shift-Afternoon .
+auto:WO-2025-0704 a auto:ProductionWorkOrder ; rdfs:label "冲压-前盖外板"@zh ; auto:workOrderId "WO-2025-0704" ; auto:workOrderStatus "InProgress" ; auto:plannedQuantity 200 ; auto:actualQuantity 95 ; auto:plannedStartTime "2025-07-11T07:00:00"^^xsd:dateTime ; auto:plannedEndTime "2025-07-11T15:00:00"^^xsd:dateTime ; auto:assignedToEquipment auto:PR-005 ; auto:producesProduct auto:Product-HoodPanel ; auto:forVehicleModel auto:Model-Y-Hybrid ; auto:executedOnShift auto:Shift-Morning .
+auto:WO-M-001 a auto:MaintenanceWorkOrder ; rdfs:label "WR-001传感器更换维护"@zh ; auto:workOrderId "WO-M-001" ; auto:workOrderStatus "InProgress" ; auto:plannedStartTime "2025-07-11T08:20:00"^^xsd:dateTime ; auto:plannedEndTime "2025-07-11T10:00:00"^^xsd:dateTime ; auto:assignedToEquipment auto:WR-001 ; auto:executedOnShift auto:Shift-Morning .
+
+auto:FAULT-20250711-001 auto:triggersException auto:EXC-20250711-001 .
+auto:EXC-20250711-001 auto:affectsWorkOrder auto:WO-2025-0701 .
+auto:FAULT-20250711-002 auto:triggersException auto:EXC-20250711-002 .
+auto:EXC-20250711-002 auto:affectsWorkOrder auto:WO-2025-0702 .
+auto:FAULT-20250711-003 auto:triggersException auto:EXC-20250711-003 .
+auto:EXC-20250711-003 auto:affectsWorkOrder auto:WO-2025-0703 .
+auto:FAULT-20250711-004 auto:triggersException auto:EXC-20250711-004 .
+auto:EXC-20250711-004 auto:affectsWorkOrder auto:WO-2025-0704 .
