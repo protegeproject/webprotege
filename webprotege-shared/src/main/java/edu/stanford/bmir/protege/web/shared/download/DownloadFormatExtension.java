@@ -15,6 +15,8 @@ public enum DownloadFormatExtension {
     owx("OWL/XML"),
 
     omn("Manchester OWL Syntax"),
+    
+    obo("OBO Syntax"),
 
     ofn("Functional OWL Syntax");
 
