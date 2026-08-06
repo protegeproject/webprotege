@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
+import edu.stanford.bmir.protege.web.client.entity.ChangeEntityIRIUiAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
@@ -67,6 +68,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final MergeEntitiesUiAction mergeEntitiesAction;
 
     @Nonnull
+    private final ChangeEntityIRIUiAction changeEntityIriAction;
+
+    @Nonnull
     private final EditEntityTagsUiAction editEntityTagsAction;
 
     @Nonnull
@@ -96,6 +100,7 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull UIAction deleteEntityAction,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
                                                @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided @Nonnull ChangeEntityIRIUiAction changeEntityIriAction,
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
@@ -111,6 +116,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.createEntityAction = checkNotNull(createEntityAction);
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
+        this.changeEntityIriAction = checkNotNull(changeEntityIriAction);
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
         this.watchUiAction = checkNotNull(watchUiAction);
         this.permissionChecker = checkNotNull(permissionChecker);
@@ -143,6 +149,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addSeparator();
         contextMenu.addItem(moveToParentUiAction);
         contextMenu.addItem(mergeEntitiesAction);
+        contextMenu.addItem(changeEntityIriAction);
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(editAnnotationsUiAction);
         contextMenu.addSeparator();
@@ -169,11 +176,14 @@ public class EntityHierarchyContextMenuPresenter {
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
+        changeEntityIriAction.setSelectionSupplier(() -> selectionSupplier.get().stream().findFirst());
+        changeEntityIriAction.setChangeHandler(this::handleRefresh);
         updateActionStates();
     }
 
     private void updateActionStates() {
         mergeEntitiesAction.setEnabled(false);
+        changeEntityIriAction.setEnabled(false);
         editEntityTagsAction.setEnabled(false);
         setAnnotationValueUiAction.setEnabled(false);
         editAnnotationsUiAction.setEnabled(false);
@@ -197,6 +207,7 @@ public class EntityHierarchyContextMenuPresenter {
             permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ONTOLOGY, enabled -> changeEntityIriAction.setEnabled(selIsSingleton && enabled));
         }
     }
 
