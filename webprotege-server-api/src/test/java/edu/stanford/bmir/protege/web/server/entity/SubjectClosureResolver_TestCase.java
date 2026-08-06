@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,7 +70,7 @@ public class SubjectClosureResolver_TestCase {
         when(axiom.getSubject()).thenReturn(clsIri);
         var rootEntities = resolver.resolve(valueEntity)
                 .collect(toSet());
-        assertThat(rootEntities, contains(cls, valueEntity));
+        assertThat(rootEntities, hasItems(cls, valueEntity));
     }
 
     @Test
