@@ -1,63 +1,70 @@
 {
-  "@type" : "ParentNode",
-  "direction": "row",
-  "children": [
-    {
-      "weight": 0.3,
-      "node": {
-        "@type" : "LeafNode",
-        "properties": {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.ClassHierarchy"
+  "perspectiveId" : "52fa1dce-0274-50bb-ae16-56f779c6f4a7",
+  "label" : {
+    "en" : "OWL Classes"
+  },
+  "favorite" : false,
+  "layout" : {
+    "@type" : "ParentNode",
+    "direction": "row",
+    "children": [
+      {
+        "weight": 0.3,
+        "node": {
+          "@type" : "LeafNode",
+          "properties": {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.ClassHierarchy"
+            }
           }
         }
-      }
-    },
-    {
-      "weight": 0.5,
-      "node": {
-        "@type" : "LeafNode",
-        "properties": {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.owl.EntityDescriptionEditor"
+      },
+      {
+        "weight": 0.5,
+        "node": {
+          "@type" : "LeafNode",
+          "properties": {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.owl.EntityDescriptionEditor"
+            }
           }
         }
-      }
-    },
-    {
-      "weight": 0.2,
-      "node": {
-        "@type" : "ParentNode",
-        "direction": "column",
-        "children": [
-          {
-            "weight": 0.6,
-            "node": {
-              "@type" : "LeafNode",
-              "properties": {
-                "portlet": {
-                  "@type": "String",
-                  "value": "portlets.Comments"
+      },
+      {
+        "weight": 0.2,
+        "node": {
+          "@type" : "ParentNode",
+          "direction": "column",
+          "children": [
+            {
+              "weight": 0.6,
+              "node": {
+                "@type" : "LeafNode",
+                "properties": {
+                  "portlet": {
+                    "@type": "String",
+                    "value": "portlets.Comments"
+                  }
+                }
+              }
+            },
+            {
+              "weight": 0.4,
+              "node": {
+                "@type" : "LeafNode",
+                "properties": {
+                  "portlet": {
+                    "@type": "String",
+                    "value": "portlets.ProjectFeed"
+                  }
                 }
               }
             }
-          },
-          {
-            "weight": 0.4,
-            "node": {
-              "@type" : "LeafNode",
-              "properties": {
-                "portlet": {
-                  "@type": "String",
-                  "value": "portlets.ProjectFeed"
-                }
-              }
-            }
-          }
-        ]
+          ]
+        }
       }
-    }
-  ]
+    ]
+  }
 }

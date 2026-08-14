@@ -1,0 +1,37 @@
+{
+  "perspectiveId" : "5785084a-4fe0-5d06-a35f-4463854e04ce",
+  "label" : {
+    "en" : "Changes by Entity"
+  },
+  "favorite" : false,
+  "layout" : {
+    "@type" : "ParentNode",
+    "direction": "row",
+    "children": [
+      {
+        "weight": 0.3,
+        "node": {
+          "@type" : "LeafNode",
+          "properties": {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.ClassHierarchy"
+            }
+          }
+        }
+      },
+      {
+        "weight": 0.7,
+        "node": {
+          "@type" : "LeafNode",
+          "properties": {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.ChangesByEntity"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

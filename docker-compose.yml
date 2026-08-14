@@ -17,6 +17,16 @@ services:
     restart: unless-stopped
     environment:
       - webprotege.mongodb.host=wpmongo
+      # 163 SMTP. Set MAIL_SMTP_USER / MAIL_SMTP_PASSWORD / MAIL_SMTP_FROM in a local .env
+      # (gitignored). If mail.smtp.auth=true, user and password are required at startup.
+      - mail.smtp.host=smtp.163.com
+      - mail.smtp.port=465
+      - mail.smtp.auth=true
+      - mail.smtp.user=${MAIL_SMTP_USER:-}
+      - mail.smtp.wp.password=${MAIL_SMTP_PASSWORD:-}
+      - mail.smtp.from=${MAIL_SMTP_FROM:-}
+      - mail.smtp.starttls.enable=false
+      - mail.smtp.ssl.enable=true
     volumes: 
     - ./.protegedata/protege:/srv/webprotege
     ports:

@@ -71,18 +71,40 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
     /**
      * Overrides any property values in the specified {@link Properties} object with property values that are specified
-     * via the command line (with a -D argument) or via environment variables.
+     * via environment variables or the command line (with a -D argument). Environment variables are applied first;
+     * Java system properties take precedence so that {@code -Dmail.smtp.*} can still override Docker Compose values.
+     * Blank values are ignored so empty Compose interpolations do not wipe {@code mail.properties}.
      *
      * @param properties The properties object whose property values should be replaced.  Not {@code null}.
      */
     private void overridePropertiesWithSystemProperties(Properties properties) {
         checkNotNull(properties);
+        try {
+            for (var entry : System.getenv().entrySet()) {
+                applyMailOverride(properties, entry.getKey(), entry.getValue());
+            }
+        } catch (SecurityException e) {
+            logger.warn("Cannot access environment variables for mail overrides: {}", e.getMessage());
+        }
         Properties systemProperties = getSystemProperties();
         for (String systemPropertyName : systemProperties.stringPropertyNames()) {
-            if (systemPropertyName.startsWith(MAIL_PROPERTIES_PREFIX)) {
-                String propertyValue = systemProperties.getProperty(systemPropertyName);
-                properties.setProperty(systemPropertyName, propertyValue);
-            }
+            applyMailOverride(properties, systemPropertyName, systemProperties.getProperty(systemPropertyName));
+        }
+    }
+
+    private void applyMailOverride(Properties properties, String name, String value) {
+        if (name == null || !name.startsWith(MAIL_PROPERTIES_PREFIX)) {
+            return;
+        }
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+        properties.setProperty(name, value);
+        if (SendMailImpl.MAIL_SMTP_PASSWORD.equals(name)) {
+            logger.info("Overriding {} from system or environment configuration", name);
+        }
+        else {
+            logger.info("Overriding {} with value: {}", name, value);
         }
     }
 

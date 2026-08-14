@@ -1,30 +1,37 @@
 {
-  "@type" : "ParentNode",
-  "direction": "row",
-  "children": [
-    {
-      "weight": 0.3,
-      "node": {
-        "@type" : "LeafNode",
-        "properties" : {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.CommentedEntities"
+  "perspectiveId" : "ad4fdcb0-ed28-5a30-96a8-8b9575fb4282",
+  "label" : {
+    "en" : "Comments"
+  },
+  "favorite" : false,
+  "layout" : {
+    "@type" : "ParentNode",
+    "direction": "row",
+    "children": [
+      {
+        "weight": 0.3,
+        "node": {
+          "@type" : "LeafNode",
+          "properties" : {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.CommentedEntities"
+            }
+          }
+        }
+      },
+      {
+        "weight": 0.7,
+        "node": {
+          "@type" : "LeafNode",
+          "properties" : {
+            "portlet": {
+              "@type": "String",
+              "value": "portlets.Comments"
+            }
           }
         }
       }
-    },
-    {
-      "weight": 0.7,
-      "node": {
-        "@type" : "LeafNode",
-        "properties" : {
-          "portlet": {
-            "@type": "String",
-            "value": "portlets.Comments"
-          }
-        }
-      }
-    }
-  ]
+    ]
+  }
 }

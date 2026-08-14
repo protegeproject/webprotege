@@ -1,9 +1,16 @@
 {
-  "@type" : "LeafNode",
-  "properties": {
-    "portlet": {
-      "@type": "String",
-      "value": "portlet.query"
+  "perspectiveId" : "2e20b5de-114e-5408-a26c-ac008de5f51b",
+  "label" : {
+    "en" : "Query"
+  },
+  "favorite" : false,
+  "layout" : {
+    "@type" : "LeafNode",
+    "properties": {
+      "portlet": {
+        "@type": "String",
+        "value": "portlet.query"
+      }
     }
   }
 }
